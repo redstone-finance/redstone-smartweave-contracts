@@ -1,0 +1,11 @@
+{
+  "manifests": {
+    "ppe": [
+      {
+        "uploadedTs": 444,
+        "blockTs": 222,
+        "content": "blabla"
+      }
+    ]
+  }
+}
