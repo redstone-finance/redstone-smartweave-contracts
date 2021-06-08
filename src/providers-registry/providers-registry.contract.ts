@@ -6,7 +6,7 @@ import {
   GetProviderManifest,
   ManifestData,
   ProvidersRegistryAction,
-  ProvidersRegistryResult,
+  ProvidersRegistryResult, ProvidersRegistrySetFunction,
   ProvidersRegistryState,
   RegisterProviderData,
   RemoveProviderData,
@@ -17,6 +17,10 @@ declare type ContractResult = { state: ProvidersRegistryState } | { result: Prov
 declare const ContractError: any;
 declare const SmartWeave: SmartWeaveGlobal;
 
+/**
+ * This contract is responsible for keeping track of all providers (and their configuration) that
+ * are using Redstone Node server (https://github.com/redstone-finance/redstone-node)
+ */
 export function handle(state: ProvidersRegistryState, action: ProvidersRegistryAction): ContractResult {
 
   trace("[Providers Registry Contract Handle]");
@@ -36,6 +40,10 @@ export function handle(state: ProvidersRegistryState, action: ProvidersRegistryA
   trace("TIMESTAMP: ", SmartWeave.block.timestamp);
   trace("STATE", state);
   trace("ACTION", action);
+
+  if (stateChangingFunctions().includes(input.function) && state.readOnly && !isContractAdmin(caller)) {
+    throw new ContractError("Contract is currently in readOnly state, modifications are not allowed.");
+  }
 
   /* STATE MODIFYING ACTIONS */
   if (input.function === "register-provider") {
@@ -265,6 +273,11 @@ export function handle(state: ProvidersRegistryState, action: ProvidersRegistryA
   function isEmpty(value: string) {
     return value === undefined || value.length === 0;
   }
+
+  function stateChangingFunctions() {
+    return ['register-provider', 'remove-provider', 'add-provider-admin', 'add-provider-manifest', 'stake-provider-tokens'];
+  }
+
 
   throw new ContractError(`No function supplied or function not recognised: "${input.function}"`);
 }

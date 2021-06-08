@@ -8,6 +8,15 @@ export interface ProvidersRegistryState {
   trace: boolean;
 
   /**
+   * whether contract is working in read-only mode (ie. no state-changing functions are allowed).
+   * this is mainly used for the purpose of migrating current contract's state to a newer version.
+   * switching to readOnly prevents from changing contract state after its state has been saved as an initial input
+   * for the new version.
+   * note: only contract's admin is allowed to change this value
+   */
+  readOnly: boolean;
+
+  /**
    * wallet address of an account that deployed the contract
    */
   contractAdmins: string[];
@@ -25,6 +34,8 @@ export interface ProviderData {
    * wallet addresses of users allowed to change this provider's data
    */
   adminsPool?: string[];
+
+  isMultiNode: boolean;
 
   /**
    * data that identifies this provider
@@ -130,8 +141,8 @@ export interface ProvidersRegistryResult {
 export type ProvidersRegistryGetFunction = 'active-manifest' | 'pending-manifests' | 'historical-manifests' | 'provider-data' ;
 export type ProvidersRegistrySetFunction = 'register-provider'
   |'remove-provider'
-  |'switch-trace'
   |'add-provider-admin'
   |'add-provider-manifest'
   |'stake-provider-tokens'
+  |'switch-trace'
   |'add-contract-admins'

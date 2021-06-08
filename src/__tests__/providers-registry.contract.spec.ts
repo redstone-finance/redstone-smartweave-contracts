@@ -1,7 +1,7 @@
 import ContractsTestingEnv from "../tools/ContractsTestingEnv";
 import {ProvidersRegistryInput} from "../providers-registry/types";
 
-const contractSrcPath = "./src/providers-registry/providers-registry-contract.ts";
+const contractSrcPath = "./src/providers-registry/providers-registry.contract.ts";
 
 const caller = "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBY"
 const initialState = `{
