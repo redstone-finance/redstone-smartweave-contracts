@@ -4,10 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "build": "npm run clean && npm run build-ts && npm run cp",
+    "build": "npm run clean && npm run build-ts",
     "build-ts": "node build.js",
     "clean": "rimraf ./dist",
-    "cp": "copyfiles -u 1 ./src/**/*.json dist",
     "test": "jest"
   },
   "jest": {
