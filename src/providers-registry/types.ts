@@ -1,5 +1,3 @@
-import {SmartWeaveGlobal} from "smartweave/lib/smartweave-global";
-
 export interface ProvidersRegistryState {
   /**
    * whether contract function should log debug info
@@ -14,10 +12,10 @@ export interface ProvidersRegistryState {
    * for the new version.
    * note: only contract's admin is allowed to change this value
    */
-  readOnly: boolean;
+  readonly: boolean;
 
   /**
-   * wallet address of an account that deployed the contract
+   * wallet addresses of accounts with administrative privileges
    */
   contractAdmins: string[];
 
@@ -35,6 +33,7 @@ export interface ProviderData {
    */
   adminsPool?: string[];
 
+  // TODO: what about this feature - running multiple providers on one "physical" node.
   isMultiNode: boolean;
 
   /**
@@ -60,18 +59,21 @@ export interface ProviderData {
 }
 
 export interface ProviderProfile {
-  id?: string;
+  id: string;
   name: string;
   description: string;
   url: string;
   imgUrl?: string;
 }
 
+export type ManifestStatus = "historical" | "active" | "locked";
+
 export interface ManifestData {
   uploadBlockHeight?: number;
   changeMessage: string;
   lockedHours?: number;
   manifest: any;
+  status?: ManifestStatus;
 }
 
 export interface ProvidersRegistryAction {
@@ -80,7 +82,7 @@ export interface ProvidersRegistryAction {
 }
 
 export interface ProvidersRegistryInput {
-  function: ProvidersRegistryGetFunction | ProvidersRegistrySetFunction;
+  function: ProvidersRegistryGetFunction | ProvidersRegistryAdminSetFunction | ProvidersRegistryNonAdminSetFunction;
   data: RegisterProviderData
     | RemoveProviderData
     | AddProviderAdminData
@@ -122,7 +124,14 @@ export interface AddContractAdmins {
 }
 
 export interface SwitchTraceData {
+}
 
+export interface SwitchReadonlyData {
+}
+
+export interface UpdateProviderProfileData {
+  providerId: string;
+  profile: ProviderProfile;
 }
 
 export interface StakeProviderTokens {
@@ -138,11 +147,19 @@ export interface ProvidersRegistryResult {
   manifest?: ManifestData;
 }
 
-export type ProvidersRegistryGetFunction = 'active-manifest' | 'pending-manifests' | 'historical-manifests' | 'provider-data' ;
-export type ProvidersRegistrySetFunction = 'register-provider'
-  |'remove-provider'
-  |'add-provider-admin'
-  |'add-provider-manifest'
-  |'stake-provider-tokens'
-  |'switch-trace'
-  |'add-contract-admins'
+export const getFunctions = ["activeManifest", "providerData", "providersData"] as const;
+export type ProvidersRegistryGetFunction = typeof getFunctions[number];
+
+export const adminSetFunctions = ["switchTrace", "addContractAdmins", "switchReadonly"] as const;
+export type ProvidersRegistryAdminSetFunction = typeof adminSetFunctions[number];
+
+export const nonAdminSetFunctions = [
+  "registerProvider",
+  "removeProvider",
+  "addProviderAdmin",
+  "addProviderManifest",
+  "stakeProviderTokens",
+  "updateProviderProfile"
+] as const;
+export type ProvidersRegistryNonAdminSetFunction = typeof nonAdminSetFunctions[number];
+

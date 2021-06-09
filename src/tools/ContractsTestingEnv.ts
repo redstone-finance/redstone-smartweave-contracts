@@ -4,8 +4,6 @@ import {ContractHandler, ContractInteractionResult, execute} from "smartweave/li
 import {SmartWeaveGlobal} from "smartweave/lib/smartweave-global";
 import {InteractionTx} from "smartweave/lib/interaction-tx";
 
-require("ts-node").register();
-
 export type ContractExecutionEnv = {
   handler: ContractHandler;
   swGlobal: SmartWeaveGlobal;
@@ -47,19 +45,29 @@ export default class ContractsTestingEnv {
    * deploys new contract and returns its contractId
    */
   deployContract(
-    srcPath: string,//from the project's root.
+    srcPath: string,// from the project's root.
     initialState: any = {},
-    contractId: string = `TEST-${srcPath}`)
-    : string {
+    contractId: string = `TEST-${srcPath}`): string {
 
     if (srcPath === undefined || srcPath.length === 0) {
       throw new Error("srcPath is required.");
     }
 
-    const {handle} = require(`${process.cwd()}/${srcPath}`);
+    const result = require('esbuild').buildSync({
+      entryPoints: [`${process.cwd()}/${srcPath}`],
+      minify: false,
+      bundle: true,
+      format: "iife",
+      write: false
+    });
+
+    const source = new TextDecoder().decode(result.outputFiles[0].contents);
+    const normalizedSource = source
+      .replace(/\(\(\) => {/g, "")
+      .replace(/}\)\(\);/g, "");
 
     const env: ContractExecutionEnv = createContractExecutionEnvironment(
-      this.arweave, handle.toString(), this.contractId);
+      this.arweave, normalizedSource, this.contractId);
 
     env.swGlobal.contracts.readContractState = jest.fn().mockImplementation((contractId) => {
       return this.currentState(contractId);
@@ -80,14 +88,13 @@ export default class ContractsTestingEnv {
     block: Block = null,
     forcedCurrentState: any = null): Promise<ContractInteractionResult> {
 
-    // note: no need to copy state here, as it is copied in execute method:
+    // note: no need to copy state here, as it is copied by execute method:
     // https://github.com/ArweaveTeam/SmartWeave/blob/788a974e66494ef2ab8f876024e72bf363d4c4a4/src/contract-step.ts#L56
     const currentState = forcedCurrentState || this.currentState(contractId);
 
     const prevActiveTx = this.contracts[contractId].env.swGlobal._activeTx;
-    if (block !== null) {
-      this.contracts[contractId].env.swGlobal._activeTx = ContractsTestingEnv.mockActiveTx(block)
-    }
+    this.contracts[contractId].env.swGlobal._activeTx = ContractsTestingEnv.mockActiveTx(block || {height: 1000});
+
     const res: ContractInteractionResult = await execute(
       this.contracts[contractId].env.handler,
       {
@@ -99,6 +106,7 @@ export default class ContractsTestingEnv {
     if (res.type === 'error' || res.type === 'exception') {
       throw Error(res.result);
     }
+
     this.pushState(contractId, res.state || currentState);
     this.contracts[contractId].env.swGlobal._activeTx = prevActiveTx;
 

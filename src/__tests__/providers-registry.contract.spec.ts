@@ -6,6 +6,7 @@ const contractSrcPath = "./src/providers-registry/providers-registry.contract.ts
 const caller = "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBY"
 const initialState = `{
   "trace": false,
+  "readonly": false,
   "contractAdmins": ["bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBY"]
 }`
 
@@ -22,11 +23,11 @@ describe("Provider Registry Contract", () => {
     testEnv.clearContracts();
   });
 
-  describe("register-provider function", () => {
+  describe("registerProvider function", () => {
     it("registers new provider without manifest", async () => {
       const interaction = await testEnv.interact<ProvidersRegistryInput>(caller, contractId,
         {
-          function: "register-provider",
+          function: "registerProvider",
           data: {
             "provider": {
               "adminsPool": [],
@@ -37,8 +38,6 @@ describe("Provider Registry Contract", () => {
               },
             }
           }
-        }, {
-          height: 1000
         });
 
       expect(interaction.state.providers).toEqual({
@@ -57,6 +56,132 @@ describe("Provider Registry Contract", () => {
       );
     });
 
+    it("registers new provider with manifest", async () => {
+      const interaction = await testEnv.interact<ProvidersRegistryInput>(caller, contractId,
+        {
+          function: "registerProvider",
+          data: {
+            "provider": {
+              "adminsPool": [],
+              "profile": {
+                "name": "test-provider-1",
+                "description": "desc-1",
+                "url": "https://test-provider-1.ok"
+              },
+              "manifests": [
+                {
+                  changeMessage: "initial add",
+                  lockedHours: 6,
+                  manifest: {
+                    "interval": 15000,
+                    "priceAggregator": "median",
+                    "defaultSource": ["yahoo-finance"],
+                    "sourceTimeout": 50000,
+                    "maxPriceDeviationPercent": 25,
+                    "tokens": {
+                      "TSLA": {},
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        });
+
+      expect(interaction.state.providers).toEqual({
+          "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBY": {
+            "adminsPool": ["bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBY"],
+            "profile": {
+              "name": "test-provider-1",
+              "description": "desc-1",
+              "url": "https://test-provider-1.ok",
+              "id": "provider_TX-ID-1000"
+            },
+            "manifests": [{
+              "changeMessage": "initial add",
+              "lockedHours": 6,
+              "manifest": {
+                "interval": 15000,
+                "priceAggregator": "median",
+                "defaultSource": ["yahoo-finance"],
+                "sourceTimeout": 50000,
+                "maxPriceDeviationPercent": 25,
+                "tokens": {"TSLA": {}}
+              }
+            }],
+            "registerHeight": 1000
+          }
+        });
+    });
+
+    it("throws if provider is already registered", async () => {
+      await testEnv.interact<ProvidersRegistryInput>(caller, contractId,
+        {
+          function: "registerProvider",
+          data: {
+            "provider": {
+              "adminsPool": [],
+              "profile": {
+                "name": "test-provider-1",
+                "description": "desc-1",
+                "url": "https://test-provider-1.ok"
+              },
+            }
+          }
+        });
+
+       await expect(testEnv.interact<ProvidersRegistryInput>(caller, contractId,
+        {
+          function: "registerProvider",
+          data: {
+            "provider": {
+              "adminsPool": [],
+              "profile": {
+                "name": "test-provider-1",
+                "description": "desc-1",
+                "url": "https://test-provider-1.ok"
+              },
+            }
+          }
+        }))
+        .rejects
+        .toThrowError("Provider for bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBY is already registered.")
+    });
+
+    it("throws if provider with given name is already registered", async () => {
+      await testEnv.interact<ProvidersRegistryInput>(caller, contractId,
+        {
+          function: "registerProvider",
+          data: {
+            "provider": {
+              "adminsPool": [],
+              "profile": {
+                "name": "test-provider-1",
+                "description": "desc-1",
+                "url": "https://test-provider-1.ok"
+              },
+            }
+          }
+        });
+
+      await expect(testEnv.interact<ProvidersRegistryInput>("bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111", contractId,
+        {
+          function: "registerProvider",
+          data: {
+            "provider": {
+              "adminsPool": [],
+              "profile": {
+                "name": "test-provider-1",
+                "description": "desc-1",
+                "url": "https://test-provider-1.ok"
+              },
+            }
+          }
+        }))
+        .rejects
+        .toThrowError("Provider with test-provider-1 is already registered.")
+    });
+
     it("throws if profile not set", async () => {
       const data = JSON.parse(`
       {
@@ -68,10 +193,8 @@ describe("Provider Registry Contract", () => {
 
       await expect(testEnv.interact<ProvidersRegistryInput>(caller, contractId,
         {
-          function: "register-provider",
+          function: "registerProvider",
           data: data
-        }, {
-          height: 1000
         }))
         .rejects
         .toThrowError("Provider profile not defined")
@@ -92,10 +215,8 @@ describe("Provider Registry Contract", () => {
 
       await expect(testEnv.interact<ProvidersRegistryInput>(caller, contractId,
         {
-          function: "register-provider",
+          function: "registerProvider",
           data: data
-        }, {
-          height: 1000
         }))
         .rejects
         .toThrowError("Provider profile name not defined.")
@@ -116,10 +237,8 @@ describe("Provider Registry Contract", () => {
 
       await expect(testEnv.interact<ProvidersRegistryInput>(caller, contractId,
         {
-          function: "register-provider",
+          function: "registerProvider",
           data: data
-        }, {
-          height: 1000
         }))
         .rejects
         .toThrowError("Provider profile description not defined.")
@@ -140,10 +259,8 @@ describe("Provider Registry Contract", () => {
 
       await expect(testEnv.interact<ProvidersRegistryInput>(caller, contractId,
         {
-          function: "register-provider",
+          function: "registerProvider",
           data: data
-        }, {
-          height: 1000
         }))
         .rejects
         .toThrowError("Provider profile url not defined.")
@@ -152,7 +269,7 @@ describe("Provider Registry Contract", () => {
     it("throws if initial locked tokens > 0", async () => {
       await expect(testEnv.interact<ProvidersRegistryInput>(caller, contractId,
         {
-          function: "register-provider",
+          function: "registerProvider",
           data: {
             "provider": {
               "adminsPool": [],
@@ -164,44 +281,20 @@ describe("Provider Registry Contract", () => {
               },
             }
           }
-        }, {
-          height: 1000
         }))
         .rejects
         .toThrowError("Initial stake must be zero.")
     });
-
-    it("throws if trying to add manifest with provider", async () => {
-      await expect(testEnv.interact<ProvidersRegistryInput>(caller, contractId,
-        {
-          function: "register-provider",
-          data: {
-            "provider": {
-              "adminsPool": [],
-              "profile": {
-                "name": "test-provider-1",
-                "description": "desc-1",
-                "url": "https://test-provider-1.ok"
-              },
-              "manifests": []
-            }
-          }
-        }, {
-          height: 1000
-        }))
-        .rejects
-        .toThrowError("Manifest should be added add with separate add-provider-manifest function.")
-    });
   });
 
-  describe("remove-provider function", () => {
+  describe("removeProvider function", () => {
     // adding two providers before execution of each test
     beforeEach(async () => {
       await testEnv.interact<ProvidersRegistryInput>(
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
         contractId,
         {
-          function: "register-provider",
+          function: "registerProvider",
           data: {
             "provider": {
               "adminsPool": [],
@@ -212,27 +305,23 @@ describe("Provider Registry Contract", () => {
               },
             }
           }
-        }, {
-          height: 1000
         });
 
       await testEnv.interact<ProvidersRegistryInput>(
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_222222",
         contractId,
         {
-          function: "register-provider",
+          function: "registerProvider",
           data: {
             "provider": {
               "adminsPool": [],
               "profile": {
-                "name": "test-provider-1",
+                "name": "test-provider-2",
                 "description": "desc-1",
                 "url": "https://test-provider-1.ok"
               },
             }
           }
-        }, {
-          height: 1000
         });
     });
 
@@ -241,12 +330,10 @@ describe("Provider Registry Contract", () => {
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_222222",
         contractId,
         {
-          function: "remove-provider",
+          function: "removeProvider",
           data: {
             providerId: "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_222222"
           }
-        }, {
-          height: 1000
         });
 
       expect(interaction.state.providers).toEqual(
@@ -273,10 +360,8 @@ describe("Provider Registry Contract", () => {
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_222222",
         contractId,
         {
-          function: "remove-provider",
+          function: "removeProvider",
           data
-        }, {
-          height: 1000
         }))
         .rejects
         .toThrowError("'providerId' field is required.")
@@ -287,12 +372,10 @@ describe("Provider Registry Contract", () => {
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_222222",
         contractId,
         {
-          function: "remove-provider",
+          function: "removeProvider",
           data: {
             providerId: "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_333333"
           }
-        }, {
-          height: 1000
         }))
         .rejects
         .toThrowError("Provider with id bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_333333 is not registered.")
@@ -303,25 +386,23 @@ describe("Provider Registry Contract", () => {
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_222221",
         contractId,
         {
-          function: "remove-provider",
+          function: "removeProvider",
           data: {
             providerId: "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_222222"
           }
-        }, {
-          height: 1000
         }))
         .rejects
         .toThrowError("bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_222221 is not an admin for bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_222222")
     });
   });
 
-  describe("add-provider-manifest function", () => {
+  describe("addProviderManifest function", () => {
     beforeEach(async () => {
       await testEnv.interact<ProvidersRegistryInput>(
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
         contractId,
         {
-          function: "register-provider",
+          function: "registerProvider",
           data: {
             "provider": {
               "adminsPool": [],
@@ -332,8 +413,6 @@ describe("Provider Registry Contract", () => {
               },
             }
           }
-        }, {
-          height: 1000
         });
     });
 
@@ -342,7 +421,7 @@ describe("Provider Registry Contract", () => {
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
         contractId,
         {
-          function: "add-provider-manifest",
+          function: "addProviderManifest",
           data: {
             providerId: "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
             manifestData: {
@@ -360,8 +439,6 @@ describe("Provider Registry Contract", () => {
               }
             }
           }
-        }, {
-          height: 1000
         });
 
       expect(interaction.state.providers["bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111"].manifests).toEqual(
@@ -389,10 +466,8 @@ describe("Provider Registry Contract", () => {
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_222222",
         contractId,
         {
-          function: "add-provider-manifest",
+          function: "addProviderManifest",
           data
-        }, {
-          height: 1000
         }))
         .rejects
         .toThrowError("'providerId' field is required.");
@@ -403,12 +478,10 @@ describe("Provider Registry Contract", () => {
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
         contractId,
         {
-          function: "add-provider-manifest",
+          function: "addProviderManifest",
           data: {
             providerId: "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_333333"
           }
-        }, {
-          height: 1000
         }))
         .rejects
         .toThrowError("Provider with id bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_333333 is not registered.");
@@ -419,12 +492,10 @@ describe("Provider Registry Contract", () => {
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111112",
         contractId,
         {
-          function: "add-provider-manifest",
+          function: "addProviderManifest",
           data: {
             providerId: "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111"
           }
-        }, {
-          height: 1000
         }))
         .rejects
         .toThrowError("bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111112 is not an admin for bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111");
@@ -435,12 +506,10 @@ describe("Provider Registry Contract", () => {
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
         contractId,
         {
-          function: "add-provider-manifest",
+          function: "addProviderManifest",
           data: {
             providerId: "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111"
           }
-        }, {
-          height: 1000
         }))
         .rejects
         .toThrowError("Manifest data not set.");
@@ -454,13 +523,11 @@ describe("Provider Registry Contract", () => {
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
         contractId,
         {
-          function: "add-provider-manifest",
+          function: "addProviderManifest",
           data: {
             providerId: "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
             manifestData: manifestData
           }
-        }, {
-          height: 1000
         }))
         .rejects
         .toThrowError("Manifest not set.");
@@ -471,7 +538,7 @@ describe("Provider Registry Contract", () => {
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
         contractId,
         {
-          function: "add-provider-manifest",
+          function: "addProviderManifest",
           data: {
             providerId: "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
             manifestData: {
@@ -479,8 +546,6 @@ describe("Provider Registry Contract", () => {
               changeMessage: ""
             }
           }
-        }, {
-          height: 1000
         }))
         .rejects
         .toThrowError("Change message is not set.");
@@ -488,13 +553,13 @@ describe("Provider Registry Contract", () => {
 
   });
 
-  describe("add-provider-admin function", () => {
+  describe("addProviderAdmin function", () => {
     beforeEach(async () => {
       await testEnv.interact<ProvidersRegistryInput>(
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
         contractId,
         {
-          function: "register-provider",
+          function: "registerProvider",
           data: {
             "provider": {
               "adminsPool": [],
@@ -505,8 +570,6 @@ describe("Provider Registry Contract", () => {
               },
             }
           }
-        }, {
-          height: 1000
         });
     });
 
@@ -518,10 +581,8 @@ describe("Provider Registry Contract", () => {
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_222222",
         contractId,
         {
-          function: "add-provider-admin",
+          function: "addProviderAdmin",
           data
-        }, {
-          height: 1000
         }))
         .rejects
         .toThrowError("'providerId' field is required.");
@@ -532,12 +593,10 @@ describe("Provider Registry Contract", () => {
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
         contractId,
         {
-          function: "add-provider-admin",
+          function: "addProviderAdmin",
           data: {
             providerId: "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_333333"
           }
-        }, {
-          height: 1000
         }))
         .rejects
         .toThrowError("Provider with id bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_333333 is not registered.");
@@ -548,12 +607,10 @@ describe("Provider Registry Contract", () => {
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111112",
         contractId,
         {
-          function: "add-provider-admin",
+          function: "addProviderAdmin",
           data: {
             providerId: "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111"
           }
-        }, {
-          height: 1000
         }))
         .rejects
         .toThrowError("bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111112 is not an admin for bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111");
@@ -564,13 +621,11 @@ describe("Provider Registry Contract", () => {
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
         contractId,
         {
-          function: "add-provider-admin",
+          function: "addProviderAdmin",
           data: {
             providerId: "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
             admins: ["bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_333333", "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_444444"]
           }
-        }, {
-          height: 1000
         });
 
       expect(interaction.state.providers["bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111"]).toEqual(
@@ -594,13 +649,14 @@ describe("Provider Registry Contract", () => {
 
   });
 
-  describe("active-manifest function", () => {
+  describe("activeManifest function", () => {
 
     it("gets latest active manifest (1)", async () => {
       testEnv.pushState(
         contractId,
         {
           trace: true,
+          contractAdmins: ["xxx"],
           providers: {
             "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111": {
               manifests:
@@ -621,18 +677,17 @@ describe("Provider Registry Contract", () => {
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
         contractId,
         {
-          function: "active-manifest",
+          function: "activeManifest",
           data: {
             providerId: "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111"
           }
-        }, {
-          height: 1000
         });
 
       expect(interaction.result).toEqual({
         "manifest": {
           "uploadBlockHeight": 700,
           "lockedHours": 12,
+          "status": "active",
           "manifest": {"id": "700_12"}
         }
       });
@@ -643,6 +698,7 @@ describe("Provider Registry Contract", () => {
         contractId,
         {
           trace: true,
+          contractAdmins: ["xxx"],
           providers: {
             "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111": {
               manifests:
@@ -670,18 +726,17 @@ describe("Provider Registry Contract", () => {
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
         contractId,
         {
-          function: "active-manifest",
+          function: "activeManifest",
           data: {
             providerId: "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111"
           }
-        }, {
-          height: 1000
         });
 
       expect(interaction.result).toEqual({
         "manifest": {
           "uploadBlockHeight": 500,
           "lockedHours": 12,
+          "status": "active",
           "manifest": {"id": "500_12"}
         }
       });
@@ -692,6 +747,7 @@ describe("Provider Registry Contract", () => {
         contractId,
         {
           trace: true,
+          contractAdmins: ["xxx"],
           providers: {
             "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111": {
               manifests:
@@ -726,18 +782,17 @@ describe("Provider Registry Contract", () => {
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
         contractId,
         {
-          function: "active-manifest",
+          function: "activeManifest",
           data: {
             providerId: "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111"
           }
-        }, {
-          height: 1000
         });
 
       expect(interaction.result).toEqual({
         "manifest": {
           "uploadBlockHeight": 700,
           "lockedHours": 6,
+          "status": "active",
           "manifest": {"id": "700_6"}
         }
       });
@@ -746,26 +801,39 @@ describe("Provider Registry Contract", () => {
 
   });
 
-  describe("provider-data function", () => {
+  describe("providerData function", () => {
 
     beforeEach(async () => {
       await testEnv.interact<ProvidersRegistryInput>(
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
         contractId,
         {
-          function: "register-provider",
+          function: "registerProvider",
           data: {
             "provider": {
               "adminsPool": [],
               "profile": {
                 "name": "test-provider-1",
                 "description": "desc-1",
-                "url": "https://test-provider-1.ok"
+                "url": "https://test-provider-1.ok",
               },
+              "manifests": [{
+                "changeMessage": "initial",
+                "lockedHours": 5,
+                "manifest":
+                  {
+                    "interval": 15000,
+                    "priceAggregator": "median",
+                    "defaultSource": ["yahoo-finance"],
+                    "sourceTimeout": 50000,
+                    "maxPriceDeviationPercent": 25,
+                    "tokens": {
+                      "TSLA": {},
+                    }
+                  }
+              }],
             }
           }
-        }, {
-          height: 1000
         });
     });
 
@@ -777,10 +845,8 @@ describe("Provider Registry Contract", () => {
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_222222",
         contractId,
         {
-          function: "provider-data",
+          function: "providerData",
           data
-        }, {
-          height: 1000
         }))
         .rejects
         .toThrowError("'providerId' field is required.");
@@ -791,12 +857,10 @@ describe("Provider Registry Contract", () => {
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
         contractId,
         {
-          function: "provider-data",
+          function: "providerData",
           data: {
             providerId: "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_333333"
           }
-        }, {
-          height: 1000
         }))
         .rejects
         .toThrowError("Provider with id bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_333333 is not registered.");
@@ -807,12 +871,10 @@ describe("Provider Registry Contract", () => {
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
         contractId,
         {
-          function: "provider-data",
+          function: "providerData",
           data: {
             providerId: "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
           }
-        }, {
-          height: 1000
         });
 
       expect(interaction.result).toEqual(
@@ -825,7 +887,19 @@ describe("Provider Registry Contract", () => {
               "url": "https://test-provider-1.ok",
               "id": "provider_TX-ID-1000"
             },
-            "manifests": [],
+            "manifests": [{
+              "changeMessage": "initial",
+              "lockedHours": 5,
+              "manifest": {
+                "interval": 15000,
+                "priceAggregator": "median",
+                "defaultSource": ["yahoo-finance"],
+                "sourceTimeout": 50000,
+                "maxPriceDeviationPercent": 25,
+                "tokens": {"TSLA": {}}
+              },
+              "status": "active"
+            }],
             "registerHeight": 1000
           }
         }
@@ -833,20 +907,178 @@ describe("Provider Registry Contract", () => {
     });
   });
 
-  describe("add-contract-admins function", () => {
+  describe("providersData function", () => {
+
+    beforeEach(async () => {
+      await testEnv.interact<ProvidersRegistryInput>(
+        "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
+        contractId,
+        {
+          function: "registerProvider",
+          data: {
+            "provider": {
+              "adminsPool": [],
+              "profile": {
+                "name": "test-provider-1",
+                "description": "desc-1",
+                "url": "https://test-provider-1.ok",
+              },
+              "manifests": [{
+                "changeMessage": "initial",
+                "lockedHours": 5,
+                "manifest":
+                  {
+                    "interval": 15000,
+                    "priceAggregator": "median",
+                    "defaultSource": ["yahoo-finance"],
+                    "sourceTimeout": 50000,
+                    "maxPriceDeviationPercent": 25,
+                    "tokens": {
+                      "TSLA": {},
+                    }
+                  }
+              }],
+            }
+          }
+        });
+
+      await testEnv.interact<ProvidersRegistryInput>(
+        "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111112",
+        contractId,
+        {
+          function: "registerProvider",
+          data: {
+            "provider": {
+              "adminsPool": [],
+              "profile": {
+                "name": "test-provider-2",
+                "description": "desc-2",
+                "url": "https://test-provider-2.ok",
+              },
+              "manifests": [{
+                "changeMessage": "initial",
+                "lockedHours": 0,
+                "manifest":
+                  {
+                    "interval": 15000,
+                    "priceAggregator": "median",
+                    "defaultSource": ["yahoo-finance"],
+                    "sourceTimeout": 50000,
+                    "maxPriceDeviationPercent": 25,
+                    "tokens": {
+                      "TSLA": {},
+                    }
+                  }
+              },
+                {
+                  "changeMessage": "initial 2",
+                  "lockedHours": 0,
+                  "manifest":
+                    {
+                      "interval": 7000,
+                      "priceAggregator": "median",
+                      "defaultSource": ["yahoo-finance"],
+                      "sourceTimeout": 10000,
+                      "maxPriceDeviationPercent": 15,
+                      "tokens": {
+                        "AMZN": {},
+                      }
+                    }
+                }
+              ],
+            }
+          }
+        });
+    });
+
+    it("returns data of all providers", async () => {
+      const interaction = await testEnv.interact<ProvidersRegistryInput>(
+        "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
+        contractId,
+        {
+          function: "providersData",
+          data: {}
+        });
+
+      expect(interaction.result).toEqual(
+        {
+          "providers": {
+            "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111": {
+              "adminsPool": ["bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111"],
+              "profile": {
+                "name": "test-provider-1",
+                "description": "desc-1",
+                "url": "https://test-provider-1.ok",
+                "id": "provider_TX-ID-1000"
+              },
+              "manifests": [{
+                "changeMessage": "initial",
+                "lockedHours": 5,
+                "manifest": {
+                  "interval": 15000,
+                  "priceAggregator": "median",
+                  "defaultSource": ["yahoo-finance"],
+                  "sourceTimeout": 50000,
+                  "maxPriceDeviationPercent": 25,
+                  "tokens": {"TSLA": {}}
+                },
+                "status": "active"
+              }],
+              "registerHeight": 1000
+            },
+            "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111112": {
+              "adminsPool": ["bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111112"],
+              "profile": {
+                "name": "test-provider-2",
+                "description": "desc-2",
+                "url": "https://test-provider-2.ok",
+                "id": "provider_TX-ID-1000"
+              },
+              "manifests": [{
+                "changeMessage": "initial",
+                "lockedHours": 0,
+                "manifest": {
+                  "interval": 15000,
+                  "priceAggregator": "median",
+                  "defaultSource": ["yahoo-finance"],
+                  "sourceTimeout": 50000,
+                  "maxPriceDeviationPercent": 25,
+                  "tokens": {"TSLA": {}}
+                },
+                "status": "historical"
+              }, {
+                "changeMessage": "initial 2",
+                "lockedHours": 0,
+                "manifest": {
+                  "interval": 7000,
+                  "priceAggregator": "median",
+                  "defaultSource": ["yahoo-finance"],
+                  "sourceTimeout": 10000,
+                  "maxPriceDeviationPercent": 15,
+                  "tokens": {"AMZN": {}}
+                },
+                "status": "active"
+              }],
+              "registerHeight": 1000
+            }
+          }
+        }
+      )
+    });
+  });
+
+  describe("addContractAdmins function", () => {
 
     it("should throw if caller is not an admin", async () => {
       await expect(testEnv.interact<ProvidersRegistryInput>(
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBZ",
         contractId,
         {
-          function: "add-contract-admins",
+          function: "addContractAdmins",
           data: {
             admins: ["bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111"]
           }
-        }, {
-          height: 1000
-        })).rejects.toThrowError("Only admin is allowed to call this function");
+        })).rejects.toThrowError("Administrative functions can be called only by contract admins.");
     });
 
     it("should add new contract admins", async () => {
@@ -854,12 +1086,10 @@ describe("Provider Registry Contract", () => {
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBY",
         contractId,
         {
-          function: "add-contract-admins",
+          function: "addContractAdmins",
           data: {
             admins: ["bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111", "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_333333"]
           }
-        }, {
-          height: 1000
         });
 
       expect(interaction.state.contractAdmins).toEqual([
@@ -870,18 +1100,16 @@ describe("Provider Registry Contract", () => {
     });
   });
 
-  describe("switch-trace function", () => {
+  describe("switchTrace function", () => {
 
     it("should throw if caller is not an admin", async () => {
       await expect(testEnv.interact<ProvidersRegistryInput>(
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBZ",
         contractId,
         {
-          function: "switch-trace",
+          function: "switchTrace",
           data: {}
-        }, {
-          height: 1000
-        })).rejects.toThrowError("Only admin is allowed to call this function");
+        })).rejects.toThrowError("Administrative functions can be called only by contract admins.");
     });
 
     it("should switch trace state", async () => {
@@ -891,14 +1119,99 @@ describe("Provider Registry Contract", () => {
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBY",
         contractId,
         {
-          function: "switch-trace",
+          function: "switchTrace",
           data: {}
-        }, {
-          height: 1000
         });
 
       expect(interaction.state.trace).toEqual(!prevTraceState);
     });
   });
+
+  describe("switchReadonly function", () => {
+
+    it("should throw if caller is not an admin", async () => {
+      await expect(testEnv.interact<ProvidersRegistryInput>(
+        "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBZ",
+        contractId,
+        {
+          function: "switchReadonly",
+          data: {}
+        })).rejects.toThrowError("Administrative functions can be called only by contract admins.");
+    });
+
+    it("should switch readonly state", async () => {
+      const prevReadonlyState = testEnv.readContract(contractId).readonly
+
+      const interaction = await testEnv.interact<ProvidersRegistryInput>(
+        "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBY",
+        contractId,
+        {
+          function: "switchReadonly",
+          data: {}
+        });
+
+      expect(interaction.state.readonly).toEqual(!prevReadonlyState);
+    });
+
+    describe("when contract in readonly", () => {
+      const nonAdminCaller = "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111";
+
+      beforeEach(async () => {
+        await testEnv.interact<ProvidersRegistryInput>(
+          "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBY",
+          contractId,
+          {
+            function: "switchReadonly",
+            data: {}
+          });
+        expect(testEnv.readContract(contractId).readonly).toBeTruthy();
+      });
+
+      it("should prevent from changing state by non-admins", async () => {
+        await expect(testEnv.interact<ProvidersRegistryInput>(nonAdminCaller, contractId,
+          {
+            function: "registerProvider",
+            data: {
+              "provider": {
+                "adminsPool": [],
+                "profile": {
+                  "name": "test-provider-1",
+                  "description": "desc-1",
+                  "url": "https://test-provider-1.ok"
+                },
+              }
+            }
+          })).rejects.toThrowError("Cannot call state modifying functions in readonly state.")
+      });
+
+      it("should prevent from changing  state by contract admins", async () => {
+        await expect(testEnv.interact<ProvidersRegistryInput>(caller, contractId,
+          {
+            function: "registerProvider",
+            data: {
+              "provider": {
+                "adminsPool": [],
+                "profile": {
+                  "name": "test-provider-1",
+                  "description": "desc-1",
+                  "url": "https://test-provider-1.ok"
+                },
+              }
+            }
+          })).rejects.toThrowError("Cannot call state modifying functions in readonly state.")
+      });
+
+      it("should should allow to change administrative state by admins", async () => {
+        const prevTrace = testEnv.readContract(contractId).trace;
+        const interaction = await testEnv.interact<ProvidersRegistryInput>(caller, contractId,
+          {
+            function: "switchTrace",
+            data: {}
+          });
+        expect(interaction.state.trace).toEqual(!prevTrace);
+      });
+    });
+  });
+
 
 });

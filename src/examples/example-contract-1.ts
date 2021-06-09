@@ -1,7 +1,6 @@
 import {ContractHandlerResult, ContractInteraction} from "smartweave/lib/contract-step";
 import {SmartWeaveGlobal} from "smartweave/lib/smartweave-global";
 
-declare const ContractError: any;
 declare const SmartWeave: SmartWeaveGlobal;
 
 export function handle(state: any, action: ContractInteraction): ContractHandlerResult {
@@ -15,10 +14,10 @@ export function handle(state: any, action: ContractInteraction): ContractHandler
   if (action.input.function === "value") {
     return {result: state.counter}
   }
-  if (action.input.function === "block-height") {
+  if (action.input.function === "blockHeight") {
     return {result: SmartWeave.block.height};
   }
-  if (action.input.function === "read-contract-2") {
+  if (action.input.function === "readContract2") {
     const id = action.input.contractId;
     const value = SmartWeave.contracts.readContractState(id);
     return {result: value};

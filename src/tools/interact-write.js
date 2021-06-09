@@ -5,7 +5,7 @@ async function main() {
   const {jwk, arweave, contractId} = Arweave.init();
 
   const inputProvider = {
-    function: "register-provider",
+    function: "registerProvider",
     data: {
       "provider": {
         "adminsPool": [],
@@ -18,11 +18,17 @@ async function main() {
     }
   }
 
+  const inputTrace = {
+    function: "switchTrace",
+    data: {
+    }
+  }
+
   function addManifest(lockedHours) {
     return {
       function: "add-provider-manifest",
       data: {
-        providerId: "33F0QHcb22W7LwWR1iRC8Az1ntZG09XQ03YWuw2ABqA",
+        providerId: "6rM3NxALJNckIQx9Mq60EP_zv6cWi2K2pD2rGNm26uc",
         manifestData: {
           changeMessage: "stocks manifest initial add",
           lockedHours: lockedHours,
@@ -41,7 +47,7 @@ async function main() {
     }
   }
 
-  for (let i = 0; i < 120; i++) {
+  /*for (let i = 0; i < 120; i++) {
     const result = await interactWrite(
       arweave,
       jwk,
@@ -51,13 +57,13 @@ async function main() {
     console.log(" === RESULT ===\n", JSON.stringify(result));
 
   }
-
-  /*const result = await interactWrite(
+*/
+  const result = await interactWrite(
     arweave,
     jwk,
     contractId,
-    inputManifest
-  );*/
+    inputTrace
+  );
 
   console.log(" === RESULT ===\n", JSON.stringify(result));
   // 6Q854sKNIDyNoPW3gfdyE2DrFg1IZ7AWw3g-0dCyiaI

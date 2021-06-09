@@ -2,10 +2,10 @@ import {ContractHandlerResult, ContractInteraction} from "smartweave/lib/contrac
 import {SmartWeaveGlobal} from "smartweave/lib/smartweave-global";
 
 declare const ContractError: any;
-declare const SmartWeave: SmartWeaveGlobal;
 
 export function handle(state: any, action: ContractInteraction): ContractHandlerResult {
-  if (action.caller !== "test-caller") {
+  // just to verify in test whether caller is set properly.
+  if (action.caller === "wrong-caller") {
     throw new ContractError("wrong caller");
   }
   if (state.text === undefined) {

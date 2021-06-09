@@ -3,18 +3,20 @@ const Arweave = require("./_helpers");
 
 async function main() {
   const {jwk, arweave, contractId} = Arweave.init();
+  const caller = arweave.wallets.jwkToAddress(jwk);
+
 
   const providerData = {
     function: "provider-data",
     data: {
-      providerId: "33F0QHcb22W7LwWR1iRC8Az1ntZG09XQ03YWuw2ABqA"
+      providerId: caller
     }
   }
 
   const currentManifest = {
-    function: "active-manifest",
+    function: "activeManifest",
     data: {
-      providerId: "33F0QHcb22W7LwWR1iRC8Az1ntZG09XQ03YWuw2ABqA"
+      providerId: caller
     }
   }
 

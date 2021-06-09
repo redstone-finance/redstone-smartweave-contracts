@@ -51,7 +51,7 @@ describe("ContractTestingEnv", () => {
     const testEnv: ContractsTestingEnv = new ContractsTestingEnv();
     const contract1Id = testEnv.deployContract(contract1, {counter: 5});
 
-    const result = await testEnv.interact("test-caller", contract1Id, {"function": "block-height"}, {height: 554});
+    const result = await testEnv.interact("test-caller", contract1Id, {"function": "blockHeight"}, {height: 554});
     expect(result).toEqual({ type: 'ok', result: 554, state: { counter: 5 } });
   });
 
@@ -100,12 +100,12 @@ describe("ContractTestingEnv", () => {
     expect(testEnv.history(contract1Id)).toEqual([]);
   });
 
-  it("should allow read other contract's data", async () => {
+  it("should allow to read other contract's data", async () => {
     const testEnv: ContractsTestingEnv = new ContractsTestingEnv();
     const contract1Id = testEnv.deployContract(contract1, {counter: 5});
     const contract2Id = testEnv.deployContract(contract2, {text: "init"});
 
-    const interaction = await testEnv.interact("test-caller", contract1Id, {"function": "read-contract-2", "contractId": contract2Id});
+    const interaction = await testEnv.interact("test-caller", contract1Id, {"function": "readContract2", "contractId": contract2Id});
     expect(interaction.result).toEqual({"text": "init"});
   });
 });

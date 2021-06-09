@@ -12,7 +12,7 @@ module.exports = {
       logging: false,      // Enable network request logging
     });
 
-    const contractId = "4o-2xMPa45BXjGuII_LbOMQWfhE1F0qugdEUZvRlXRY";
+    const contractId = "lolkz01J82h3tv6vPMJlQCIVAX9lz9v2TlLZwZRvx7Q";
 
     return {jwk, arweave, contractId};
   }

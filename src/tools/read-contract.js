@@ -2,7 +2,7 @@ const {readContract} = require("smartweave");
 const Arweave = require("./_helpers");
 
 async function main() {
-  const {jwk, arweave, contractId} = Arweave.init();
+  const {arweave, contractId} = Arweave.init();
 
   try {
     const result = await readContract(
