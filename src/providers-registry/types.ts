@@ -72,8 +72,17 @@ export interface ManifestData {
   uploadBlockHeight?: number;
   changeMessage: string;
   lockedHours?: number;
-  manifest: any;
+
+  // manifest is stored in "data" field of a separate transaction,
+  // as contract's input is stored in transaction tags - which are limited to 2048 bytes
+  manifestTxId: string;
+
+  // this field is evaluated when accessing provider data
   status?: ManifestStatus;
+
+  // this is the content of the active. It is filled only by the "providerData" and "activeManifest" functions,
+  // when "eagerManifestLoad" flag is set in the input by the caller.
+  activeManifestContent?: any
 }
 
 export interface ProvidersRegistryAction {
@@ -102,10 +111,15 @@ export interface RemoveProviderData {
 
 export interface GetProviderData {
   providerId: string
+
+  // this flag says whether we should also try to get a transaction with "active"  manifest's content
+  eagerManifestLoad?: boolean
 }
 
 export interface GetProviderManifest {
-  providerId: string
+  providerId: string,
+  // this flag says whether we should also try to get a transaction with "active"  manifest's content
+  eagerManifestLoad?: boolean
 }
 
 export interface AddProviderAdminData {

@@ -72,16 +72,7 @@ describe("Provider Registry Contract", () => {
                 {
                   changeMessage: "initial add",
                   lockedHours: 6,
-                  manifest: {
-                    "interval": 15000,
-                    "priceAggregator": "median",
-                    "defaultSource": ["yahoo-finance"],
-                    "sourceTimeout": 50000,
-                    "maxPriceDeviationPercent": 25,
-                    "tokens": {
-                      "TSLA": {},
-                    }
-                  }
+                  manifestTxId: "mft-tx-1"
                 }
               ]
             }
@@ -89,29 +80,22 @@ describe("Provider Registry Contract", () => {
         });
 
       expect(interaction.state.providers).toEqual({
-          "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBY": {
-            "adminsPool": ["bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBY"],
-            "profile": {
-              "name": "test-provider-1",
-              "description": "desc-1",
-              "url": "https://test-provider-1.ok",
-              "id": "provider_TX-ID-1000"
-            },
-            "manifests": [{
-              "changeMessage": "initial add",
-              "lockedHours": 6,
-              "manifest": {
-                "interval": 15000,
-                "priceAggregator": "median",
-                "defaultSource": ["yahoo-finance"],
-                "sourceTimeout": 50000,
-                "maxPriceDeviationPercent": 25,
-                "tokens": {"TSLA": {}}
-              }
-            }],
-            "registerHeight": 1000
-          }
-        });
+        "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBY": {
+          "adminsPool": ["bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBY"],
+          "profile": {
+            "name": "test-provider-1",
+            "description": "desc-1",
+            "url": "https://test-provider-1.ok",
+            "id": "provider_TX-ID-1000"
+          },
+          "manifests": [{
+            "changeMessage": "initial add",
+            "lockedHours": 6,
+            "manifestTxId": "mft-tx-1"
+          }],
+          "registerHeight": 1000
+        }
+      });
     });
 
     it("throws if provider is already registered", async () => {
@@ -130,7 +114,7 @@ describe("Provider Registry Contract", () => {
           }
         });
 
-       await expect(testEnv.interact<ProvidersRegistryInput>(caller, contractId,
+      await expect(testEnv.interact<ProvidersRegistryInput>(caller, contractId,
         {
           function: "registerProvider",
           data: {
@@ -289,9 +273,13 @@ describe("Provider Registry Contract", () => {
 
   describe("removeProvider function", () => {
     // adding two providers before execution of each test
+    const user1 = "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111";
+    const user2 = "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_222222";
+    const nonProviderAdminUser = "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_222221";
+
     beforeEach(async () => {
       await testEnv.interact<ProvidersRegistryInput>(
-        "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
+        user1,
         contractId,
         {
           function: "registerProvider",
@@ -308,7 +296,7 @@ describe("Provider Registry Contract", () => {
         });
 
       await testEnv.interact<ProvidersRegistryInput>(
-        "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_222222",
+        user2,
         contractId,
         {
           function: "registerProvider",
@@ -327,19 +315,19 @@ describe("Provider Registry Contract", () => {
 
     it("removes provider with given provider id", async () => {
       const interaction = await testEnv.interact<ProvidersRegistryInput>(
-        "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_222222",
+        user2,
         contractId,
         {
           function: "removeProvider",
           data: {
-            providerId: "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_222222"
+            providerId: user2
           }
         });
 
       expect(interaction.state.providers).toEqual(
         {
           "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111": {
-            "adminsPool": ["bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111"],
+            "adminsPool": [user1],
             "profile": {
               "name": "test-provider-1",
               "description": "desc-1",
@@ -357,7 +345,7 @@ describe("Provider Registry Contract", () => {
       const data = JSON.parse(`{}`);
 
       await expect(testEnv.interact<ProvidersRegistryInput>(
-        "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_222222",
+        user2,
         contractId,
         {
           function: "removeProvider",
@@ -369,7 +357,7 @@ describe("Provider Registry Contract", () => {
 
     it("throws if provider does not exist", async () => {
       await expect(testEnv.interact<ProvidersRegistryInput>(
-        "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_222222",
+        user2,
         contractId,
         {
           function: "removeProvider",
@@ -383,12 +371,12 @@ describe("Provider Registry Contract", () => {
 
     it("throws if caller has no privileges to provider ", async () => {
       await expect(testEnv.interact<ProvidersRegistryInput>(
-        "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_222221",
+        nonProviderAdminUser,
         contractId,
         {
           function: "removeProvider",
           data: {
-            providerId: "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_222222"
+            providerId: user2
           }
         }))
         .rejects
@@ -427,16 +415,7 @@ describe("Provider Registry Contract", () => {
             manifestData: {
               changeMessage: "initial add",
               lockedHours: 6,
-              manifest: {
-                "interval": 15000,
-                "priceAggregator": "median",
-                "defaultSource": ["yahoo-finance"],
-                "sourceTimeout": 50000,
-                "maxPriceDeviationPercent": 25,
-                "tokens": {
-                  "TSLA": {},
-                }
-              }
+              manifestTxId: "mft-tx-1"
             }
           }
         });
@@ -444,14 +423,7 @@ describe("Provider Registry Contract", () => {
       expect(interaction.state.providers["bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111"].manifests).toEqual(
         [{
           "uploadBlockHeight": 1000,
-          "manifest": {
-            "interval": 15000,
-            "priceAggregator": "median",
-            "defaultSource": ["yahoo-finance"],
-            "sourceTimeout": 50000,
-            "maxPriceDeviationPercent": 25,
-            "tokens": {"TSLA": {}}
-          },
+          "manifestTxId": "mft-tx-1",
           "changeMessage": "initial add",
           "lockedHours": 0
         }]
@@ -530,7 +502,7 @@ describe("Provider Registry Contract", () => {
           }
         }))
         .rejects
-        .toThrowError("Manifest not set.");
+        .toThrowError("ManifestTxId not set.");
     });
 
     it("throws if change message not set", async () => {
@@ -542,7 +514,7 @@ describe("Provider Registry Contract", () => {
           data: {
             providerId: "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
             manifestData: {
-              manifest: {},
+              manifestTxId: "mft-tx-44",
               changeMessage: ""
             }
           }
@@ -664,9 +636,7 @@ describe("Provider Registry Contract", () => {
                   {
                     uploadBlockHeight: 700,
                     lockedHours: 12,
-                    manifest: {
-                      id: "700_12"
-                    }
+                    manifestTxId: "700_12"
                   },
                 ]
             }
@@ -688,7 +658,7 @@ describe("Provider Registry Contract", () => {
           "uploadBlockHeight": 700,
           "lockedHours": 12,
           "status": "active",
-          "manifest": {"id": "700_12"}
+          "manifestTxId": "700_12"
         }
       });
     });
@@ -706,16 +676,12 @@ describe("Provider Registry Contract", () => {
                   {
                     uploadBlockHeight: 500,
                     lockedHours: 12,
-                    manifest: {
-                      id: "500_12"
-                    }
+                    manifestTxId: "500_12"
                   },
                   {
                     uploadBlockHeight: 700,
                     lockedHours: 12,
-                    manifest: {
-                      id: "700_12"
-                    }
+                    manifestTxId: "700_12"
                   },
                 ]
             }
@@ -737,7 +703,7 @@ describe("Provider Registry Contract", () => {
           "uploadBlockHeight": 500,
           "lockedHours": 12,
           "status": "active",
-          "manifest": {"id": "500_12"}
+          "manifestTxId": "500_12"
         }
       });
     });
@@ -755,23 +721,17 @@ describe("Provider Registry Contract", () => {
                   {
                     uploadBlockHeight: 500,
                     lockedHours: 12,
-                    manifest: {
-                      id: "500_12"
-                    }
+                    manifestTxId: "500_12"
                   },
                   {
                     uploadBlockHeight: 700,
                     lockedHours: 6,
-                    manifest: {
-                      id: "700_6"
-                    }
+                    manifestTxId: "700_6"
                   },
                   {
                     uploadBlockHeight: 700,
                     lockedHours: 12,
-                    manifest: {
-                      id: "700_12"
-                    }
+                    manifestTxId: "700_12"
                   },
                 ]
             }
@@ -793,7 +753,7 @@ describe("Provider Registry Contract", () => {
           "uploadBlockHeight": 700,
           "lockedHours": 6,
           "status": "active",
-          "manifest": {"id": "700_6"}
+          "manifestTxId": "700_6"
         }
       });
     });
@@ -820,17 +780,7 @@ describe("Provider Registry Contract", () => {
               "manifests": [{
                 "changeMessage": "initial",
                 "lockedHours": 5,
-                "manifest":
-                  {
-                    "interval": 15000,
-                    "priceAggregator": "median",
-                    "defaultSource": ["yahoo-finance"],
-                    "sourceTimeout": 50000,
-                    "maxPriceDeviationPercent": 25,
-                    "tokens": {
-                      "TSLA": {},
-                    }
-                  }
+                "manifestTxId": "mft-tx-5"
               }],
             }
           }
@@ -890,14 +840,7 @@ describe("Provider Registry Contract", () => {
             "manifests": [{
               "changeMessage": "initial",
               "lockedHours": 5,
-              "manifest": {
-                "interval": 15000,
-                "priceAggregator": "median",
-                "defaultSource": ["yahoo-finance"],
-                "sourceTimeout": 50000,
-                "maxPriceDeviationPercent": 25,
-                "tokens": {"TSLA": {}}
-              },
+              "manifestTxId": "mft-tx-5",
               "status": "active"
             }],
             "registerHeight": 1000
@@ -926,17 +869,7 @@ describe("Provider Registry Contract", () => {
               "manifests": [{
                 "changeMessage": "initial",
                 "lockedHours": 5,
-                "manifest":
-                  {
-                    "interval": 15000,
-                    "priceAggregator": "median",
-                    "defaultSource": ["yahoo-finance"],
-                    "sourceTimeout": 50000,
-                    "maxPriceDeviationPercent": 25,
-                    "tokens": {
-                      "TSLA": {},
-                    }
-                  }
+                "manifestTxId": "mft-tx-5"
               }],
             }
           }
@@ -958,32 +891,12 @@ describe("Provider Registry Contract", () => {
               "manifests": [{
                 "changeMessage": "initial",
                 "lockedHours": 0,
-                "manifest":
-                  {
-                    "interval": 15000,
-                    "priceAggregator": "median",
-                    "defaultSource": ["yahoo-finance"],
-                    "sourceTimeout": 50000,
-                    "maxPriceDeviationPercent": 25,
-                    "tokens": {
-                      "TSLA": {},
-                    }
-                  }
+                "manifestTxId": "mft-tx-5"
               },
                 {
                   "changeMessage": "initial 2",
                   "lockedHours": 0,
-                  "manifest":
-                    {
-                      "interval": 7000,
-                      "priceAggregator": "median",
-                      "defaultSource": ["yahoo-finance"],
-                      "sourceTimeout": 10000,
-                      "maxPriceDeviationPercent": 15,
-                      "tokens": {
-                        "AMZN": {},
-                      }
-                    }
+                  "manifestTxId": "mft-tx-7"
                 }
               ],
             }
@@ -1014,14 +927,7 @@ describe("Provider Registry Contract", () => {
               "manifests": [{
                 "changeMessage": "initial",
                 "lockedHours": 5,
-                "manifest": {
-                  "interval": 15000,
-                  "priceAggregator": "median",
-                  "defaultSource": ["yahoo-finance"],
-                  "sourceTimeout": 50000,
-                  "maxPriceDeviationPercent": 25,
-                  "tokens": {"TSLA": {}}
-                },
+                "manifestTxId": "mft-tx-5",
                 "status": "active"
               }],
               "registerHeight": 1000
@@ -1037,26 +943,12 @@ describe("Provider Registry Contract", () => {
               "manifests": [{
                 "changeMessage": "initial",
                 "lockedHours": 0,
-                "manifest": {
-                  "interval": 15000,
-                  "priceAggregator": "median",
-                  "defaultSource": ["yahoo-finance"],
-                  "sourceTimeout": 50000,
-                  "maxPriceDeviationPercent": 25,
-                  "tokens": {"TSLA": {}}
-                },
+                "manifestTxId": "mft-tx-5",
                 "status": "historical"
               }, {
                 "changeMessage": "initial 2",
                 "lockedHours": 0,
-                "manifest": {
-                  "interval": 7000,
-                  "priceAggregator": "median",
-                  "defaultSource": ["yahoo-finance"],
-                  "sourceTimeout": 10000,
-                  "maxPriceDeviationPercent": 15,
-                  "tokens": {"AMZN": {}}
-                },
+                "manifestTxId": "mft-tx-7",
                 "status": "active"
               }],
               "registerHeight": 1000
@@ -1212,6 +1104,5 @@ describe("Provider Registry Contract", () => {
       });
     });
   });
-
 
 });

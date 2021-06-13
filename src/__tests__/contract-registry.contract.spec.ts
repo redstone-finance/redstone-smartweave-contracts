@@ -430,20 +430,83 @@ describe("Contracts Registry Contract", () => {
       });
     });
 
-
-    it("throws if profile has no privileges", async () => {
-      /* await expect(testEnv.interact<BeaconInput>(otherCaller, contractId,
-         {
-           function: "registerContract",
-           data: {
-             contractName: "providers-registry",
-             contractTxId: "VTbkAHJLshFi0v0uDD-af8ldoOjxge0J8s1yZMIIoTQ"
-           }
-         }))
-         .rejects
-         .toThrowError("No privileges to register new contract.")*/
+    it("throws if caller is not an admin", async () => {
+      await expect(testEnv.interact<ContractsRegistryInput>("bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBZ", contractId,
+        {
+          function: "registerContracts",
+          data: {
+            contracts: {
+              "providers-registry": "ar-tx-1",
+              "disputes": "ar-tx-2",
+            },
+            comment: "initial deploy",
+            version: "v2"
+          },
+        })).rejects.toThrowError("Administrative functions can be called only by contract admins.");
     });
 
+    it("throws if version is sent in wrong format ", async () => {
+      await expect(testEnv.interact<ContractsRegistryInput>(caller, contractId,
+        {
+          function: "registerContracts",
+          data: {
+            contracts: {
+              "providers-registry": "ar-tx-1",
+            },
+            comment: "initial deploy",
+            version: "2"
+          },
+        })).rejects.toThrowError("Wrong version format - should be 'v[number]'");
+
+      await expect(testEnv.interact<ContractsRegistryInput>(caller, contractId,
+        {
+          function: "registerContracts",
+          data: {
+            contracts: {
+              "providers-registry": "ar-tx-1",
+            },
+            comment: "initial deploy",
+            version: "version2"
+          },
+        })).rejects.toThrowError("Wrong version format - should be 'v[number]'");
+
+      await expect(testEnv.interact<ContractsRegistryInput>(caller, contractId,
+        {
+          function: "registerContracts",
+          data: {
+            contracts: {
+              "providers-registry": "ar-tx-1",
+            },
+            comment: "initial deploy",
+            version: "v 2"
+          },
+        })).rejects.toThrowError("Wrong version format - should be 'v[number]'");
+
+      await expect(testEnv.interact<ContractsRegistryInput>(caller, contractId,
+        {
+          function: "registerContracts",
+          data: {
+            contracts: {
+              "providers-registry": "ar-tx-1",
+            },
+            comment: "initial deploy",
+            version: "v_2"
+          },
+        })).rejects.toThrowError("Wrong version format - should be 'v[number]'");
+
+      await expect(testEnv.interact<ContractsRegistryInput>(caller, contractId,
+        {
+          function: "registerContracts",
+          data: {
+            contracts: {
+              "providers-registry": "ar-tx-1",
+            },
+            comment: "initial deploy",
+            version: "v02"
+          },
+        })).rejects.toThrowError("Wrong version format - should be 'v[number]'");
+
+    });
 
   });
 
@@ -479,7 +542,6 @@ describe("Contracts Registry Contract", () => {
         }
       });
     });
-
 
     describe("when no version supplied in input", () => {
       it("returns txIds for contracts from latest version", async () => {
@@ -537,8 +599,31 @@ describe("Contracts Registry Contract", () => {
           {"providers-registry": "ar-tx-1"}
         );
       });
+
+      it("throws if version not registered in contract", async () => {
+        await expect(testEnv.interact<ContractsRegistryInput>(caller, contractId,
+          {
+            function: "contractsCurrentTxId",
+            data: {
+              contractNames: ["providers-registry"],
+              version: "v5"
+            },
+          })).rejects.toThrowError("No such version v5.");
+
+      });
+
+      it("throws if contract not registered for given version", async () => {
+        await expect(testEnv.interact<ContractsRegistryInput>(caller, contractId,
+          {
+            function: "contractsCurrentTxId",
+            data: {
+              contractNames: ["play-drums"],
+              version: "v1"
+            },
+          })).rejects.toThrowError("Contract play-drums is not defined for version v1.");
+
+      });
     });
   });
-
 
 });

@@ -3,7 +3,8 @@ const replace = require('replace-in-file');
 
 const contracts = [
   '/providers-registry/providers-registry.contract.ts',
-  '/contracts-registry/contracts-registry.contract.ts'
+  '/contracts-registry/contracts-registry.contract.ts',
+  '/examples/example-contract-1.ts',
 ];
 
 build({

@@ -3,7 +3,9 @@
     "moduleResolution": "Node",
     "target": "ES2018",
     "lib": [
-      "dom"
-    ]
+      "dom",
+    ],
+    "esModuleInterop": true,
+    "downlevelIteration": true
   }
 }

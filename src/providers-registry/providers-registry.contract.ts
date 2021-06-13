@@ -26,9 +26,9 @@ declare const SmartWeave;
  * This contract is responsible for keeping track of all providers (and their configuration) that
  * are deployed using Redstone Node server (https://github.com/redstone-finance/redstone-node)
  */
-export function handle(state: ProvidersRegistryState, action: ProvidersRegistryAction): ContractResult {
+export async function handle(state: ProvidersRegistryState, action: ProvidersRegistryAction): Promise<ContractResult> {
 
-  trace("[Providers Registry Contract Handle]");
+  trace(`[ Providers Registry Contract Handle :: ${action.input.function} ]`);
 
   // as seen here..:https://github.com/CommunityXYZ/website/blob/0b8506a0ca1e32964fc3523d578c3e24c5236754/src/assets/scripts/utils/utils.ts#L51
   const BLOCKS_IN_HOUR = 30;
@@ -117,21 +117,24 @@ export function handle(state: ProvidersRegistryState, action: ProvidersRegistryA
         throw new ContractError("Manifest data not set.");
       }
 
-      if (manifestData.manifest === undefined) {
-        throw new ContractError("Manifest not set.");
+      if (Validators.isEmpty(manifestData.manifestTxId)) {
+        throw new ContractError("ManifestTxId not set.");
       }
 
+      if (!Validators.isTypeOf(manifestData.manifestTxId, "string")) {
+        throw new ContractError("Manifest must be sent as a transaction id string.")
+      }
+
+      // TODO: verify manifestTxId using unsafeClient?
       if (Validators.isEmpty(manifestData.changeMessage)) {
         throw new ContractError("Change message is not set.");
       }
-
-      // TODO: manifest properties validation
 
       // note: this is safe, as manifests array is initialized when provider is added
       allProviders[manifestProviderId].manifests.push(
         {
           uploadBlockHeight: CURRENT_BLOCK_HEIGHT,
-          manifest: manifestData.manifest,
+          manifestTxId: manifestData.manifestTxId,
           changeMessage: manifestData.changeMessage,
           lockedHours: addManifestData.lockedHours || 0
         }
@@ -191,12 +194,18 @@ export function handle(state: ProvidersRegistryState, action: ProvidersRegistryA
       const providerCopy = Tools.deepCopy(allProviders[getProviderData.providerId]);
       providerCopy.manifests = updateManifestsStatus(providerCopy.manifests);
 
+      if (getProviderData.eagerManifestLoad) {
+        const activeManifest: ManifestData = providerCopy.manifests.find((manifest) => {
+          return manifest.status === "active";
+        });
+        await setManifestContent(activeManifest);
+      }
       return {
         result: {provider: providerCopy}
       };
 
     case "providersData":
-      const providersCopy: {[providerAddress: string]: ProviderData} = Tools.deepCopy(allProviders);
+      const providersCopy: { [providerAddress: string]: ProviderData } = Tools.deepCopy(allProviders);
       Object.values(providersCopy).forEach((provider: ProviderData) => {
         provider.manifests = updateManifestsStatus(provider.manifests);
       });
@@ -212,11 +221,12 @@ export function handle(state: ProvidersRegistryState, action: ProvidersRegistryA
 
       const manifests = getManifestsFor(caller);
       const manifestsWithStatus = updateManifestsStatus(manifests);
-      trace("Block height: ", CURRENT_BLOCK_HEIGHT);
       const activeManifest = manifestsWithStatus.find((manifest) => {
         return manifest.status === "active";
       });
-
+      if (data.eagerManifestLoad) {
+        await setManifestContent(activeManifest);
+      }
       trace("RESULT", activeManifest);
 
       return {result: {manifest: activeManifest}};
@@ -226,6 +236,21 @@ export function handle(state: ProvidersRegistryState, action: ProvidersRegistryA
   }
 
   /* HELPER FUNCTIONS */
+  async function setManifestContent(manifest: ManifestData): Promise<ManifestData> {
+    trace("Searching for data of", manifest.manifestTxId);
+
+    try {
+      const manifestContent = await SmartWeave.unsafeClient.transactions.getData(
+        manifest.manifestTxId,
+        {decode: true, string: true});
+      manifest.activeManifestContent = JSON.parse(manifestContent);
+    } catch (e) {
+      trace("Error while fetching manifest", e);
+    }
+
+    return manifest;
+  }
+
   function updateManifestsStatus(manifests: ManifestData[]): ManifestData[] {
     let activeSet = false;
     const manifestsLength = manifests.length;

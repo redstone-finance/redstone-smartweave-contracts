@@ -1,22 +1,35 @@
 const {readContract} = require("smartweave");
-const Arweave = require("./_helpers");
+const helpers = require("./_helpers");
+const registry = require("./contracts-registry.api");
 
-async function main() {
-  const {arweave, contractId} = Arweave.init();
-
-  try {
+module.exports = {
+  contractsRegistry: async (onTestWeave = true) => {
+    onTestWeave = helpers.parseBoolean(onTestWeave);
+    const {arweave} = await helpers.initArweave(onTestWeave);
     const result = await readContract(
       arweave,
-      contractId
+      registry.getRegistryContractTxId(onTestWeave)
     );
-    console.log(" === RESULT ===\n",  JSON.stringify(result));
-  }
-  catch (e) {
-    console.error(e);
-  }
+    console.log("\n=== RESULT ===\n", result, result.versions, result.versions["v1"]);
+  },
 
-  //VTbkAHJLshFi0v0uDD-af8ldoOjxge0J8s1yZMIIoTQ
-  //https://viewblock.io/arweave/address/VTbkAHJLshFi0v0uDD-af8ldoOjxge0J8s1yZMIIoTQ
+  providersRegistry: async (onTestWeave = true) => {
+    onTestWeave = helpers.parseBoolean(onTestWeave);
+    const {arweave} = await helpers.initArweave(onTestWeave);
+
+    const providersContractTxId = await registry.currentContractTxId("providers-registry", onTestWeave);
+
+    console.log("Calling providers-registry", providersContractTxId);
+
+    const result = await readContract(
+      arweave,
+      providersContractTxId,
+      null,
+      true
+    );
+    console.log("\n=== RESULT ===\n", result.state.providers, result.validity);
+
+  }
 }
 
-main();
+require('make-runnable');
