@@ -1,4 +1,4 @@
-const {interactWrite} = require("smartweave");
+const {interactWrite, interactRead} = require("smartweave");
 const helpers = require("./_helpers");
 const registry = require("./contracts-registry.api");
 const manifests = require("./manifests.api");
@@ -169,6 +169,29 @@ module.exports = {
 
     return writeTxId;
 
+  },
+
+  currentManifest: async (providerId, onTestWeave = true) => {
+    onTestWeave = helpers.parseBoolean(onTestWeave);
+
+    const {jwk, arweave} = await helpers.initArweave(onTestWeave);
+
+    const providersRegistryContractId = await registry.currentContractTxId("providers-registry", onTestWeave);
+
+    const result = await interactRead(
+      arweave,
+      jwk,
+      providersRegistryContractId,
+      {
+        function: "activeManifest",
+        data: {
+          providerId: providerId,
+          eagerManifestLoad: true
+        }
+      }
+    );
+
+    return result;
   }
 
 }
