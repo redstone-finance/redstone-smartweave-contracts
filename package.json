@@ -1,0 +1,48 @@
+{
+  "name": "redstone-smartweave-contracts",
+  "version": "0.4.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "yarn run clean && yarn run build-ts && npm run cp",
+    "build-ts": "node build.js",
+    "clean": "rimraf ./dist",
+    "cp": "copyfiles -u 1 ./src/**/*.json dist",
+    "test": "jest",
+
+    "contracts-registry:deploy:test": "yarn build && node src/tools/contracts-registry.api.js deploy true",
+    "contracts-registry:deploy:prod": "yarn build && node src/tools/contracts-registry.api.js deploy false",
+
+    "manifest:deploy:main:test": "node src/tools/manifests.api.js deploy \"../redstone-node/manifests/all-supported-tokens.json\" true",
+    "manifest:deploy:main:prod": "node src/tools/manifests.api.js deploy \"../redstone-node/manifests/all-supported-tokens.json\" false",
+
+    "manifest:deploy:stocks:test": "node src/tools/manifests.api.js deploy \"../redstone-node/manifests/stocks.json\" true",
+    "manifest:deploy:stocks:prod": "node src/tools/manifests.api.js deploy \"../redstone-node/manifests/stocks.json\" false",
+
+    "manifest:deploy:rapid:test": "node src/tools/manifests.api.js deploy \"../redstone-node/manifests/rapid.json\" true",
+    "manifest:deploy:rapid:prod": "node src/tools/manifests.api.js deploy \"../redstone-node/manifests/rapid.json\" false",
+
+    "providers-registry:deploy:test": "yarn build && node src/tools/providers-registry.api.js deploy true",
+    "providers-registry:deploy:prod": "yarn build && node src/tools/providers-registry.api.js deploy false"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node"
+  },
+  "dependencies": {
+    "arweave": "^1.10.14",
+    "make-runnable": "^1.3.9",
+    "smartweave": "^0.4.30",
+    "testweave-sdk": "^0.2.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.23",
+    "copyfiles": "^2.4.0",
+    "esbuild": "0.12.5",
+    "jest": "^27.0.4",
+    "replace-in-file": "^6.2.0",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^27.0.3",
+    "typescript": "^4.3.2"
+  }
+}
