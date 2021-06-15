@@ -644,7 +644,7 @@ describe("Provider Registry Contract", () => {
         });
 
       const interaction = await testEnv.interact<ProvidersRegistryInput>(
-        "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
+        caller,
         contractId,
         {
           function: "activeManifest",
@@ -689,7 +689,7 @@ describe("Provider Registry Contract", () => {
         });
 
       const interaction = await testEnv.interact<ProvidersRegistryInput>(
-        "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
+        caller,
         contractId,
         {
           function: "activeManifest",
@@ -739,7 +739,7 @@ describe("Provider Registry Contract", () => {
         });
 
       const interaction = await testEnv.interact<ProvidersRegistryInput>(
-        "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
+        caller,
         contractId,
         {
           function: "activeManifest",
@@ -754,6 +754,67 @@ describe("Provider Registry Contract", () => {
           "lockedHours": 6,
           "status": "active",
           "manifestTxId": "700_6"
+        }
+      });
+    })
+
+    it("gets latest active manifest with content for eagerManifestLoad", async () => {
+      testEnv.contractEnv(contractId).swGlobal.unsafeClient.transactions.getData = jest.fn().mockImplementation((contractId, options) => {
+        console.log("aaaa", contractId)
+        if (contractId == "700_6") {
+          return `{"foo": "bar"}`;
+        }
+      });
+
+      testEnv.pushState(
+        contractId,
+        {
+          trace: true,
+          contractAdmins: ["xxx"],
+          providers: {
+            "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111": {
+              manifests:
+                [
+                  {
+                    uploadBlockHeight: 500,
+                    lockedHours: 12,
+                    manifestTxId: "500_12"
+                  },
+                  {
+                    uploadBlockHeight: 700,
+                    lockedHours: 6,
+                    manifestTxId: "700_6"
+                  },
+                  {
+                    uploadBlockHeight: 700,
+                    lockedHours: 12,
+                    manifestTxId: "700_12"
+                  },
+                ]
+            }
+          }
+        });
+
+      const interaction = await testEnv.interact<ProvidersRegistryInput>(
+        caller,
+        contractId,
+        {
+          function: "activeManifest",
+          data: {
+            providerId: "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
+            eagerManifestLoad: true
+          }
+        });
+
+      expect(interaction.result).toEqual({
+        "manifest": {
+          "uploadBlockHeight": 700,
+          "lockedHours": 6,
+          "status": "active",
+          "manifestTxId": "700_6",
+          "activeManifestContent": {
+            "foo": "bar"
+          }
         }
       });
     });

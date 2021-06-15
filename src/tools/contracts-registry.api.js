@@ -76,12 +76,9 @@ module.exports = {
     console.info(`${contractTxId} saved in ${filePath}`);
   },
 
-  currentContractTxId: async (contractName, onTestWeave = true) => {
+  currentContractTxId: async (contractName, onTestWeave = true, externalJwk = null) => {
     onTestWeave = helpers.parseBoolean(onTestWeave);
-    const {jwk, arweave, testWeave} = await helpers.initArweave(onTestWeave);
-    if (onTestWeave) {
-      await testWeave.mine();
-    }
+    const {jwk, arweave, testWeave} = await helpers.initArweave(onTestWeave, externalJwk);
 
     const result = await interactRead(
       arweave,

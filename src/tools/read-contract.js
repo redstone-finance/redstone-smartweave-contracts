@@ -8,16 +8,19 @@ module.exports = {
     const {arweave} = await helpers.initArweave(onTestWeave);
     const result = await readContract(
       arweave,
-      registry.getRegistryContractTxId(onTestWeave)
+      registry.getRegistryContractTxId(onTestWeave),
+      null,
+      true
     );
-    console.log("\n=== RESULT ===\n", result, result.versions, result.versions["v1"]);
+    console.log("\n=== RESULT ===\n", result, result.versions);
+    return result;
   },
 
-  providersRegistry: async (onTestWeave = true) => {
+  providersRegistry: async (onTestWeave = true, txId = null) => {
     onTestWeave = helpers.parseBoolean(onTestWeave);
     const {arweave} = await helpers.initArweave(onTestWeave);
 
-    const providersContractTxId = await registry.currentContractTxId("providers-registry", onTestWeave);
+    const providersContractTxId = txId || await registry.currentContractTxId("providers-registry", onTestWeave);
 
     console.log("Calling providers-registry", providersContractTxId);
 
@@ -27,7 +30,8 @@ module.exports = {
       null,
       true
     );
-    console.log("\n=== RESULT ===\n", result.state.providers, result.validity);
+
+    return result;
 
   }
 }

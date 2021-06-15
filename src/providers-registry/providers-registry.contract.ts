@@ -219,7 +219,7 @@ export async function handle(state: ProvidersRegistryState, action: ProvidersReg
       checkProviderId(data.providerId);
       checkProviderExists(data.providerId);
 
-      const manifests = getManifestsFor(caller);
+      const manifests = getManifestsFor(data.providerId);
       const manifestsWithStatus = updateManifestsStatus(manifests);
       const activeManifest = manifestsWithStatus.find((manifest) => {
         return manifest.status === "active";

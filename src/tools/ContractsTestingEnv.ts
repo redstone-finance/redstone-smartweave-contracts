@@ -17,14 +17,6 @@ export default class ContractsTestingEnv {
 
   readonly contractId: string;
 
-  private readonly arweave = Arweave.init({
-    host: 'arweave.net',// Hostname or IP address for a Arweave host
-    port: 443,          // Port
-    protocol: 'https',  // Network protocol http or https
-    timeout: 20000,     // Network request timeouts in milliseconds
-    logging: false,     // Enable network request logging
-  });
-
   private readonly contracts: {
     [contractId: string]: {
       env: ContractExecutionEnv,
@@ -62,12 +54,8 @@ export default class ContractsTestingEnv {
     });
 
     const source = new TextDecoder().decode(result.outputFiles[0].contents);
-    const normalizedSource = source
-      .replace(/\(\(\) => {/g, "")
-      .replace(/}\)\(\);/g, "");
-
     const env: ContractExecutionEnv = createContractExecutionEnvironment(
-      this.arweave, normalizedSource, this.contractId);
+      Arweave.init({}), source, this.contractId);
 
     env.swGlobal.contracts.readContractState = jest.fn().mockImplementation((contractId) => {
       return this.currentState(contractId);
@@ -129,6 +117,10 @@ export default class ContractsTestingEnv {
 
   readContract(contractId: string) {
     return this.currentState(contractId);
+  }
+
+  contractEnv(contractId: string) {
+    return this.contracts[contractId].env;
   }
 
   history(contractId: string) {

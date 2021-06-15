@@ -4,7 +4,7 @@ const {createContract} = require("smartweave");
 const TestWeave = require("testweave-sdk").default;
 
 module.exports = {
-  initArweave: async (onTestWeave, jwkPath) => {
+  initArweave: async (onTestWeave, jwkLike /*path to jwk file or jwkObject*/) => {
     if (onTestWeave) {
       console.log("Initialising Arweave instance on TestWeave host");
     }
@@ -21,21 +21,40 @@ module.exports = {
       ? await TestWeave.init(arweave)
       : null;
 
-    const jwk = onTestWeave
-      ? testWeave.rootJWK
-      : module.exports.readJSON(jwkPath || module.exports.getProdJwkPath())
 
-    return {jwk, arweave, testWeave};
+    // FIXME: handle this jwk shit in a proper way...
+    let resultJwk;
+    if (onTestWeave) {
+      resultJwk = testWeave.rootJWK;
+    } else {
+      if (jwkLike) {
+        if (typeof jwkLike === "string") {
+          resultJwk = module.exports.readJSON(jwkLike);
+        } else {
+          resultJwk = jwkLike;
+        }
+      } else {
+        resultJwk = module.exports.readJSON(module.exports.getProdJwkPath());
+      }
+    }
+
+    if (resultJwk === null) {
+      throw new Error("Could not init jwk");
+    }
+
+    return {jwk:resultJwk, arweave, testWeave};
   },
 
-  createContract: async (sourcePath, initialInputPath, onTestWeave) => {
+  createContract: async (sourcePath, initialInputLike /*string with path to json file or state object*/, onTestWeave) => {
     const {jwk, arweave, testWeave} = await module.exports.initArweave(onTestWeave);
 
     // note: don't forget to compile the contract :-)
     const contractSource = fs.readFileSync(sourcePath, "utf-8");
-    const initialState = fs.readFileSync(initialInputPath, "utf-8");
+    const initialState = typeof initialInputLike === "string"
+      ? fs.readFileSync(initialInputLike, "utf-8")
+      : JSON.stringify(initialInputLike);
 
-    console.info("Creating contract", {sourcePath});
+    console.info("Creating contract", {sourcePath, initialState});
 
     const contractTxId = await createContract(
       arweave, onTestWeave ? testWeave.rootJWK : jwk, contractSource, initialState);
