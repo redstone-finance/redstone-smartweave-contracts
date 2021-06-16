@@ -244,6 +244,7 @@ export async function handle(state: ProvidersRegistryState, action: ProvidersReg
         manifest.manifestTxId,
         {decode: true, string: true});
       manifest.activeManifestContent = JSON.parse(manifestContent);
+      manifest.activeManifestContent.txId = manifest.manifestTxId;
     } catch (e) {
       trace("Error while fetching manifest", e);
     }
