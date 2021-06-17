@@ -1,3 +1,5 @@
+import TransferRequest from "../common/common-types";
+
 export interface ProvidersRegistryState {
   /**
    * whether contract function should log debug info
@@ -49,7 +51,11 @@ export interface ProviderData {
   /**
    * TBA
    */
-  lockedTokens?: number;
+  stakedTokens?: number;
+
+  transferRequests: {
+    [id: string]: TransferRequest
+  }
 
   /**
    * Redstone node manifests deployed for this provider
@@ -96,9 +102,11 @@ export interface ProvidersRegistryInput {
     | RemoveProviderData
     | AddProviderAdminData
     | AddProviderManifestData
-    | StakeProviderTokens
+    | StakeTokens
     | AddContractAdmins
-    | SwitchTraceData;
+    | SwitchTraceData
+    | GetProviderManifest
+    | GetProviderStake;
 }
 
 export interface RegisterProviderData {
@@ -120,6 +128,10 @@ export interface GetProviderManifest {
   providerId: string,
   // this flag says whether we should also try to get a transaction with "active"  manifest's content
   eagerManifestLoad?: boolean
+}
+
+export interface GetProviderStake {
+  providerId: string
 }
 
 export interface AddProviderAdminData {
@@ -148,9 +160,12 @@ export interface UpdateProviderProfileData {
   profile: ProviderProfile;
 }
 
-export interface StakeProviderTokens {
+export interface StakeTokens {
   providerId: string,
   qty: number
+}
+
+export interface WithdrawTokens extends StakeTokens {
 }
 
 export interface ProvidersRegistryResult {
@@ -159,9 +174,10 @@ export interface ProvidersRegistryResult {
   };
   provider?: ProviderData;
   manifest?: ManifestData;
+  stakedTokens?: number;
 }
 
-export const getFunctions = ["activeManifest", "providerData", "providersData"] as const;
+export const getFunctions = ["activeManifest", "providerData", "providersData", "currentStake"] as const;
 export type ProvidersRegistryGetFunction = typeof getFunctions[number];
 
 export const adminSetFunctions = ["switchTrace", "addContractAdmins", "switchReadonly"] as const;
@@ -172,7 +188,8 @@ export const nonAdminSetFunctions = [
   "removeProvider",
   "addProviderAdmin",
   "addProviderManifest",
-  "stakeProviderTokens",
+  "stake",
+  "withdraw",
   "updateProviderProfile"
 ] as const;
 export type ProvidersRegistryNonAdminSetFunction = typeof nonAdminSetFunctions[number];

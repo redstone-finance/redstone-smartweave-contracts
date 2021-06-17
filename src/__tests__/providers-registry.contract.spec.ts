@@ -1,7 +1,12 @@
 import ContractsTestingEnv from "../tools/ContractsTestingEnv";
 import {ProvidersRegistryInput} from "../providers-registry/types";
+import {ContractsRegistryInput} from "../contracts-registry/types";
+import {registryTxId} from "../common/ContractInteractions";
 
 const contractSrcPath = "./src/providers-registry/providers-registry.contract.ts";
+const tokenContractSrcPath = "./src/token/token.contract.ts";
+const tokenContractTxId = "tokenContractTxId";
+const registryContractSrcPath = "./src/contracts-registry/contracts-registry.contract.ts";
 
 const caller = "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBY"
 const initialState = `{
@@ -257,7 +262,7 @@ describe("Provider Registry Contract", () => {
           data: {
             "provider": {
               "adminsPool": [],
-              "lockedTokens": 444,
+              "stakedTokens": 444,
               "profile": {
                 "name": "test-provider-1",
                 "description": "desc-1",
@@ -759,8 +764,7 @@ describe("Provider Registry Contract", () => {
     })
 
     it("gets latest active manifest with content for eagerManifestLoad", async () => {
-      testEnv.contractEnv(contractId).swGlobal.unsafeClient.transactions.getData = jest.fn().mockImplementation((contractId, options) => {
-        console.log("aaaa", contractId)
+      testEnv.contractEnv(contractId).swGlobal.unsafeClient.transactions.getData = jest.fn().mockImplementation((contractId) => {
         if (contractId == "700_6") {
           return `{"foo": "bar"}`;
         }
@@ -1164,6 +1168,82 @@ describe("Provider Registry Contract", () => {
           });
         expect(interaction.state.trace).toEqual(!prevTrace);
       });
+    });
+  });
+
+  describe("stake function", () => {
+    let initialBalance = 1000;
+    beforeEach(async () => {
+      testEnv.deployContract(registryContractSrcPath, {
+        "contractAdmins": [caller]
+      }, registryTxId);
+
+      await testEnv.interact<ContractsRegistryInput>(caller, registryTxId,
+        {
+          function: "registerContracts",
+          data: {
+            contracts: {
+              "providers-registry": contractId,
+              "token": tokenContractTxId
+            },
+            comment: "initial deploy"
+          }
+        });
+
+      testEnv.deployContract(tokenContractSrcPath, {
+        "ticker": "R_TEST",
+        "balances": {
+          [caller]: initialBalance
+        }
+      }, tokenContractTxId);
+
+      await testEnv.interact<ProvidersRegistryInput>(caller, contractId,
+        {
+          function: "registerProvider",
+          data: {
+            "provider": {
+              "adminsPool": [],
+              "profile": {
+                "name": "test-provider-1",
+                "description": "desc-1",
+                "url": "https://test-provider-1.ok"
+              },
+            }
+          }
+        });
+
+    });
+
+    it("should not create stake request if not enough balance", async () => {
+      await expect(testEnv.interact<ProvidersRegistryInput>(caller, contractId,
+        {
+          function: "stake",
+          data: {
+            "providerId": caller,
+            "qty": initialBalance + 1
+          }
+        })).rejects.toThrowError("Not enough balance.");
+    });
+
+    it("should create stake request if enough balance", async () => {
+      const interaction = await testEnv.interact<ProvidersRegistryInput>(caller, contractId,
+        {
+          function: "stake",
+          data: {
+            "providerId": caller,
+            "qty": initialBalance
+          }
+        }, {timestamp: 234234234, height: 55544});
+      expect(interaction.state.providers[caller].stakeTokensRequests)
+        .toEqual({
+          "DhvbNBM9ytlinJvco4SnWEoMSspLTtNeNCLyNFSnKbo": {
+            "targetId": "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBY",
+            "qty": 1000,
+            "caller": "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBY",
+            "timestamp": 234234234,
+            "type": "provider"
+          }
+        });
     });
   });
 

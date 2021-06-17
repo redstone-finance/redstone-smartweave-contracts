@@ -51,7 +51,7 @@ describe("ContractTestingEnv", () => {
     const testEnv: ContractsTestingEnv = new ContractsTestingEnv();
     const contract1Id = testEnv.deployContract(contract1, {counter: 5});
 
-    const result = await testEnv.interact("test-caller", contract1Id, {"function": "blockHeight"}, {height: 554});
+    const result = await testEnv.interact("test-caller", contract1Id, {"function": "blockHeight"}, {height: 554, timestamp: 987234});
     expect(result).toEqual({ type: 'ok', result: 554, state: { counter: 5 } });
   });
 

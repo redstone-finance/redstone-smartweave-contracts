@@ -4,19 +4,22 @@ import {
   AddProviderManifestData,
   adminSetFunctions,
   GetProviderData,
-  GetProviderManifest,
+  GetProviderManifest, GetProviderStake,
   ManifestData, ManifestStatus, ProviderData,
   ProviderProfile,
   ProvidersRegistryAction,
   ProvidersRegistryResult,
   ProvidersRegistryState,
   RegisterProviderData,
-  RemoveProviderData,
-  UpdateProviderProfileData,
+  RemoveProviderData, StakeTokens,
+  UpdateProviderProfileData, WithdrawTokens,
 } from "./types";
 import {ContractAdmin} from "../common/ContractAdmin";
 import {Validators} from "../common/Validators";
 import {Tools} from "../common/Tools";
+import TransferRequest from "../common/common-types";
+import {ContractInteractions} from "../common/ContractInteractions";
+import {ProcessedTransferRequest, WalletTransferRequests} from "../token/types";
 
 declare type ContractResult = { state: ProvidersRegistryState } | { result: ProvidersRegistryResult }
 declare const ContractError;
@@ -53,8 +56,8 @@ export async function handle(state: ProvidersRegistryState, action: ProvidersReg
   trace("STATE", state);
   trace("ACTION", action);
 
-  /* STATE MODIFYING ACTIONS */
 
+  /* STATE MODIFYING ACTIONS */
   switch (input.function) {
     case "registerProvider":
       const registerProviderData = input.data as RegisterProviderData;
@@ -67,7 +70,7 @@ export async function handle(state: ProvidersRegistryState, action: ProvidersReg
       checkProviderProfile(newProvider.profile);
 
       // TODO: not sure about this...
-      if (newProvider.lockedTokens !== undefined && newProvider.lockedTokens !== 0) {
+      if (newProvider.stakedTokens !== undefined && newProvider.stakedTokens !== 0) {
         throw new ContractError("Initial stake must be zero.");
       }
 
@@ -168,6 +171,39 @@ export async function handle(state: ProvidersRegistryState, action: ProvidersReg
 
       return {state};
 
+    case "stake":
+      const stakeData = input.data as StakeTokens;
+      checkProviderId(stakeData.providerId);
+      checkProviderExists(stakeData.providerId);
+      checkPrivileges(caller, stakeData.providerId);
+
+      await checkProviderBalance(stakeData.providerId, stakeData.qty);
+
+      // is it necessary?
+      checkNoPendingRequests(stakeData.providerId);
+
+      await addStakeTransferRequest(stakeData.providerId, stakeData.qty);
+
+      return {state}
+
+    case "withdraw":
+      const withdrawData = input.data as WithdrawTokens;
+      checkProviderId(withdrawData.providerId);
+      checkProviderExists(withdrawData.providerId);
+      checkPrivileges(caller, withdrawData.providerId);
+
+      // is it necessary?
+      checkNoPendingRequests(stakeData.providerId);
+
+      // TODO - or at least check if (sum of all disputes) <= (stake - withdrawData.qty)?
+      checkNoPendingDisputes(withdrawData.providerId);
+
+      checkQtyLowerThanCurrentStake(withdrawData.providerId, withdrawData.qty);
+
+      await addStakeTransferRequest(withdrawData.providerId, -withdrawData.qty);
+
+      return {state}
+
     case "switchTrace":
       state.trace = !state.trace;
       trace("END STATE", state);
@@ -215,27 +251,91 @@ export async function handle(state: ProvidersRegistryState, action: ProvidersReg
       };
 
     case "activeManifest":
-      const data = input.data as GetProviderManifest;
-      checkProviderId(data.providerId);
-      checkProviderExists(data.providerId);
+      const activeManifestData = input.data as GetProviderManifest;
+      checkProviderId(activeManifestData.providerId);
+      checkProviderExists(activeManifestData.providerId);
 
-      const manifests = getManifestsFor(data.providerId);
+      const manifests = getManifestsFor(activeManifestData.providerId);
       const manifestsWithStatus = updateManifestsStatus(manifests);
       const activeManifest = manifestsWithStatus.find((manifest) => {
         return manifest.status === "active";
       });
-      if (data.eagerManifestLoad) {
+      if (activeManifestData.eagerManifestLoad) {
         await setManifestContent(activeManifest);
       }
       trace("RESULT", activeManifest);
 
       return {result: {manifest: activeManifest}};
 
+    case "currentStake":
+      const currentStakeData = input.data as GetProviderStake;
+      const tokenContractState = await ContractInteractions.tokenContractState();
+      const providerTransferRequests: WalletTransferRequests = tokenContractState.transferRequestsRegistry[currentStakeData.providerId];
+      // TODO: check if providerTransferRequests is undefined
+
+      const stakedTokens = Object.values(providerTransferRequests)
+        .filter(properlyProcessedStakeRequests)
+        .map((t) => t.qty)
+        .reduce((a, b) => a + b, 0);
+
+      trace("Current stake", stakedTokens);
+
+      return {result: {stakedTokens}};
+
     default:
       throw new ContractError(`No function supplied or function not recognised: "${input.function}"`);
   }
 
   /* HELPER FUNCTIONS */
+  function properlyProcessedStakeRequests(transferRequest: ProcessedTransferRequest) {
+    return transferRequest.status === "ok" && transferRequest.type === "stake";
+  }
+
+  async function addStakeTransferRequest(providerId: string, qty: number) {
+    const thisContractTxId = await ContractInteractions.getContractTxId("providers-registry");
+
+    const request: Omit<TransferRequest, "id"> = {
+      targetId: providerId,
+      qty: qty,
+      caller: caller,
+      timestamp: SmartWeave.block.timestamp,
+      type: "stake",
+      owningContractTxId: thisContractTxId,
+    }
+
+    const requestId = await ContractInteractions.generateId(JSON.stringify(request));
+    Tools.initIfUndefined(state.providers[providerId], "transferRequests", {});
+    const transferRequests = state.providers[providerId].transferRequests;
+
+    if (transferRequests[requestId] !== undefined) {
+      throw new ContractError(`Transfer with id = ${requestId} already exists`);
+    }
+
+    transferRequests[requestId] = {
+      ...request,
+      id: requestId
+    }
+  }
+
+
+  function checkNoPendingDisputes(providerId: string) {
+    // TODO: implement when disputes contract will be ready.
+  }
+
+  function checkQtyLowerThanCurrentStake(providerId: string, qty: number) {
+
+  }
+
+  async function checkProviderBalance(caller: string, qty: number) {
+    const tokenContractState = await ContractInteractions.tokenContractState();
+    const balance = tokenContractState.balances[caller];
+    // TODO: consider adding some "buffer"?
+    // eg. only max. 80% of available tokens can be staked?
+    if (balance < qty) {
+      throw new ContractError("Not enough balance.");
+    }
+  }
+
   async function setManifestContent(manifest: ManifestData): Promise<ManifestData> {
     trace("Searching for data of", manifest.manifestTxId);
 
@@ -287,6 +387,10 @@ export async function handle(state: ProvidersRegistryState, action: ProvidersReg
 
     // un-reverse to restore original order (ie. order in which manifests where added).
     return manifestsWithStatus.reverse();
+  }
+
+  function checkNoPendingRequests(providerId: string) {
+    // read token contract state and verify if there are any non-processed requests for given providerId.
   }
 
   function checkExactOneManifestIsActive(manifestsWithStatus: ManifestData[]) {
