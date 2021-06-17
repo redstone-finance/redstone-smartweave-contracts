@@ -15,8 +15,6 @@ export type Block = {
 
 export default class ContractsTestingEnv {
 
-  readonly contractId: string;
-
   private readonly contracts: {
     [contractId: string]: {
       env: ContractExecutionEnv,
@@ -55,7 +53,7 @@ export default class ContractsTestingEnv {
 
     const source = new TextDecoder().decode(result.outputFiles[0].contents);
     const env: ContractExecutionEnv = createContractExecutionEnvironment(
-      Arweave.init({}), source, this.contractId);
+      Arweave.init({}), source, contractId);
 
     env.swGlobal.contracts.readContractState = jest.fn().mockImplementation((contractId) => {
       return this.currentState(contractId);

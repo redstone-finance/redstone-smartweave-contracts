@@ -211,8 +211,9 @@ module.exports = {
 
   },
 
-  currentManifest: async (providerId, onTestWeave = true, externalJwk = null) => {
+  currentManifest: async (providerId, onTestWeave = true, externalJwk = null, eager = true) => {
     onTestWeave = helpers.parseBoolean(onTestWeave);
+    eager = helpers.parseBoolean(eager);
 
     const {jwk, arweave} = await helpers.initArweave(onTestWeave);
 
@@ -226,7 +227,7 @@ module.exports = {
         function: "activeManifest",
         data: {
           providerId: providerId,
-          eagerManifestLoad: true
+          eagerManifestLoad: eager
         }
       }
     );
