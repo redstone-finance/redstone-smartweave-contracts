@@ -813,7 +813,8 @@ describe("Provider Registry Contract", () => {
           "status": "active",
           "manifestTxId": "700_6",
           "activeManifestContent": {
-            "foo": "bar"
+            "foo": "bar",
+            "txId": "700_6"
           }
         }
       });
