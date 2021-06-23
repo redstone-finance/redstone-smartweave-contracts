@@ -23,7 +23,10 @@
     "manifest:deploy:rapid:prod": "node src/tools/manifests.api.js deploy \"../redstone-node/manifests/rapid.json\" false",
 
     "providers-registry:deploy:test": "yarn build && node src/tools/providers-registry.api.js deploy true",
-    "providers-registry:deploy:prod": "yarn build && node src/tools/providers-registry.api.js deploy false"
+    "providers-registry:deploy:prod": "yarn build && node src/tools/providers-registry.api.js deploy false",
+
+    "token:deploy:test": "yarn build && node src/tools/token.api.js deploy true",
+    "token:deploy:prod": "yarn build && node src/tools/token.api.js deploy false"
   },
   "jest": {
     "preset": "ts-jest",

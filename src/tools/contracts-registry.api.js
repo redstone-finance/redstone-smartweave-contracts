@@ -2,7 +2,7 @@ const {interactWrite, interactRead} = require("smartweave");
 const helpers = require("./_helpers")
 const fs = require("fs");
 
-const knownContracts = ["providers-registry"];
+const knownContracts = ["providers-registry", "token"];
 
 module.exports = {
 
@@ -25,7 +25,7 @@ module.exports = {
     console.info("Registering", {contractName, contractTxId, comment});
 
     if (!knownContracts.includes(contractName)) {
-      throw new Error(`Unknown contract ${contractName}`);
+      throw new Error(`Unknown contract "${contractName}".`);
     }
 
     const address = module.exports.getRegistryContractTxId(onTestWeave);

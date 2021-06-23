@@ -12,8 +12,7 @@ module.exports = {
       null,
       true
     );
-    console.log("\n=== RESULT ===\n", result, result.versions);
-    return result;
+    return {result, versions: result.state.versions, v1: result.state.versions.v1.contracts};
   },
 
   providersRegistry: async (onTestWeave = true, txId = null) => {
@@ -33,6 +32,24 @@ module.exports = {
 
     return result;
 
+  },
+
+  token: async(onTestWeave = true, txId = null) => {
+    onTestWeave = helpers.parseBoolean(onTestWeave);
+    const {arweave} = await helpers.initArweave(onTestWeave);
+
+    const tokenContractTxId = txId || await registry.currentContractTxId("token", onTestWeave);
+
+    console.log("Calling token", tokenContractTxId);
+
+    const result = await readContract(
+      arweave,
+      tokenContractTxId,
+      null,
+      true
+    );
+
+    return {result, balances: result.state.balances, deposits: JSON.stringify(result.state.contractDeposits)};
   }
 }
 

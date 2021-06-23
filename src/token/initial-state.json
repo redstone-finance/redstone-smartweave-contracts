@@ -1,7 +1,9 @@
 {
   "ticker": "R_TEST",
-  "contractsRegistryTxId": "XQkGzXG6YknJyy-YbakEZvQKAWkW2_aPRhc3ShC8lyA",
   "balances": {
-    "MlV6DeOtRmakDOf6vgOBlif795tcWimgyPsYYNQ8q1Y": 50000000
+    "I-5rWUehEv-MjdK9gFw09RxfSLQX9DIHxG614Wf8qo0": 5000000,
+    "zYqPZuALSPa_f5Agvf8g2JHv94cqMn9aBtnH7GFHbuA": 3000000,
+    "Yba8IVc_01bFxutKNJAZ7CmTD5AVi2GcWXf1NajPAsc": 2000000,
+    "33F0QHcb22W7LwWR1iRC8Az1ntZG09XQ03YWuw2ABqA": 1000000
   }
 }

@@ -114,7 +114,7 @@ module.exports = {
 
     const transactionId = await helpers.createContract(
       "./dist/providers-registry/providers-registry.contract.js",
-      initialStateData.state || `./dist/providers-registry/initial-state${onTestWeave ? '-test' : ''}.json`,
+      initialStateData?.state || `./dist/providers-registry/initial-state${onTestWeave ? '-test' : ''}.json`,
       onTestWeave
     );
 
