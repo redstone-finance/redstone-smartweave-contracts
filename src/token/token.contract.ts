@@ -1,37 +1,21 @@
 import {ContractInteractions} from "../common/ContractInteractions";
-import {ProvidersRegistryState} from "../providers-registry/types";
-import TransferRequest from "../common/common-types";
-import {
-  BalanceData,
-  ProcessedTransferRequest, ProcessedTransferRequestStatus, StakeData,
-  WalletTransferRequestsRegistry,
-  TokenAction,
-  TokenResult,
-  TokenState, TransferData,
-  WalletTransferRequests, WithdrawData
-} from "./types";
+import {BalanceData, DepositData, TokenAction, TokenResult, TokenState, TransferData, WithdrawData} from "./types";
 import {Tools} from "../common/Tools";
 
 declare type ContractResult = { state: TokenState } | { result: TokenResult }
 declare const ContractError: any;
 declare const SmartWeave: any;
 
-
 // note: this is a standard token implementation from ff8wOKWGIS6xKlhA8U6t70ydZOozixF5jQMp4yjoTc8
+// with added "deposit" and "withdraw" functions.
 export async function handle(state: TokenState, action: TokenAction): Promise<ContractResult> {
 
   const balances = state.balances;
   const input = action.input;
   const caller = action.caller
 
-  Tools.initIfUndefined(state, "stakeUpdateRegistry", {});
-  Tools.initIfUndefined(state.transferRequestsRegistry, caller, {});
-
-  // stake na id kontraktu
-  // ew. podawanie callera
-
   switch (input.function) {
-    case 'transfer':
+    case 'transfer': {
       const transferData = input.data as TransferData;
 
       const transferTarget = transferData.target;
@@ -64,63 +48,8 @@ export async function handle(state: TokenState, action: TokenAction): Promise<Co
       }
 
       return {state};
-
-
-      // that's just an alternative to "TransferRequest" implementation that operates directly on token contract.
-    case 'stake': {
-      const stakeData = input.data as StakeData;
-      const contractTxId = await getContractTxId(stakeData.contractName);
-      const targetId = stakeData.targetId;
-      const from = caller;
-      Tools.initIfUndefined(state, "stakes", {});
-      Tools.initIfUndefined(state.stakes, contractTxId, {});
-      Tools.initIfUndefined(state.stakes[contractTxId], targetId, {});
-      Tools.initIfUndefined(state.stakes[contractTxId][targetId], "stakesLog", []);
-
-      if (state.balances[from] === undefined
-        || state.balances[from] < stakeData.qty) {
-        throw new ContractError(`Not enough mana in wallet ${from}`);
-      }
-
-      // TODO: remove from balance or not?
-      // TODO: verify that caller is among given provider admins?
-      state.balances[targetId] -= stakeData.qty;
-
-      const contractStakes = state.stakes[contractTxId];
-      contractStakes.totalContractStake += stakeData.qty;
-
-      const targetStakes = contractStakes[targetId];
-      targetStakes.totalContractStake += stakeData.qty;
-      targetStakes.stakesLog.push({
-        ...stakeData,
-        timestamp: SmartWeave.block.timestamp
-      });
-
     }
-
-    case 'withdraw': {
-      const withdrawData = input.data as WithdrawData;
-      const contractName = withdrawData.contractName;
-      const targetContractTxId = await ContractInteractions.getContractTxId(contractName);
-      const qty = withdrawData.qty;
-
-      // ask targetContractTxId if qty can be withdrawn by caller
-      // but how to do this without interactRead?
-      const {total, unlocked} = {total: 1000, unlocked: 500}//await ContractInteractions.providerContractState()
-      if (unlocked < qty) {
-        throw ContractError(`Cannot withdraw, not enough unlocked tokens on contract ${contractName} `)
-      }
-
-    }
-
-    // withdraw
-    // weryfikacja ile można wyciągnąć.
-    // wyciąganie po "x" dniach.
-    // "slash" stake - wyciąganie zastekowanych token-ów i przesłyanie na adres "poszkodowanego"
-    //
-
-
-     case 'balance':
+    case 'balance': {
       const balanceData = input.data as BalanceData;
 
       const target = balanceData.target;
@@ -135,70 +64,94 @@ export async function handle(state: TokenState, action: TokenAction): Promise<Co
       }
 
       return {result: {target, ticker, balance: balances[target]}};
+    }
 
-    case 'processStakeRequest':
+    // allows to "deposit" certain amount of tokens on another contract and walletId.
+    // example use-case: someone wants to deposit certain amount of tokens on behalf
+    // of stake for certain node in providers-registry.contract (or in a more specific case -
+    // a provider himself wants to stake some tokens on his own node).
+    case 'deposit': {
+      const {contractName, targetId, qty} = input.data as DepositData;
+      const from = caller;
+      Tools.initIfUndefined(state, "contractDeposits", {});
+      Tools.initIfUndefined(state.contractDeposits, contractName, {deposit: 0, withdraw: 0});
+      Tools.initIfUndefined(state.contractDeposits[contractName], "wallets", {});
+      Tools.initIfUndefined(state.contractDeposits[contractName].wallets, targetId, {
+          deposit: 0,
+          withdraw: 0,
+          log: []
+        }
+      );
 
-      //TODO: add contactName input param
-      await updateProviderStakedTokens();
+      if (qty <= 0) {
+        throw new ContractError("Deposit quantity should be a positive value.");
+      }
+
+      if (state.balances[from] === undefined || state.balances[from] < qty) {
+        throw new ContractError(`Not enough tokens in wallet ${from}.`);
+      }
+
+      state.balances[from] -= qty;
+
+      const contractDeposits = state.contractDeposits[contractName];
+      contractDeposits.deposit += qty;
+
+      const walletDeposit = contractDeposits.wallets[targetId];
+
+      walletDeposit.deposit += qty;
+      walletDeposit.log.push({
+        from: from,
+        qty: qty,
+        timestamp: SmartWeave.block.timestamp
+      });
+
       return {state};
+    }
+
+    // allows to withdraw certain amount of the deposit.
+    case 'withdraw': {
+      const {contractName, qty} = input.data as WithdrawData;
+      if (qty >= 0) {
+        throw new ContractError("Withdraw quantity should be a negative value.");
+      }
+
+      if (state.contractDeposits === undefined) {
+        throw new ContractError("No deposits yet.");
+      }
+
+      if (state.contractDeposits[contractName] === undefined) {
+        throw new ContractError(`No deposits for ${contractName} yet.`);
+      }
+
+      if (state.contractDeposits[contractName].wallets[caller] === undefined) {
+        throw new ContractError(`No deposits for ${caller} in ${contractName} yet.`);
+      }
+
+      const contractDeposits = state.contractDeposits[contractName];
+      const walletDeposit = contractDeposits.wallets[caller];
+
+      // note: this operation requires the state of the contract "contractName" to be updated manually
+      // (ie. requires calling "interactWrite" on this contract and wait for the new transaction to be mined)
+      // prior to calling "withdraw" method, otherwise we might not get most accurate/recent info about
+      // currently available tokens (eg. if it is a time-base token locking mechanism like vesting).
+      // Alternatively "interactRead" could be called here, if it will be made available from SWC code
+      // (see: https://github.com/ArweaveTeam/SmartWeave/issues/78 for details).
+      const availableTokens = await ContractInteractions.availableTokens(contractName, caller);
+      const totalWithdraw = walletDeposit.withdraw;
+      const availableForWithdrawQty = availableTokens - totalWithdraw;
+
+      const toWithdraw = Math.min(Math.abs(qty), availableForWithdrawQty);
+
+      state.balances[caller] += toWithdraw;
+      walletDeposit.withdraw += toWithdraw;
+      contractDeposits.withdraw += toWithdraw;
+
+      return {state};
+    }
 
     default:
       throw new ContractError(`No function supplied or function not recognised: "${input.function}"`);
 
   }
 
-  async function getContractTxId(contractName: string) {
-    try {
-      return await ContractInteractions.getContractTxId(contractName);
-    } catch (e) {
-      throw new ContractError(`Cannot determine txId for contract: ${contractName}`);
-    }
-  }
-
-  async function updateProviderStakedTokens() {
-
-    const providersRegistryState: ProvidersRegistryState = await ContractInteractions.providerContractState();
-    const externalTransferRequests = providersRegistryState.providers[caller].transferRequests;
-
-    if (externalTransferRequests === undefined) {
-      return;
-    }
-
-    const transferRequestsRegistry: WalletTransferRequests = state.transferRequestsRegistry[caller];
-
-    Object.keys(externalTransferRequests).forEach((requestId) => {
-      const transferRequest: TransferRequest = externalTransferRequests[requestId];
-
-      //if given transfer not yet processed by token contract
-      if (transferRequestsRegistry[requestId] === undefined) {
-        let processedRequest: ProcessedTransferRequest;
-        try {
-          if (balances[caller] >= transferRequest.qty) {
-            // TODO: what about "withdraw" operation?
-            balances[caller] -= transferRequest.qty;
-            processedRequest = updateRequest(
-              transferRequest, "ok", `Staked ${transferRequest.qty} tokens, balance after ${balances[caller]}`);
-          } else {
-            processedRequest = updateRequest(
-              transferRequest, "not-enough-balance", `Stake request: ${transferRequest.qty}, balance: ${balances[caller]}`);
-          }
-        } catch (e) {
-          processedRequest = updateRequest(
-            transferRequest, "error", `${JSON.stringify(e)}`);
-
-        }
-        transferRequestsRegistry[requestId] = processedRequest;
-      }
-    });
-  }
-
-  function updateRequest(transferRequest: TransferRequest, status: ProcessedTransferRequestStatus, description: string)
-    : ProcessedTransferRequest {
-    return {
-      ...transferRequest,
-      status,
-      description,
-      processedTimestamp: SmartWeave.block.timestamp
-    }
-  }
 }

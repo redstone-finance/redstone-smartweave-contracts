@@ -25,7 +25,7 @@ export function handle(state: ContractsRegistryState, action: ContractsRegistryA
     ["registerContracts"]);
 
   switch (input.function) {
-    case "registerContracts":
+    case "registerContracts": {
       const registerContractsData = input.data as ContractsRegistryRegisterContractsData;
       checkInputVersion(registerContractsData.version);
       Tools.initIfUndefined(state, "versions", {});
@@ -45,8 +45,9 @@ export function handle(state: ContractsRegistryState, action: ContractsRegistryA
       });
 
       return {state};
+    }
 
-    case "contractsCurrentTxId":
+    case "contractsCurrentTxId": {
       const currentTxIdData = input.data as ContractsRegistryCurrentTxIdData;
       //console.log(`contractsCurrentTxId`, JSON.stringify(state.versions));
 
@@ -59,6 +60,7 @@ export function handle(state: ContractsRegistryState, action: ContractsRegistryA
       }
 
       return {result: currentContractTxId(currentTxIdData.contractNames, version)};
+    }
 
     default:
       throw new ContractError(`No function supplied or function not recognised: "${input.function}".`);

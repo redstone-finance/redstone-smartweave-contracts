@@ -1,6 +1,7 @@
-import TransferRequest from "../common/common-types";
+import {TokenLockingContract} from "../common/common-types";
 
-export interface ProvidersRegistryState {
+export interface ProvidersRegistryState extends TokenLockingContract
+{
   /**
    * whether contract function should log debug info
    * note: only contract's admin is allowed to change this value
@@ -48,14 +49,8 @@ export interface ProviderData {
    */
   registerHeight?: number;
 
-  /**
-   * TBA
-   */
+  // note: this is filled dynamically with data from token.contract state.
   stakedTokens?: number;
-
-  transferRequests: {
-    [id: string]: TransferRequest
-  }
 
   /**
    * Redstone node manifests deployed for this provider
@@ -102,11 +97,14 @@ export interface ProvidersRegistryInput {
     | RemoveProviderData
     | AddProviderAdminData
     | AddProviderManifestData
-    | StakeTokens
     | AddContractAdmins
     | SwitchTraceData
     | GetProviderManifest
-    | GetProviderStake;
+    | UpdateAvailableTokensData;
+}
+
+export interface UpdateAvailableTokensData {
+  providerId: string;
 }
 
 export interface RegisterProviderData {
@@ -120,18 +118,14 @@ export interface RemoveProviderData {
 export interface GetProviderData {
   providerId: string
 
-  // this flag says whether we should also try to get a transaction with "active"  manifest's content
+  // this flag says whether we should also try to get a transaction with "active" manifest's content
   eagerManifestLoad?: boolean
 }
 
 export interface GetProviderManifest {
   providerId: string,
-  // this flag says whether we should also try to get a transaction with "active"  manifest's content
+  // this flag says whether we should also try to get a transaction with "active" manifest's content
   eagerManifestLoad?: boolean
-}
-
-export interface GetProviderStake {
-  providerId: string
 }
 
 export interface AddProviderAdminData {
@@ -160,24 +154,15 @@ export interface UpdateProviderProfileData {
   profile: ProviderProfile;
 }
 
-export interface StakeTokens {
-  providerId: string,
-  qty: number
-}
-
-export interface WithdrawTokens extends StakeTokens {
-}
-
 export interface ProvidersRegistryResult {
   providers?: {
     [providerAddress: string]: ProviderData,
   };
   provider?: ProviderData;
   manifest?: ManifestData;
-  stakedTokens?: number;
 }
 
-export const getFunctions = ["activeManifest", "providerData", "providersData", "currentStake"] as const;
+export const getFunctions = ["activeManifest", "providerData", "providersData"] as const;
 export type ProvidersRegistryGetFunction = typeof getFunctions[number];
 
 export const adminSetFunctions = ["switchTrace", "addContractAdmins", "switchReadonly"] as const;
@@ -188,9 +173,8 @@ export const nonAdminSetFunctions = [
   "removeProvider",
   "addProviderAdmin",
   "addProviderManifest",
-  "stake",
-  "withdraw",
-  "updateProviderProfile"
+  "updateProviderProfile",
+  "updateAvailableTokens"
 ] as const;
 export type ProvidersRegistryNonAdminSetFunction = typeof nonAdminSetFunctions[number];
 

@@ -9,8 +9,8 @@ describe("ContractTestingEnv", () => {
     const contract1Id = testEnv.deployContract(contract1, {counter: 5});
     const contract2Id = testEnv.deployContract(contract2, {text: "init"});
 
-    expect(testEnv.readContract(contract1Id)).toEqual({counter: 5});
-    expect(testEnv.readContract(contract2Id)).toEqual({text: "init"});
+    expect(testEnv.readState(contract1Id)).toEqual({counter: 5});
+    expect(testEnv.readState(contract2Id)).toEqual({text: "init"});
     expect(contract1Id).toContain("TEST-");
     expect(contract2Id).toContain("TEST-");
   });

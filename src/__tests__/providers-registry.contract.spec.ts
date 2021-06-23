@@ -18,19 +18,36 @@ const initialState = `{
 describe("Provider Registry Contract", () => {
 
   const testEnv = new ContractsTestingEnv();
-  let contractId: string
+  let providersContractId: string
 
   beforeEach(() => {
-    contractId = testEnv.deployContract(contractSrcPath, JSON.parse(initialState));
+    providersContractId = testEnv.deployContract(contractSrcPath, JSON.parse(initialState));
   });
 
   afterEach(() => {
     testEnv.clearContracts();
   });
 
+  async function deployContractsRegistry() {
+    testEnv.deployContract(registryContractSrcPath, {
+      contractAdmins: [caller]
+    }, registryTxId);
+    await testEnv.interact<ContractsRegistryInput>(caller, registryTxId,
+      {
+        function: "registerContracts",
+        data: {
+          contracts: {
+            "providers-registry": providersContractId,
+            "token": tokenContractTxId
+          },
+          comment: "initial deploy"
+        }
+      });
+  }
+
   describe("registerProvider function", () => {
     it("registers new provider without manifest", async () => {
-      const interaction = await testEnv.interact<ProvidersRegistryInput>(caller, contractId,
+      const interaction = await testEnv.interact<ProvidersRegistryInput>(caller, providersContractId,
         {
           function: "registerProvider",
           data: {
@@ -62,7 +79,7 @@ describe("Provider Registry Contract", () => {
     });
 
     it("registers new provider with manifest", async () => {
-      const interaction = await testEnv.interact<ProvidersRegistryInput>(caller, contractId,
+      const interaction = await testEnv.interact<ProvidersRegistryInput>(caller, providersContractId,
         {
           function: "registerProvider",
           data: {
@@ -104,7 +121,7 @@ describe("Provider Registry Contract", () => {
     });
 
     it("throws if provider is already registered", async () => {
-      await testEnv.interact<ProvidersRegistryInput>(caller, contractId,
+      await testEnv.interact<ProvidersRegistryInput>(caller, providersContractId,
         {
           function: "registerProvider",
           data: {
@@ -119,7 +136,7 @@ describe("Provider Registry Contract", () => {
           }
         });
 
-      await expect(testEnv.interact<ProvidersRegistryInput>(caller, contractId,
+      await expect(testEnv.interact<ProvidersRegistryInput>(caller, providersContractId,
         {
           function: "registerProvider",
           data: {
@@ -138,7 +155,7 @@ describe("Provider Registry Contract", () => {
     });
 
     it("throws if provider with given name is already registered", async () => {
-      await testEnv.interact<ProvidersRegistryInput>(caller, contractId,
+      await testEnv.interact<ProvidersRegistryInput>(caller, providersContractId,
         {
           function: "registerProvider",
           data: {
@@ -153,7 +170,7 @@ describe("Provider Registry Contract", () => {
           }
         });
 
-      await expect(testEnv.interact<ProvidersRegistryInput>("bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111", contractId,
+      await expect(testEnv.interact<ProvidersRegistryInput>("bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111", providersContractId,
         {
           function: "registerProvider",
           data: {
@@ -180,7 +197,7 @@ describe("Provider Registry Contract", () => {
       }`
       );
 
-      await expect(testEnv.interact<ProvidersRegistryInput>(caller, contractId,
+      await expect(testEnv.interact<ProvidersRegistryInput>(caller, providersContractId,
         {
           function: "registerProvider",
           data: data
@@ -202,7 +219,7 @@ describe("Provider Registry Contract", () => {
       }`
       );
 
-      await expect(testEnv.interact<ProvidersRegistryInput>(caller, contractId,
+      await expect(testEnv.interact<ProvidersRegistryInput>(caller, providersContractId,
         {
           function: "registerProvider",
           data: data
@@ -224,7 +241,7 @@ describe("Provider Registry Contract", () => {
       }`
       );
 
-      await expect(testEnv.interact<ProvidersRegistryInput>(caller, contractId,
+      await expect(testEnv.interact<ProvidersRegistryInput>(caller, providersContractId,
         {
           function: "registerProvider",
           data: data
@@ -246,7 +263,7 @@ describe("Provider Registry Contract", () => {
       }`
       );
 
-      await expect(testEnv.interact<ProvidersRegistryInput>(caller, contractId,
+      await expect(testEnv.interact<ProvidersRegistryInput>(caller, providersContractId,
         {
           function: "registerProvider",
           data: data
@@ -255,25 +272,6 @@ describe("Provider Registry Contract", () => {
         .toThrowError("Provider profile url not defined.")
     });
 
-    it("throws if initial locked tokens > 0", async () => {
-      await expect(testEnv.interact<ProvidersRegistryInput>(caller, contractId,
-        {
-          function: "registerProvider",
-          data: {
-            "provider": {
-              "adminsPool": [],
-              "stakedTokens": 444,
-              "profile": {
-                "name": "test-provider-1",
-                "description": "desc-1",
-                "url": "https://test-provider-1.ok"
-              },
-            }
-          }
-        }))
-        .rejects
-        .toThrowError("Initial stake must be zero.")
-    });
   });
 
   describe("removeProvider function", () => {
@@ -285,7 +283,7 @@ describe("Provider Registry Contract", () => {
     beforeEach(async () => {
       await testEnv.interact<ProvidersRegistryInput>(
         user1,
-        contractId,
+        providersContractId,
         {
           function: "registerProvider",
           data: {
@@ -302,7 +300,7 @@ describe("Provider Registry Contract", () => {
 
       await testEnv.interact<ProvidersRegistryInput>(
         user2,
-        contractId,
+        providersContractId,
         {
           function: "registerProvider",
           data: {
@@ -321,7 +319,7 @@ describe("Provider Registry Contract", () => {
     it("removes provider with given provider id", async () => {
       const interaction = await testEnv.interact<ProvidersRegistryInput>(
         user2,
-        contractId,
+        providersContractId,
         {
           function: "removeProvider",
           data: {
@@ -351,7 +349,7 @@ describe("Provider Registry Contract", () => {
 
       await expect(testEnv.interact<ProvidersRegistryInput>(
         user2,
-        contractId,
+        providersContractId,
         {
           function: "removeProvider",
           data
@@ -363,7 +361,7 @@ describe("Provider Registry Contract", () => {
     it("throws if provider does not exist", async () => {
       await expect(testEnv.interact<ProvidersRegistryInput>(
         user2,
-        contractId,
+        providersContractId,
         {
           function: "removeProvider",
           data: {
@@ -377,7 +375,7 @@ describe("Provider Registry Contract", () => {
     it("throws if caller has no privileges to provider ", async () => {
       await expect(testEnv.interact<ProvidersRegistryInput>(
         nonProviderAdminUser,
-        contractId,
+        providersContractId,
         {
           function: "removeProvider",
           data: {
@@ -393,7 +391,7 @@ describe("Provider Registry Contract", () => {
     beforeEach(async () => {
       await testEnv.interact<ProvidersRegistryInput>(
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
-        contractId,
+        providersContractId,
         {
           function: "registerProvider",
           data: {
@@ -412,7 +410,7 @@ describe("Provider Registry Contract", () => {
     it("adds manifest to a provider", async () => {
       const interaction = await testEnv.interact<ProvidersRegistryInput>(
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
-        contractId,
+        providersContractId,
         {
           function: "addProviderManifest",
           data: {
@@ -441,7 +439,7 @@ describe("Provider Registry Contract", () => {
 
       await expect(testEnv.interact<ProvidersRegistryInput>(
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_222222",
-        contractId,
+        providersContractId,
         {
           function: "addProviderManifest",
           data
@@ -453,7 +451,7 @@ describe("Provider Registry Contract", () => {
     it("throws if provider does not exist", async () => {
       await expect(testEnv.interact<ProvidersRegistryInput>(
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
-        contractId,
+        providersContractId,
         {
           function: "addProviderManifest",
           data: {
@@ -467,7 +465,7 @@ describe("Provider Registry Contract", () => {
     it("throws if caller has no privileges to provider", async () => {
       await expect(testEnv.interact<ProvidersRegistryInput>(
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111112",
-        contractId,
+        providersContractId,
         {
           function: "addProviderManifest",
           data: {
@@ -481,7 +479,7 @@ describe("Provider Registry Contract", () => {
     it("throws if manifest data is not set", async () => {
       await expect(testEnv.interact<ProvidersRegistryInput>(
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
-        contractId,
+        providersContractId,
         {
           function: "addProviderManifest",
           data: {
@@ -498,7 +496,7 @@ describe("Provider Registry Contract", () => {
       }`);
       await expect(testEnv.interact<ProvidersRegistryInput>(
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
-        contractId,
+        providersContractId,
         {
           function: "addProviderManifest",
           data: {
@@ -513,7 +511,7 @@ describe("Provider Registry Contract", () => {
     it("throws if change message not set", async () => {
       await expect(testEnv.interact<ProvidersRegistryInput>(
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
-        contractId,
+        providersContractId,
         {
           function: "addProviderManifest",
           data: {
@@ -534,7 +532,7 @@ describe("Provider Registry Contract", () => {
     beforeEach(async () => {
       await testEnv.interact<ProvidersRegistryInput>(
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
-        contractId,
+        providersContractId,
         {
           function: "registerProvider",
           data: {
@@ -556,7 +554,7 @@ describe("Provider Registry Contract", () => {
 
       await expect(testEnv.interact<ProvidersRegistryInput>(
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_222222",
-        contractId,
+        providersContractId,
         {
           function: "addProviderAdmin",
           data
@@ -568,7 +566,7 @@ describe("Provider Registry Contract", () => {
     it("throws if provider does not exist", async () => {
       await expect(testEnv.interact<ProvidersRegistryInput>(
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
-        contractId,
+        providersContractId,
         {
           function: "addProviderAdmin",
           data: {
@@ -582,7 +580,7 @@ describe("Provider Registry Contract", () => {
     it("throws if caller has no privileges to provider", async () => {
       await expect(testEnv.interact<ProvidersRegistryInput>(
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111112",
-        contractId,
+        providersContractId,
         {
           function: "addProviderAdmin",
           data: {
@@ -596,7 +594,7 @@ describe("Provider Registry Contract", () => {
     it("adds new admins for provider", async () => {
       const interaction = await testEnv.interact<ProvidersRegistryInput>(
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
-        contractId,
+        providersContractId,
         {
           function: "addProviderAdmin",
           data: {
@@ -630,7 +628,7 @@ describe("Provider Registry Contract", () => {
 
     it("gets latest active manifest (1)", async () => {
       testEnv.pushState(
-        contractId,
+        providersContractId,
         {
           trace: true,
           contractAdmins: ["xxx"],
@@ -650,7 +648,7 @@ describe("Provider Registry Contract", () => {
 
       const interaction = await testEnv.interact<ProvidersRegistryInput>(
         caller,
-        contractId,
+        providersContractId,
         {
           function: "activeManifest",
           data: {
@@ -670,7 +668,7 @@ describe("Provider Registry Contract", () => {
 
     it("gets latest active manifest (2)", async () => {
       testEnv.pushState(
-        contractId,
+        providersContractId,
         {
           trace: true,
           contractAdmins: ["xxx"],
@@ -695,7 +693,7 @@ describe("Provider Registry Contract", () => {
 
       const interaction = await testEnv.interact<ProvidersRegistryInput>(
         caller,
-        contractId,
+        providersContractId,
         {
           function: "activeManifest",
           data: {
@@ -715,7 +713,7 @@ describe("Provider Registry Contract", () => {
 
     it("gets latest active manifest (3)", async () => {
       testEnv.pushState(
-        contractId,
+        providersContractId,
         {
           trace: true,
           contractAdmins: ["xxx"],
@@ -745,7 +743,7 @@ describe("Provider Registry Contract", () => {
 
       const interaction = await testEnv.interact<ProvidersRegistryInput>(
         caller,
-        contractId,
+        providersContractId,
         {
           function: "activeManifest",
           data: {
@@ -764,14 +762,14 @@ describe("Provider Registry Contract", () => {
     })
 
     it("gets latest active manifest with content for eagerManifestLoad", async () => {
-      testEnv.contractEnv(contractId).swGlobal.unsafeClient.transactions.getData = jest.fn().mockImplementation((contractId) => {
+      testEnv.contractEnv(providersContractId).swGlobal.unsafeClient.transactions.getData = jest.fn().mockImplementation((contractId) => {
         if (contractId == "700_6") {
           return `{"foo": "bar"}`;
         }
       });
 
       testEnv.pushState(
-        contractId,
+        providersContractId,
         {
           trace: true,
           contractAdmins: ["xxx"],
@@ -801,7 +799,7 @@ describe("Provider Registry Contract", () => {
 
       const interaction = await testEnv.interact<ProvidersRegistryInput>(
         caller,
-        contractId,
+        providersContractId,
         {
           function: "activeManifest",
           data: {
@@ -830,9 +828,34 @@ describe("Provider Registry Contract", () => {
   describe("providerData function", () => {
 
     beforeEach(async () => {
+      testEnv.deployContract(tokenContractSrcPath, {
+        ticker: "R_TEST",
+        balances: {
+          [caller]: 2000
+        },
+        contractDeposits: {
+          "providers-registry": {
+            total: 1000,
+            wallets: {
+              [caller]: {
+                totalDeposit: 1000,
+                totalWithdrawn: 300,
+                log: {
+                  from: caller,
+                  qty: 1000,
+                  timestamp: 555
+                }
+              }
+            }
+          }
+        }
+      }, tokenContractTxId);
+
+
+
       await testEnv.interact<ProvidersRegistryInput>(
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
-        contractId,
+        providersContractId,
         {
           function: "registerProvider",
           data: {
@@ -851,6 +874,7 @@ describe("Provider Registry Contract", () => {
             }
           }
         });
+
     });
 
     it("throws if providerId not set", async () => {
@@ -859,7 +883,7 @@ describe("Provider Registry Contract", () => {
 
       await expect(testEnv.interact<ProvidersRegistryInput>(
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_222222",
-        contractId,
+        providersContractId,
         {
           function: "providerData",
           data
@@ -871,7 +895,7 @@ describe("Provider Registry Contract", () => {
     it("throws if provider does not exist", async () => {
       await expect(testEnv.interact<ProvidersRegistryInput>(
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
-        contractId,
+        providersContractId,
         {
           function: "providerData",
           data: {
@@ -882,10 +906,35 @@ describe("Provider Registry Contract", () => {
         .toThrowError("Provider with id bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_333333 is not registered.");
     });
 
-    it("gets provider by provider id", async () => {
+    it("gets provider by provider id with calculated staked tokens", async () => {
+      // given
+      await deployContractsRegistry();
+
+      testEnv.pushState(tokenContractTxId, {
+        ...testEnv.readState(tokenContractTxId),
+        contractDeposits: {
+          "providers-registry": {
+            "deposit": 3478,
+            "withdraw": 378,
+            "wallets": {
+              "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111": {
+                "deposit": 3478,
+                "withdraw": 378,
+                "log": [{
+                  "from": "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
+                  "qty": 3478,
+                  "timestamp": 5555
+                }]
+              }
+            }
+          }
+        }
+      });
+
+      //when
       const interaction = await testEnv.interact<ProvidersRegistryInput>(
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
-        contractId,
+        providersContractId,
         {
           function: "providerData",
           data: {
@@ -893,6 +942,7 @@ describe("Provider Registry Contract", () => {
           }
         });
 
+      // then
       expect(interaction.result).toEqual(
         {
           "provider": {
@@ -909,10 +959,10 @@ describe("Provider Registry Contract", () => {
               "manifestTxId": "mft-tx-5",
               "status": "active"
             }],
-            "registerHeight": 1000
+            "registerHeight": 1000,
+            "stakedTokens": 3100
           }
-        }
-      )
+        });
     });
   });
 
@@ -921,7 +971,7 @@ describe("Provider Registry Contract", () => {
     beforeEach(async () => {
       await testEnv.interact<ProvidersRegistryInput>(
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
-        contractId,
+        providersContractId,
         {
           function: "registerProvider",
           data: {
@@ -943,7 +993,7 @@ describe("Provider Registry Contract", () => {
 
       await testEnv.interact<ProvidersRegistryInput>(
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111112",
-        contractId,
+        providersContractId,
         {
           function: "registerProvider",
           data: {
@@ -971,14 +1021,19 @@ describe("Provider Registry Contract", () => {
     });
 
     it("returns data of all providers", async () => {
+      // given
+      await deployContractsRegistry();
+
+      // when
       const interaction = await testEnv.interact<ProvidersRegistryInput>(
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
-        contractId,
+        providersContractId,
         {
           function: "providersData",
           data: {}
         });
 
+      // then
       expect(interaction.result).toEqual(
         {
           "providers": {
@@ -996,7 +1051,8 @@ describe("Provider Registry Contract", () => {
                 "manifestTxId": "mft-tx-5",
                 "status": "active"
               }],
-              "registerHeight": 1000
+              "registerHeight": 1000,
+              "stakedTokens": 0
             },
             "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111112": {
               "adminsPool": ["bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111112"],
@@ -1017,7 +1073,8 @@ describe("Provider Registry Contract", () => {
                 "manifestTxId": "mft-tx-7",
                 "status": "active"
               }],
-              "registerHeight": 1000
+              "registerHeight": 1000,
+              "stakedTokens": 0
             }
           }
         }
@@ -1030,7 +1087,7 @@ describe("Provider Registry Contract", () => {
     it("should throw if caller is not an admin", async () => {
       await expect(testEnv.interact<ProvidersRegistryInput>(
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBZ",
-        contractId,
+        providersContractId,
         {
           function: "addContractAdmins",
           data: {
@@ -1042,7 +1099,7 @@ describe("Provider Registry Contract", () => {
     it("should add new contract admins", async () => {
       const interaction = await testEnv.interact<ProvidersRegistryInput>(
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBY",
-        contractId,
+        providersContractId,
         {
           function: "addContractAdmins",
           data: {
@@ -1063,7 +1120,7 @@ describe("Provider Registry Contract", () => {
     it("should throw if caller is not an admin", async () => {
       await expect(testEnv.interact<ProvidersRegistryInput>(
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBZ",
-        contractId,
+        providersContractId,
         {
           function: "switchTrace",
           data: {}
@@ -1071,11 +1128,11 @@ describe("Provider Registry Contract", () => {
     });
 
     it("should switch trace state", async () => {
-      const prevTraceState = testEnv.readContract(contractId).trace
+      const prevTraceState = testEnv.readState(providersContractId).trace
 
       const interaction = await testEnv.interact<ProvidersRegistryInput>(
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBY",
-        contractId,
+        providersContractId,
         {
           function: "switchTrace",
           data: {}
@@ -1090,7 +1147,7 @@ describe("Provider Registry Contract", () => {
     it("should throw if caller is not an admin", async () => {
       await expect(testEnv.interact<ProvidersRegistryInput>(
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBZ",
-        contractId,
+        providersContractId,
         {
           function: "switchReadonly",
           data: {}
@@ -1098,11 +1155,11 @@ describe("Provider Registry Contract", () => {
     });
 
     it("should switch readonly state", async () => {
-      const prevReadonlyState = testEnv.readContract(contractId).readonly
+      const prevReadonlyState = testEnv.readState(providersContractId).readonly
 
       const interaction = await testEnv.interact<ProvidersRegistryInput>(
         "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBY",
-        contractId,
+        providersContractId,
         {
           function: "switchReadonly",
           data: {}
@@ -1117,16 +1174,16 @@ describe("Provider Registry Contract", () => {
       beforeEach(async () => {
         await testEnv.interact<ProvidersRegistryInput>(
           "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBY",
-          contractId,
+          providersContractId,
           {
             function: "switchReadonly",
             data: {}
           });
-        expect(testEnv.readContract(contractId).readonly).toBeTruthy();
+        expect(testEnv.readState(providersContractId).readonly).toBeTruthy();
       });
 
       it("should prevent from changing state by non-admins", async () => {
-        await expect(testEnv.interact<ProvidersRegistryInput>(nonAdminCaller, contractId,
+        await expect(testEnv.interact<ProvidersRegistryInput>(nonAdminCaller, providersContractId,
           {
             function: "registerProvider",
             data: {
@@ -1143,7 +1200,7 @@ describe("Provider Registry Contract", () => {
       });
 
       it("should prevent from changing  state by contract admins", async () => {
-        await expect(testEnv.interact<ProvidersRegistryInput>(caller, contractId,
+        await expect(testEnv.interact<ProvidersRegistryInput>(caller, providersContractId,
           {
             function: "registerProvider",
             data: {
@@ -1160,8 +1217,8 @@ describe("Provider Registry Contract", () => {
       });
 
       it("should should allow to change administrative state by admins", async () => {
-        const prevTrace = testEnv.readContract(contractId).trace;
-        const interaction = await testEnv.interact<ProvidersRegistryInput>(caller, contractId,
+        const prevTrace = testEnv.readState(providersContractId).trace;
+        const interaction = await testEnv.interact<ProvidersRegistryInput>(caller, providersContractId,
           {
             function: "switchTrace",
             data: {}
@@ -1171,11 +1228,11 @@ describe("Provider Registry Contract", () => {
     });
   });
 
-  describe("stake function", () => {
-    let initialBalance = 1000;
+  describe("updateAvailableTokens function", () => {
+    let initialBalance = 2000;
     beforeEach(async () => {
       testEnv.deployContract(registryContractSrcPath, {
-        "contractAdmins": [caller]
+        contractAdmins: [caller]
       }, registryTxId);
 
       await testEnv.interact<ContractsRegistryInput>(caller, registryTxId,
@@ -1183,21 +1240,14 @@ describe("Provider Registry Contract", () => {
           function: "registerContracts",
           data: {
             contracts: {
-              "providers-registry": contractId,
+              "providers-registry": providersContractId,
               "token": tokenContractTxId
             },
             comment: "initial deploy"
           }
         });
 
-      testEnv.deployContract(tokenContractSrcPath, {
-        "ticker": "R_TEST",
-        "balances": {
-          [caller]: initialBalance
-        }
-      }, tokenContractTxId);
-
-      await testEnv.interact<ProvidersRegistryInput>(caller, contractId,
+      await testEnv.interact<ProvidersRegistryInput>(caller, providersContractId,
         {
           function: "registerProvider",
           data: {
@@ -1211,39 +1261,85 @@ describe("Provider Registry Contract", () => {
             }
           }
         });
-
     });
 
-    it("should not create stake request if not enough balance", async () => {
-      await expect(testEnv.interact<ProvidersRegistryInput>(caller, contractId,
-        {
-          function: "stake",
-          data: {
-            "providerId": caller,
-            "qty": initialBalance + 1
+    it("should calculate tokens available for withdrawn from deposit (totalWithdrawn = 0)", async () => {
+      // given
+      testEnv.deployContract(tokenContractSrcPath, {
+        ticker: "R_TEST",
+        balances: {
+          [caller]: initialBalance
+        },
+        contractDeposits: {
+          "providers-registry": {
+            deposit: 1000,
+            withdraw: 0,
+            wallets: {
+              [caller]: {
+                deposit: 1000,
+                withdraw: 0,
+                log: {
+                  from: caller,
+                  qty: 1000,
+                  timestamp: 555
+                }
+              }
+            }
           }
-        })).rejects.toThrowError("Not enough balance.");
-    });
+        }
+      }, tokenContractTxId);
 
-    it("should create stake request if enough balance", async () => {
-      const interaction = await testEnv.interact<ProvidersRegistryInput>(caller, contractId,
-        {
-          function: "stake",
+      // when
+      const interaction = await testEnv.interact<ProvidersRegistryInput>(
+        caller, providersContractId, {
+          "function": "updateAvailableTokens",
           data: {
-            "providerId": caller,
-            "qty": initialBalance
-          }
-        }, {timestamp: 234234234, height: 55544});
-      expect(interaction.state.providers[caller].stakeTokensRequests)
-        .toEqual({
-          "DhvbNBM9ytlinJvco4SnWEoMSspLTtNeNCLyNFSnKbo": {
-            "targetId": "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBY",
-            "qty": 1000,
-            "caller": "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBY",
-            "timestamp": 234234234,
-            "type": "provider"
+            providerId: caller
           }
         });
+
+      // then
+      expect(interaction.state.availableTokens).toEqual(
+        {'bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBY': 500}
+      );
+    });
+
+    it("should calculate tokens available for withdrawn from deposit (totalWithdrawn > 0)", async () => {
+      testEnv.deployContract(tokenContractSrcPath, {
+        ticker: "R_TEST",
+        balances: {
+          [caller]: initialBalance
+        },
+        contractDeposits: {
+          "providers-registry": {
+            deposit: 1000,
+            withdraw: 200,
+            wallets: {
+              [caller]: {
+                deposit: 1000,
+                withdraw: 200,
+                log: {
+                  from: caller,
+                  qty: 1000,
+                  timestamp: 555
+                }
+              }
+            }
+          }
+        }
+      }, tokenContractTxId);
+
+      const interaction = await testEnv.interact<ProvidersRegistryInput>(
+        caller, providersContractId, {
+          "function": "updateAvailableTokens",
+          data: {
+            providerId: caller
+          }
+        });
+
+      expect(interaction.state.availableTokens).toEqual(
+        {'bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBY': 400}
+      );
     });
   });
 

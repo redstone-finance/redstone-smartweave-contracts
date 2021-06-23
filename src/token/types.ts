@@ -1,4 +1,4 @@
-import TransferRequest from "../common/common-types";
+import {Deposit} from "../common/common-types";
 
 export interface TokenState {
   contractAdmins: [];
@@ -9,42 +9,31 @@ export interface TokenState {
     [walletId: string]: number
   }
 
-  stakes: {
-    [contractTxId: string]: {
-      totalContractStake: number,
-      contractStakes: {
-        [targetId: string]: {
-          totalTargetStake: number
-          stakesLog: any[]
-        }
+  contractDeposits: {
+    [contractName: string]: {
+      /**
+       * total number of tokens deposited to given contract - ie. sum of all tokens
+       * deposited by wallets within this contract
+       */
+      deposit: number,
+
+      /**
+       * total number of tokens withdrawned from the contract - ie. sum of all tokens
+       * withdrawned from wallets within this contract
+       *
+       * currentDeposit = deposit - withdraw
+       */
+      withdraw: number
+      wallets: {
+        [walletId: string]: Deposit
       }
     }
   }
-
-  transferRequestsRegistry: WalletTransferRequestsRegistry;
 }
-
-// a map from wallet to transfer requests for this wallet
-export interface WalletTransferRequestsRegistry {
-  [walletId: string]: WalletTransferRequests
-}
-
-// a map from transfer request id to processed transfer requests for given wallet
-export interface WalletTransferRequests {
-  [requestId: string]: ProcessedTransferRequest
-}
-
-export interface ProcessedTransferRequest extends TransferRequest {
-  status: ProcessedTransferRequestStatus,
-  processedTimestamp: number,
-  description: string;
-}
-
-export type ProcessedTransferRequestStatus = "ok" | "not-enough-balance" | "error";
 
 export interface TokenInput {
   function: TokenGetFunction | TokenSetFunction;
-  data: BalanceData | StakeData | TransferData
+  data: BalanceData | DepositData | TransferData
 }
 
 export interface TransferData extends BalanceData {
@@ -55,11 +44,11 @@ export interface BalanceData {
   qty: number
 }
 
-export interface WithdrawData extends StakeData {
+export interface WithdrawData extends DepositData {
   beneficiaryId?: string;
 }
 
-export interface StakeData {
+export interface DepositData {
   contractName: string,
   targetId: string, // TODO: eg. providerId
   qty: number
@@ -77,4 +66,4 @@ export interface TokenResult {
 }
 
 export type TokenGetFunction = 'transfer' | 'processStakeRequest';
-export type TokenSetFunction = 'balance' | 'stake' | 'withdraw';
+export type TokenSetFunction = 'balance' | 'deposit' | 'withdraw' | 'slash';

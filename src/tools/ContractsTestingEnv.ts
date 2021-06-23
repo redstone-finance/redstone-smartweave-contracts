@@ -36,7 +36,7 @@ export default class ContractsTestingEnv {
     this.pushState = this.pushState.bind(this);
     this.currentState = this.currentState.bind(this);
     this.clearContracts = this.clearContracts.bind(this);
-    this.readContract = this.readContract.bind(this);
+    this.readState = this.readState.bind(this);
     this.history = this.history.bind(this);
   }
 
@@ -69,7 +69,7 @@ export default class ContractsTestingEnv {
       Arweave.init({}), source, this.contractId);
 
     env.swGlobal.contracts.readContractState = jest.fn().mockImplementation((contractId) => {
-      return this.currentState(contractId);
+      return JSON.parse(JSON.stringify(this.currentState(contractId)));
     });
 
     this.contracts[contractId] = {
@@ -126,7 +126,7 @@ export default class ContractsTestingEnv {
     this.contracts[contractId].states.push(state);
   }
 
-  readContract(contractId: string) {
+  readState(contractId: string) {
     return this.currentState(contractId);
   }
 

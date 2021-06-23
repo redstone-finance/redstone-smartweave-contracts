@@ -4,22 +4,22 @@ import {
   AddProviderManifestData,
   adminSetFunctions,
   GetProviderData,
-  GetProviderManifest, GetProviderStake,
+  GetProviderManifest,
   ManifestData, ManifestStatus, ProviderData,
   ProviderProfile,
   ProvidersRegistryAction,
   ProvidersRegistryResult,
   ProvidersRegistryState,
   RegisterProviderData,
-  RemoveProviderData, StakeTokens,
-  UpdateProviderProfileData, WithdrawTokens,
+  RemoveProviderData, UpdateAvailableTokensData,
+  UpdateProviderProfileData,
 } from "./types";
 import {ContractAdmin} from "../common/ContractAdmin";
 import {Validators} from "../common/Validators";
 import {Tools} from "../common/Tools";
-import TransferRequest from "../common/common-types";
 import {ContractInteractions} from "../common/ContractInteractions";
-import {ProcessedTransferRequest, WalletTransferRequests} from "../token/types";
+import {TokenState} from "../token/types";
+import {Deposit} from "../common/common-types";
 
 declare type ContractResult = { state: ProvidersRegistryState } | { result: ProvidersRegistryResult }
 declare const ContractError;
@@ -48,6 +48,10 @@ export async function handle(state: ProvidersRegistryState, action: ProvidersReg
   if (state.providers === undefined) {
     state.providers = {};
   }
+
+  if (state.availableTokens === undefined) {
+    state.availableTokens = {};
+  }
   const allProviders = state.providers;
 
   // note: just a test to verify how SDK behaves with real contracts
@@ -59,7 +63,7 @@ export async function handle(state: ProvidersRegistryState, action: ProvidersReg
 
   /* STATE MODIFYING ACTIONS */
   switch (input.function) {
-    case "registerProvider":
+    case "registerProvider": {
       const registerProviderData = input.data as RegisterProviderData;
       const newProvider = registerProviderData.provider;
 
@@ -68,11 +72,6 @@ export async function handle(state: ProvidersRegistryState, action: ProvidersReg
       }
 
       checkProviderProfile(newProvider.profile);
-
-      // TODO: not sure about this...
-      if (newProvider.stakedTokens !== undefined && newProvider.stakedTokens !== 0) {
-        throw new ContractError("Initial stake must be zero.");
-      }
 
       Tools.initIfUndefined(newProvider, "manifests", []);
 
@@ -94,8 +93,9 @@ export async function handle(state: ProvidersRegistryState, action: ProvidersReg
       trace("END STATE", state);
 
       return {state};
+    }
 
-    case "removeProvider":
+    case "removeProvider": {
       const removeProviderData = input.data as RemoveProviderData;
       checkProviderId(removeProviderData.providerId);
       checkProviderExists(removeProviderData.providerId);
@@ -106,8 +106,9 @@ export async function handle(state: ProvidersRegistryState, action: ProvidersReg
       trace("END STATE", state);
 
       return {state};
+    }
 
-    case "addProviderManifest":
+    case "addProviderManifest": {
       const addManifestData = input.data as AddProviderManifestData;
       const manifestProviderId = addManifestData.providerId;
       checkProviderId(manifestProviderId);
@@ -146,8 +147,9 @@ export async function handle(state: ProvidersRegistryState, action: ProvidersReg
       trace("END STATE", state);
 
       return {state};
+    }
 
-    case "addProviderAdmin":
+    case "addProviderAdmin": {
       const addProviderAdminData = input.data as AddProviderAdminData;
       checkProviderId(addProviderAdminData.providerId);
       checkProviderExists(addProviderAdminData.providerId);
@@ -159,8 +161,9 @@ export async function handle(state: ProvidersRegistryState, action: ProvidersReg
       trace("END STATE", state);
 
       return {state};
+    }
 
-    case "updateProviderProfile":
+    case "updateProviderProfile": {
       const updateProviderProfileData = input.data as UpdateProviderProfileData;
       checkProviderId(updateProviderProfileData.providerId);
       checkProviderExists(updateProviderProfileData.providerId);
@@ -170,65 +173,55 @@ export async function handle(state: ProvidersRegistryState, action: ProvidersReg
       allProviders[updateProviderProfileData.providerId].profile = updateProviderProfileData.profile;
 
       return {state};
+    }
 
-    case "stake":
-      const stakeData = input.data as StakeTokens;
-      checkProviderId(stakeData.providerId);
-      checkProviderExists(stakeData.providerId);
-      checkPrivileges(caller, stakeData.providerId);
+    case "updateAvailableTokens": {
+      const {providerId} = input.data as UpdateAvailableTokensData;
+      checkProviderId(providerId);
+      checkProviderExists(providerId);
+      checkPrivileges(caller, providerId);
 
-      await checkProviderBalance(stakeData.providerId, stakeData.qty);
+      Tools.initIfUndefined(state, "availableTokens", {});
+      Tools.initIfUndefined(state.availableTokens, providerId, {});
 
-      // is it necessary?
-      checkNoPendingRequests(stakeData.providerId);
+      const deposit = (await getDeposits())[providerId];
+      const stakedTokens = calculateStakedTokens(deposit);
 
-      await addStakeTransferRequest(stakeData.providerId, stakeData.qty);
+      // just an example implementation
+      state.availableTokens[providerId] = Math.floor(0.5 * stakedTokens);
+    }
 
-      return {state}
-
-    case "withdraw":
-      const withdrawData = input.data as WithdrawTokens;
-      checkProviderId(withdrawData.providerId);
-      checkProviderExists(withdrawData.providerId);
-      checkPrivileges(caller, withdrawData.providerId);
-
-      // is it necessary?
-      checkNoPendingRequests(stakeData.providerId);
-
-      // TODO - or at least check if (sum of all disputes) <= (stake - withdrawData.qty)?
-      checkNoPendingDisputes(withdrawData.providerId);
-
-      checkQtyLowerThanCurrentStake(withdrawData.providerId, withdrawData.qty);
-
-      await addStakeTransferRequest(withdrawData.providerId, -withdrawData.qty);
-
-      return {state}
-
-    case "switchTrace":
+    case "switchTrace": {
       state.trace = !state.trace;
       trace("END STATE", state);
 
       return {state};
+    }
 
-    case "addContractAdmins":
+    case "addContractAdmins": {
       const addContractAdmins = input.data as AddContractAdmins;
       contractAdmin.addContractAdmins(addContractAdmins.admins);
 
       return {state};
+    }
 
-    case "switchReadonly":
+    case "switchReadonly": {
       state.readonly = !state.readonly;
       trace("END STATE", state);
 
       return {state};
+    }
 
-    case "providerData":
+    case "providerData": {
       const getProviderData = input.data as GetProviderData;
       checkProviderId(getProviderData.providerId);
       checkProviderExists(getProviderData.providerId);
 
       const providerCopy = Tools.deepCopy(allProviders[getProviderData.providerId]);
       providerCopy.manifests = updateManifestsStatus(providerCopy.manifests);
+
+      const providerDeposit = (await getDeposits())[getProviderData.providerId];
+      providerCopy.stakedTokens = calculateStakedTokens(providerDeposit);
 
       if (getProviderData.eagerManifestLoad) {
         const activeManifest: ManifestData = providerCopy.manifests.find((manifest) => {
@@ -239,18 +232,23 @@ export async function handle(state: ProvidersRegistryState, action: ProvidersReg
       return {
         result: {provider: providerCopy}
       };
+    }
 
-    case "providersData":
+    case "providersData": {
       const providersCopy: { [providerAddress: string]: ProviderData } = Tools.deepCopy(allProviders);
-      Object.values(providersCopy).forEach((provider: ProviderData) => {
+      const deposits = await getDeposits();
+      Object.keys(providersCopy).forEach((key) => {
+        const provider = providersCopy[key];
         provider.manifests = updateManifestsStatus(provider.manifests);
+        provider.stakedTokens = calculateStakedTokens(deposits[key]);
       });
 
       return {
         result: {providers: providersCopy}
       };
+    }
 
-    case "activeManifest":
+    case "activeManifest": {
       const activeManifestData = input.data as GetProviderManifest;
       checkProviderId(activeManifestData.providerId);
       checkProviderExists(activeManifestData.providerId);
@@ -266,73 +264,33 @@ export async function handle(state: ProvidersRegistryState, action: ProvidersReg
       trace("RESULT", activeManifest);
 
       return {result: {manifest: activeManifest}};
-
-    case "currentStake":
-      const currentStakeData = input.data as GetProviderStake;
-      const tokenContractState = await ContractInteractions.tokenContractState();
-      const providerTransferRequests: WalletTransferRequests = tokenContractState.transferRequestsRegistry[currentStakeData.providerId];
-      // TODO: check if providerTransferRequests is undefined
-
-      const stakedTokens = Object.values(providerTransferRequests)
-        .filter(properlyProcessedStakeRequests)
-        .map((t) => t.qty)
-        .reduce((a, b) => a + b, 0);
-
-      trace("Current stake", stakedTokens);
-
-      return {result: {stakedTokens}};
+    }
 
     default:
       throw new ContractError(`No function supplied or function not recognised: "${input.function}"`);
   }
 
   /* HELPER FUNCTIONS */
-  function properlyProcessedStakeRequests(transferRequest: ProcessedTransferRequest) {
-    return transferRequest.status === "ok" && transferRequest.type === "stake";
-  }
-
-  async function addStakeTransferRequest(providerId: string, qty: number) {
-    const thisContractTxId = await ContractInteractions.getContractTxId("providers-registry");
-
-    const request: Omit<TransferRequest, "id"> = {
-      targetId: providerId,
-      qty: qty,
-      caller: caller,
-      timestamp: SmartWeave.block.timestamp,
-      type: "stake",
-      owningContractTxId: thisContractTxId,
+  function calculateStakedTokens(deposit: Deposit) {
+    if (deposit === undefined) {
+      return 0;
     }
-
-    const requestId = await ContractInteractions.generateId(JSON.stringify(request));
-    Tools.initIfUndefined(state.providers[providerId], "transferRequests", {});
-    const transferRequests = state.providers[providerId].transferRequests;
-
-    if (transferRequests[requestId] !== undefined) {
-      throw new ContractError(`Transfer with id = ${requestId} already exists`);
-    }
-
-    transferRequests[requestId] = {
-      ...request,
-      id: requestId
-    }
+    return deposit.deposit - deposit.withdraw;
   }
 
+  async function getDeposits() {
+    // note: remove try-catch when token contract will be deployed
+    try {
+      const tokenContractState = await ContractInteractions.tokenContractState() as TokenState;
 
-  function checkNoPendingDisputes(providerId: string) {
-    // TODO: implement when disputes contract will be ready.
-  }
-
-  function checkQtyLowerThanCurrentStake(providerId: string, qty: number) {
-
-  }
-
-  async function checkProviderBalance(caller: string, qty: number) {
-    const tokenContractState = await ContractInteractions.tokenContractState();
-    const balance = tokenContractState.balances[caller];
-    // TODO: consider adding some "buffer"?
-    // eg. only max. 80% of available tokens can be staked?
-    if (balance < qty) {
-      throw new ContractError("Not enough balance.");
+      const contractDeposits = tokenContractState.contractDeposits["providers-registry"];
+      if (contractDeposits === undefined) {
+        return {};
+      }
+      return contractDeposits.wallets;
+    } catch (e) {
+      trace(e);
+      return {};
     }
   }
 
@@ -387,10 +345,6 @@ export async function handle(state: ProvidersRegistryState, action: ProvidersReg
 
     // un-reverse to restore original order (ie. order in which manifests where added).
     return manifestsWithStatus.reverse();
-  }
-
-  function checkNoPendingRequests(providerId: string) {
-    // read token contract state and verify if there are any non-processed requests for given providerId.
   }
 
   function checkExactOneManifestIsActive(manifestsWithStatus: ManifestData[]) {

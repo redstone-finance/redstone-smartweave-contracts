@@ -2,11 +2,11 @@ declare const ContractError;
 
 export class Validators {
 
-  static isEmpty(value: string | any[]) {
+  static isEmpty(value: string | any[]): boolean {
     return value === undefined || value.length === 0;
   }
 
-  static isTypeOf(value: any, expectedType: "string" | "number" | "object") {
+  static isTypeOf(value: any, expectedType: "string" | "number" | "object"): boolean {
     return typeof value === expectedType;
   }
 
