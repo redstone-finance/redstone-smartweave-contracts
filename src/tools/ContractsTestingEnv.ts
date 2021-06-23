@@ -10,7 +10,14 @@ export type ContractExecutionEnv = {
 }
 
 export type Block = {
-  height: number
+  height: number,
+  timestamp: number
+}
+
+export type Contract = {
+  src: string,
+  txId: string;
+  initialState: any
 }
 
 export default class ContractsTestingEnv {
@@ -27,8 +34,12 @@ export default class ContractsTestingEnv {
     this.pushState = this.pushState.bind(this);
     this.currentState = this.currentState.bind(this);
     this.clearContracts = this.clearContracts.bind(this);
-    this.readContract = this.readContract.bind(this);
+    this.readState = this.readState.bind(this);
     this.history = this.history.bind(this);
+  }
+
+  deploy(contract: Contract): string {
+    return this.deployContract(contract.src, contract.initialState, contract.txId);
   }
 
   /**
@@ -56,7 +67,7 @@ export default class ContractsTestingEnv {
       Arweave.init({}), source, contractId);
 
     env.swGlobal.contracts.readContractState = jest.fn().mockImplementation((contractId) => {
-      return this.currentState(contractId);
+      return JSON.parse(JSON.stringify(this.currentState(contractId)));
     });
 
     this.contracts[contractId] = {
@@ -79,7 +90,7 @@ export default class ContractsTestingEnv {
     const currentState = forcedCurrentState || this.currentState(contractId);
 
     const prevActiveTx = this.contracts[contractId].env.swGlobal._activeTx;
-    this.contracts[contractId].env.swGlobal._activeTx = ContractsTestingEnv.mockActiveTx(block || {height: 1000});
+    this.contracts[contractId].env.swGlobal._activeTx = ContractsTestingEnv.mockActiveTx(block || {height: 1000, timestamp: 5555});
 
     const res: ContractInteractionResult = await execute(
       this.contracts[contractId].env.handler,
@@ -113,7 +124,7 @@ export default class ContractsTestingEnv {
     this.contracts[contractId].states.push(state);
   }
 
-  readContract(contractId: string) {
+  readState(contractId: string) {
     return this.currentState(contractId);
   }
 
@@ -134,9 +145,9 @@ export default class ContractsTestingEnv {
     }
   }
 
-  private static mockActiveTx(block: Block): InteractionTx {
+  private static mockActiveTx(mockBlock: Block): InteractionTx {
     return {
-      id: `TX-ID-${block.height}`,
+      id: `TX-ID-${mockBlock.height}`,
       owner: {
         address: "tx.owner.address",
       },
@@ -149,9 +160,9 @@ export default class ContractsTestingEnv {
         winston: "333",
       },
       block: {
-        height: block.height,
+        height: mockBlock.height,
         id: `BLOCK-${Date.now()}`,
-        timestamp: null,
+        timestamp: mockBlock.timestamp,
       },
     };
   }

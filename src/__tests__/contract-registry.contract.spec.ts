@@ -1,14 +1,13 @@
 import ContractsTestingEnv from "../tools/ContractsTestingEnv";
 import {ContractsRegistryInput} from "../contracts-registry/types";
 
-const contractSrcPath = "./src/contracts-registry/contracts-registry.contract.ts";
-
-const caller = "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBY"
-const initialState = {
-  contractAdmins: ["bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBY"]
-};
-
 describe("Contracts Registry Contract", () => {
+  const contractSrcPath = "./src/contracts-registry/contracts-registry.contract.ts";
+
+  const caller = "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBY"
+  const initialState = {
+    contractAdmins: [caller]
+  };
 
   const testEnv = new ContractsTestingEnv();
   let contractId: string

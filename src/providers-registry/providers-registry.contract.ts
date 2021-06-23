@@ -11,12 +11,15 @@ import {
   ProvidersRegistryResult,
   ProvidersRegistryState,
   RegisterProviderData,
-  RemoveProviderData,
+  RemoveProviderData, UpdateAvailableTokensData,
   UpdateProviderProfileData,
 } from "./types";
 import {ContractAdmin} from "../common/ContractAdmin";
 import {Validators} from "../common/Validators";
 import {Tools} from "../common/Tools";
+import {ContractInteractions} from "../common/ContractInteractions";
+import {TokenState} from "../token/types";
+import {Deposit} from "../common/common-types";
 
 declare type ContractResult = { state: ProvidersRegistryState } | { result: ProvidersRegistryResult }
 declare const ContractError;
@@ -45,6 +48,10 @@ export async function handle(state: ProvidersRegistryState, action: ProvidersReg
   if (state.providers === undefined) {
     state.providers = {};
   }
+
+  if (state.availableTokens === undefined) {
+    state.availableTokens = {};
+  }
   const allProviders = state.providers;
 
   // note: just a test to verify how SDK behaves with real contracts
@@ -53,10 +60,10 @@ export async function handle(state: ProvidersRegistryState, action: ProvidersReg
   trace("STATE", state);
   trace("ACTION", action);
 
-  /* STATE MODIFYING ACTIONS */
 
+  /* STATE MODIFYING ACTIONS */
   switch (input.function) {
-    case "registerProvider":
+    case "registerProvider": {
       const registerProviderData = input.data as RegisterProviderData;
       const newProvider = registerProviderData.provider;
 
@@ -65,11 +72,6 @@ export async function handle(state: ProvidersRegistryState, action: ProvidersReg
       }
 
       checkProviderProfile(newProvider.profile);
-
-      // TODO: not sure about this...
-      if (newProvider.lockedTokens !== undefined && newProvider.lockedTokens !== 0) {
-        throw new ContractError("Initial stake must be zero.");
-      }
 
       Tools.initIfUndefined(newProvider, "manifests", []);
 
@@ -91,8 +93,9 @@ export async function handle(state: ProvidersRegistryState, action: ProvidersReg
       trace("END STATE", state);
 
       return {state};
+    }
 
-    case "removeProvider":
+    case "removeProvider": {
       const removeProviderData = input.data as RemoveProviderData;
       checkProviderId(removeProviderData.providerId);
       checkProviderExists(removeProviderData.providerId);
@@ -103,8 +106,9 @@ export async function handle(state: ProvidersRegistryState, action: ProvidersReg
       trace("END STATE", state);
 
       return {state};
+    }
 
-    case "addProviderManifest":
+    case "addProviderManifest": {
       const addManifestData = input.data as AddProviderManifestData;
       const manifestProviderId = addManifestData.providerId;
       checkProviderId(manifestProviderId);
@@ -143,8 +147,9 @@ export async function handle(state: ProvidersRegistryState, action: ProvidersReg
       trace("END STATE", state);
 
       return {state};
+    }
 
-    case "addProviderAdmin":
+    case "addProviderAdmin": {
       const addProviderAdminData = input.data as AddProviderAdminData;
       checkProviderId(addProviderAdminData.providerId);
       checkProviderExists(addProviderAdminData.providerId);
@@ -156,8 +161,9 @@ export async function handle(state: ProvidersRegistryState, action: ProvidersReg
       trace("END STATE", state);
 
       return {state};
+    }
 
-    case "updateProviderProfile":
+    case "updateProviderProfile": {
       const updateProviderProfileData = input.data as UpdateProviderProfileData;
       checkProviderId(updateProviderProfileData.providerId);
       checkProviderExists(updateProviderProfileData.providerId);
@@ -167,32 +173,55 @@ export async function handle(state: ProvidersRegistryState, action: ProvidersReg
       allProviders[updateProviderProfileData.providerId].profile = updateProviderProfileData.profile;
 
       return {state};
+    }
 
-    case "switchTrace":
+    case "updateAvailableTokens": {
+      const {providerId} = input.data as UpdateAvailableTokensData;
+      checkProviderId(providerId);
+      checkProviderExists(providerId);
+      checkPrivileges(caller, providerId);
+
+      Tools.initIfUndefined(state, "availableTokens", {});
+      Tools.initIfUndefined(state.availableTokens, providerId, {});
+
+      const deposit = (await getDeposits())[providerId];
+      const stakedTokens = calculateStakedTokens(deposit);
+
+      // just an example implementation
+      state.availableTokens[providerId] = Math.floor(0.5 * stakedTokens);
+    }
+
+    case "switchTrace": {
       state.trace = !state.trace;
       trace("END STATE", state);
 
       return {state};
+    }
 
-    case "addContractAdmins":
+    case "addContractAdmins": {
       const addContractAdmins = input.data as AddContractAdmins;
       contractAdmin.addContractAdmins(addContractAdmins.admins);
 
       return {state};
+    }
 
-    case "switchReadonly":
+    case "switchReadonly": {
       state.readonly = !state.readonly;
       trace("END STATE", state);
 
       return {state};
+    }
 
-    case "providerData":
+    case "providerData": {
       const getProviderData = input.data as GetProviderData;
       checkProviderId(getProviderData.providerId);
       checkProviderExists(getProviderData.providerId);
 
       const providerCopy = Tools.deepCopy(allProviders[getProviderData.providerId]);
       providerCopy.manifests = updateManifestsStatus(providerCopy.manifests);
+
+      const providerDeposit = (await getDeposits())[getProviderData.providerId];
+      providerCopy.stakedTokens = calculateStakedTokens(providerDeposit);
 
       if (getProviderData.eagerManifestLoad) {
         const activeManifest: ManifestData = providerCopy.manifests.find((manifest) => {
@@ -203,39 +232,68 @@ export async function handle(state: ProvidersRegistryState, action: ProvidersReg
       return {
         result: {provider: providerCopy}
       };
+    }
 
-    case "providersData":
+    case "providersData": {
       const providersCopy: { [providerAddress: string]: ProviderData } = Tools.deepCopy(allProviders);
-      Object.values(providersCopy).forEach((provider: ProviderData) => {
+      const deposits = await getDeposits();
+      Object.keys(providersCopy).forEach((key) => {
+        const provider = providersCopy[key];
         provider.manifests = updateManifestsStatus(provider.manifests);
+        provider.stakedTokens = calculateStakedTokens(deposits[key]);
       });
 
       return {
         result: {providers: providersCopy}
       };
+    }
 
-    case "activeManifest":
-      const data = input.data as GetProviderManifest;
-      checkProviderId(data.providerId);
-      checkProviderExists(data.providerId);
+    case "activeManifest": {
+      const activeManifestData = input.data as GetProviderManifest;
+      checkProviderId(activeManifestData.providerId);
+      checkProviderExists(activeManifestData.providerId);
 
-      const manifests = getManifestsFor(data.providerId);
+      const manifests = getManifestsFor(activeManifestData.providerId);
       const manifestsWithStatus = updateManifestsStatus(manifests);
       const activeManifest = manifestsWithStatus.find((manifest) => {
         return manifest.status === "active";
       });
-      if (data.eagerManifestLoad) {
+      if (activeManifestData.eagerManifestLoad) {
         await setManifestContent(activeManifest);
       }
       trace("RESULT", activeManifest);
 
       return {result: {manifest: activeManifest}};
+    }
 
     default:
       throw new ContractError(`No function supplied or function not recognised: "${input.function}"`);
   }
 
   /* HELPER FUNCTIONS */
+  function calculateStakedTokens(deposit: Deposit) {
+    if (deposit === undefined) {
+      return 0;
+    }
+    return deposit.deposit - deposit.withdraw;
+  }
+
+  async function getDeposits() {
+    // note: remove try-catch when token contract will be deployed
+    try {
+      const tokenContractState = await ContractInteractions.tokenContractState() as TokenState;
+
+      const contractDeposits = tokenContractState.contractDeposits["providers-registry"];
+      if (contractDeposits === undefined) {
+        return {};
+      }
+      return contractDeposits.wallets;
+    } catch (e) {
+      trace(e);
+      return {};
+    }
+  }
+
   async function setManifestContent(manifest: ManifestData): Promise<ManifestData> {
     trace("Searching for data of", manifest.manifestTxId);
 

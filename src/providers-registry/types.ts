@@ -1,4 +1,7 @@
-export interface ProvidersRegistryState {
+import {TokenLockingContract} from "../common/common-types";
+
+export interface ProvidersRegistryState extends TokenLockingContract
+{
   /**
    * whether contract function should log debug info
    * note: only contract's admin is allowed to change this value
@@ -46,10 +49,8 @@ export interface ProviderData {
    */
   registerHeight?: number;
 
-  /**
-   * TBA
-   */
-  lockedTokens?: number;
+  // note: this is filled dynamically with data from token.contract state.
+  stakedTokens?: number;
 
   /**
    * Redstone node manifests deployed for this provider
@@ -96,9 +97,14 @@ export interface ProvidersRegistryInput {
     | RemoveProviderData
     | AddProviderAdminData
     | AddProviderManifestData
-    | StakeProviderTokens
     | AddContractAdmins
-    | SwitchTraceData;
+    | SwitchTraceData
+    | GetProviderManifest
+    | UpdateAvailableTokensData;
+}
+
+export interface UpdateAvailableTokensData {
+  providerId: string;
 }
 
 export interface RegisterProviderData {
@@ -112,13 +118,13 @@ export interface RemoveProviderData {
 export interface GetProviderData {
   providerId: string
 
-  // this flag says whether we should also try to get a transaction with "active"  manifest's content
+  // this flag says whether we should also try to get a transaction with "active" manifest's content
   eagerManifestLoad?: boolean
 }
 
 export interface GetProviderManifest {
   providerId: string,
-  // this flag says whether we should also try to get a transaction with "active"  manifest's content
+  // this flag says whether we should also try to get a transaction with "active" manifest's content
   eagerManifestLoad?: boolean
 }
 
@@ -148,11 +154,6 @@ export interface UpdateProviderProfileData {
   profile: ProviderProfile;
 }
 
-export interface StakeProviderTokens {
-  providerId: string,
-  qty: number
-}
-
 export interface ProvidersRegistryResult {
   providers?: {
     [providerAddress: string]: ProviderData,
@@ -172,8 +173,8 @@ export const nonAdminSetFunctions = [
   "removeProvider",
   "addProviderAdmin",
   "addProviderManifest",
-  "stakeProviderTokens",
-  "updateProviderProfile"
+  "updateProviderProfile",
+  "updateAvailableTokens"
 ] as const;
 export type ProvidersRegistryNonAdminSetFunction = typeof nonAdminSetFunctions[number];
 

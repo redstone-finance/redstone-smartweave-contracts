@@ -9,8 +9,8 @@ describe("ContractTestingEnv", () => {
     const contract1Id = testEnv.deployContract(contract1, {counter: 5});
     const contract2Id = testEnv.deployContract(contract2, {text: "init"});
 
-    expect(testEnv.readContract(contract1Id)).toEqual({counter: 5});
-    expect(testEnv.readContract(contract2Id)).toEqual({text: "init"});
+    expect(testEnv.readState(contract1Id)).toEqual({counter: 5});
+    expect(testEnv.readState(contract2Id)).toEqual({text: "init"});
     expect(contract1Id).toContain("TEST-");
     expect(contract2Id).toContain("TEST-");
   });
@@ -51,7 +51,7 @@ describe("ContractTestingEnv", () => {
     const testEnv: ContractsTestingEnv = new ContractsTestingEnv();
     const contract1Id = testEnv.deployContract(contract1, {counter: 5});
 
-    const result = await testEnv.interact("test-caller", contract1Id, {"function": "blockHeight"}, {height: 554});
+    const result = await testEnv.interact("test-caller", contract1Id, {"function": "blockHeight"}, {height: 554, timestamp: 987234});
     expect(result).toEqual({ type: 'ok', result: 554, state: { counter: 5 } });
   });
 
