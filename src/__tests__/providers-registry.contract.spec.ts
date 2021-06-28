@@ -1,7 +1,7 @@
 import ContractsTestingEnv from "../tools/ContractsTestingEnv";
-import {ProvidersRegistryInput} from "../providers-registry/types";
-import {ContractsRegistryInput} from "../contracts-registry/types";
-import {registryTxId} from "../common/ContractInteractions";
+import { ProvidersRegistryInput } from "../providers-registry/types";
+import { ContractsRegistryInput } from "../contracts-registry/types";
+import { registryTxId } from "../common/ContractInteractions";
 
 const contractSrcPath = "./src/providers-registry/providers-registry.contract.ts";
 const tokenContractSrcPath = "./src/token/token.contract.ts";
@@ -63,18 +63,18 @@ describe("Provider Registry Contract", () => {
         });
 
       expect(interaction.state.providers).toEqual({
-          "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBY": {
-            "adminsPool": ["bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBY"],
-            "manifests": [],
-            "profile": {
-              "name": "test-provider-1",
-              "description": "desc-1",
-              "url": "https://test-provider-1.ok",
-              "id": "provider_TX-ID-1000"
-            },
-            "registerHeight": 1000
-          }
+        "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBY": {
+          "adminsPool": ["bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBY"],
+          "manifests": [],
+          "profile": {
+            "name": "test-provider-1",
+            "description": "desc-1",
+            "url": "https://test-provider-1.ok",
+            "id": "provider_TX-ID-1000"
+          },
+          "registerHeight": 1000
         }
+      }
       );
     });
 
@@ -1009,11 +1009,11 @@ describe("Provider Registry Contract", () => {
                 "lockedHours": 0,
                 "manifestTxId": "mft-tx-5"
               },
-                {
-                  "changeMessage": "initial 2",
-                  "lockedHours": 0,
-                  "manifestTxId": "mft-tx-7"
-                }
+              {
+                "changeMessage": "initial 2",
+                "lockedHours": 0,
+                "manifestTxId": "mft-tx-7"
+              }
               ],
             }
           }
@@ -1292,15 +1292,15 @@ describe("Provider Registry Contract", () => {
       // when
       const interaction = await testEnv.interact<ProvidersRegistryInput>(
         caller, providersContractId, {
-          "function": "updateAvailableTokens",
-          data: {
-            providerId: caller
-          }
-        });
+        "function": "updateAvailableTokens",
+        data: {
+          providerId: caller
+        }
+      });
 
       // then
       expect(interaction.state.availableTokens).toEqual(
-        {'bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBY': 500}
+        { 'bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBY': 500 }
       );
     });
 
@@ -1331,16 +1331,69 @@ describe("Provider Registry Contract", () => {
 
       const interaction = await testEnv.interact<ProvidersRegistryInput>(
         caller, providersContractId, {
-          "function": "updateAvailableTokens",
-          data: {
-            providerId: caller
-          }
-        });
+        "function": "updateAvailableTokens",
+        data: {
+          providerId: caller
+        }
+      });
 
       expect(interaction.state.availableTokens).toEqual(
-        {'bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBY': 400}
+        { 'bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBY': 400 }
       );
     });
   });
 
+  describe("providerAdmins function", () => {
+    let providerId;
+
+    beforeEach(async () => {
+      const interaction = await testEnv.interact<ProvidersRegistryInput>(
+        "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
+        providersContractId,
+        {
+          function: "registerProvider",
+          data: {
+            "provider": {
+              "adminsPool": ['admin_1', 'admin_2'],
+              "profile": {
+                "name": "test-provider-1",
+                "description": "desc-1",
+                "url": "https://test-provider-1.ok",
+              },
+              "manifests": [{
+                "changeMessage": "initial",
+                "lockedHours": 5,
+                "manifestTxId": "mft-tx-5"
+              }],
+            }
+          }
+        });
+
+      providerId = Object.keys(interaction.state.providers)[0];
+      
+    });
+
+    it("returns all admins", async () => {
+      // given
+      await deployContractsRegistry();
+
+      // when
+      const interaction = await testEnv.interact<ProvidersRegistryInput>(
+        "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
+        providersContractId,
+        {
+          function: "providerAdmins",
+          data: {
+            providerId: providerId
+          }
+        });
+
+      // then
+      expect(interaction.result).toEqual(
+        {
+          "admins": ["admin_1", "admin_2", providerId]
+        }
+      )
+    });
+  });
 });

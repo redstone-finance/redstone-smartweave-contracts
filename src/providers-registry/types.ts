@@ -98,6 +98,7 @@ export interface ProvidersRegistryInput {
     | AddProviderAdminData
     | AddProviderManifestData
     | AddContractAdmins
+    | GetProviderAdmins
     | SwitchTraceData
     | GetProviderManifest
     | UpdateAvailableTokensData;
@@ -164,9 +165,10 @@ export interface ProvidersRegistryResult {
   };
   provider?: ProviderData;
   manifest?: ManifestData;
+  admins?: [string];
 }
 
-export const getFunctions = ["activeManifest", "providerData", "providersData"] as const;
+export const getFunctions = ["activeManifest", "providerData", "providersData", "providerAdmins"] as const;
 export type ProvidersRegistryGetFunction = typeof getFunctions[number];
 
 export const adminSetFunctions = ["switchTrace", "addContractAdmins", "switchReadonly"] as const;
