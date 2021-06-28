@@ -139,6 +139,10 @@ export interface AddProviderManifestData {
   lockedHours?: number;
 }
 
+export interface GetProviderAdmins {
+  providerId: string
+}
+
 export interface AddContractAdmins {
   admins: string[];
 }

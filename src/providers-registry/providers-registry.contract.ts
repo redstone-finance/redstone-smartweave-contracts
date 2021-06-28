@@ -3,6 +3,7 @@ import {
   AddProviderAdminData,
   AddProviderManifestData,
   adminSetFunctions,
+  GetProviderAdmins,
   GetProviderData,
   GetProviderManifest,
   ManifestData, ManifestStatus, ProviderData,
@@ -203,6 +204,14 @@ export async function handle(state: ProvidersRegistryState, action: ProvidersReg
       contractAdmin.addContractAdmins(addContractAdmins.admins);
 
       return {state};
+    }
+
+    case "providerAdmins": {
+      const {providerId} = input.data as GetProviderAdmins;
+
+      return {
+        result: {admins: allProviders[providerId].adminsPool}
+      };
     }
 
     case "switchReadonly": {
