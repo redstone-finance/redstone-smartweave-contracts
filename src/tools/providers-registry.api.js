@@ -169,6 +169,35 @@ module.exports = {
     return writeTxId;
   },
 
+  switchTrace: async (onTestWeave = true) => {
+    onTestWeave = helpers.parseBoolean(onTestWeave);
+
+    const {jwk, arweave, testWeave} = await helpers.initArweave(onTestWeave);
+
+    const providersRegistryContractId = await registry.currentContractTxId("providers-registry", onTestWeave);
+
+    const writeTxId = await interactWrite(
+      arweave,
+      jwk,
+      providersRegistryContractId,
+      {
+        function: "switchTrace",
+        data: {
+        }
+      }
+    );
+
+    if (onTestWeave) {
+      console.log("Mining...");
+      await testWeave.mine();
+    } else {
+      console.log("Waiting for block mining...");
+      await helpers.waitForConfirmation(writeTxId, arweave);
+    }
+
+    return writeTxId;
+  },
+
   addManifest: async (manifestPath, comment, lockedHours = 0, onTestWeave = true, providerId = null) => {
     onTestWeave = helpers.parseBoolean(onTestWeave);
 
