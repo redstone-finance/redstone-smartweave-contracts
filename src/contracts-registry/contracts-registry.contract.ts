@@ -13,7 +13,7 @@ declare type ContractResult = { state: ContractsRegistryState } | { result: Cont
 declare const ContractError: any;
 declare const SmartWeave: any;
 
-const versionRegex = new RegExp('^v[1-9][0-9]*$', 'g');
+const versionRegex = new RegExp('^v[1-9][0-9]*$');
 
 export function handle(state: ContractsRegistryState, action: ContractsRegistryAction): ContractResult {
   const input = action.input;
@@ -56,7 +56,7 @@ export function handle(state: ContractsRegistryState, action: ContractsRegistryA
       }
       const version = currentTxIdData.version || getLatestVersion(state.versions);
       if (!isVersionLike(version)) {
-        throw new ContractError("")
+        throw new ContractError("Wrong version format!")
       }
 
       return {result: currentContractTxId(currentTxIdData.contractNames, version)};
