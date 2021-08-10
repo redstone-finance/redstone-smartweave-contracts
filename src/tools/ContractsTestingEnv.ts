@@ -1,8 +1,8 @@
-import Arweave from "arweave/node";
-import {createContractExecutionEnvironment} from "smartweave/lib/contract-load"
-import {ContractHandler, ContractInteractionResult, execute} from "smartweave/lib/contract-step";
-import {SmartWeaveGlobal} from "smartweave/lib/smartweave-global";
-import {InteractionTx} from "smartweave/lib/interaction-tx";
+import Arweave from 'arweave/node';
+import { createContractExecutionEnvironment } from 'smartweave/lib/contract-load';
+import { ContractHandler, ContractInteractionResult, execute } from 'smartweave/lib/contract-step';
+import { SmartWeaveGlobal } from 'smartweave/lib/smartweave-global';
+import { InteractionTx } from 'smartweave/lib/interaction-tx';
 
 export type ContractExecutionEnv = {
   handler: ContractHandler;
@@ -64,7 +64,7 @@ export default class ContractsTestingEnv {
 
     const source = new TextDecoder().decode(result.outputFiles[0].contents);
     const env: ContractExecutionEnv = createContractExecutionEnvironment(
-      Arweave.init({}), source, contractId);
+      Arweave.init({}), source, contractId, "");
 
     env.swGlobal.contracts.readContractState = jest.fn().mockImplementation((contractId) => {
       return JSON.parse(JSON.stringify(this.currentState(contractId)));
@@ -152,7 +152,7 @@ export default class ContractsTestingEnv {
         address: "tx.owner.address",
       },
       recipient: "tx.recipient",
-      tags: {},
+      tags: [],
       fee: {
         winston: "444",
       },

@@ -1,31 +1,19 @@
-import {ProvidersRegistryState} from "../providers-registry/types";
-import {TokenState} from "../token/types";
-import {isTokenLockingContract, TokenLockingContract} from "./common-types";
+import { TokenState } from '../token/types';
+import { isTokenLockingContract, TokenLockingContract } from './common-types';
 
 declare const SmartWeave;
 declare const ContractError;
 
-export const registryTxId = "XQkGzXG6YknJyy-YbakEZvQKAWkW2_aPRhc3ShC8lyA";
+export const registryTxId = 'Xqrc1aT2oBCReBZhSYmRaUQbTV0iAOJjwLqaEghqQQA';
 
 /**
  * this class simplifies interactions between RedStone SmartWeave contracts
  */
 export class ContractInteractions {
 
-  static async providerContractState(): Promise<ProvidersRegistryState> {
-    const providersRegistryTxId = await ContractInteractions.getContractTxId("providers-registry");
-    return await SmartWeave.contracts.readContractState(providersRegistryTxId);
-  }
-
   static async tokenContractState(): Promise<TokenState> {
-    const contractTxId = await ContractInteractions.getContractTxId("token");
+    const contractTxId = await ContractInteractions.getContractTxId('token');
     return await SmartWeave.contracts.readContractState(contractTxId);
-  }
-
-  static async generateId(request: any): Promise<string> {
-    const stakeRequestBuffer = SmartWeave.arweave.utils.stringToBuffer(request);
-    const hash = await SmartWeave.arweave.crypto.hash(stakeRequestBuffer, "SHA-256");
-    return SmartWeave.arweave.utils.bufferTob64Url(hash);
   }
 
   static async availableTokens(contract: string, caller: string): Promise<number> {
@@ -46,8 +34,19 @@ export class ContractInteractions {
   }
 
   static async getContractTxId(contract: string): Promise<string> {
-    const contractsRegistry = await SmartWeave.contracts.readContractState(registryTxId);
-    return contractsRegistry.versions["v1"].contracts[contract].slice().pop();
+    const contractsRegistry = await SmartWeave.contracts.viewContractState(
+      registryTxId, {
+        function: 'contractsCurrentTxId',
+        data: {
+          contractNames: [contract]
+        }
+      });
+
+    if (contractsRegistry.type !== 'ok') {
+      throw new Error(`Cannot read contract id: ${JSON.stringify(contractsRegistry)}`);
+    }
+
+    return contractsRegistry.result[contract];
   }
 
 }
