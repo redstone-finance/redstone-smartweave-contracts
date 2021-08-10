@@ -89,8 +89,25 @@ export default class ContractsTestingEnv {
     // https://github.com/ArweaveTeam/SmartWeave/blob/788a974e66494ef2ab8f876024e72bf363d4c4a4/src/contract-step.ts#L56
     const currentState = forcedCurrentState || this.currentState(contractId);
 
-    const prevActiveTx = this.contracts[contractId].env.swGlobal._activeTx;
-    this.contracts[contractId].env.swGlobal._activeTx = ContractsTestingEnv.mockActiveTx(block || {height: 1000, timestamp: 5555});
+    const currentEnv = this.contracts[contractId].env;
+
+    const prevActiveTx = currentEnv.swGlobal._activeTx;
+
+    currentEnv.swGlobal._activeTx = ContractsTestingEnv.mockActiveTx(block || {height: 1000, timestamp: 5555});
+    currentEnv.swGlobal.contracts.viewContractState = jest.fn().mockImplementation(async (viewStateContractId, viewStateInput) => {
+
+      const targetContractEnv = this.contracts[viewStateContractId].env;
+      const computedState = JSON.parse(JSON.stringify(this.currentState(viewStateContractId)));
+
+      targetContractEnv.swGlobal._activeTx = currentEnv.swGlobal._activeTx
+
+      return await execute(targetContractEnv.handler,
+        {
+          input: viewStateInput,
+          caller: targetContractEnv.swGlobal.transaction.owner,
+        }, computedState);
+    });
+
 
     const res: ContractInteractionResult = await execute(
       this.contracts[contractId].env.handler,
@@ -149,7 +166,7 @@ export default class ContractsTestingEnv {
     return {
       id: `TX-ID-${mockBlock.height}`,
       owner: {
-        address: "tx.owner.address",
+        address: "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
       },
       recipient: "tx.recipient",
       tags: [],

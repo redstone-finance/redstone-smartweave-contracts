@@ -906,7 +906,7 @@ describe("Provider Registry Contract", () => {
         .toThrowError("Provider with id bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_333333 is not registered.");
     });
 
-    it.only("gets provider by provider id with calculated staked tokens", async () => {
+    it("gets provider by provider id with calculated staked tokens", async () => {
       // given
       await deployContractsRegistry();
 
