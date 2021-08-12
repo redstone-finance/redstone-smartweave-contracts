@@ -27,7 +27,7 @@ export default class ContractsTestingEnv {
       env: ContractExecutionEnv,
       states: any[]
     },
-  }
+  };
 
   constructor() {
     this.contracts = {};
@@ -51,20 +51,20 @@ export default class ContractsTestingEnv {
     contractId: string = `TEST-${srcPath}`): string {
 
     if (srcPath === undefined || srcPath.length === 0) {
-      throw new Error("srcPath is required.");
+      throw new Error('srcPath is required.');
     }
 
     const result = require('esbuild').buildSync({
       entryPoints: [`${process.cwd()}/${srcPath}`],
       minify: false,
       bundle: true,
-      format: "iife",
-      write: false
+      format: 'iife',
+      write: false,
     });
 
     const source = new TextDecoder().decode(result.outputFiles[0].contents);
     const env: ContractExecutionEnv = createContractExecutionEnvironment(
-      Arweave.init({}), source, contractId, "");
+      Arweave.init({}), source, contractId, '');
 
     env.swGlobal.contracts.readContractState = jest.fn().mockImplementation((contractId) => {
       return JSON.parse(JSON.stringify(this.currentState(contractId)));
@@ -72,8 +72,8 @@ export default class ContractsTestingEnv {
 
     this.contracts[contractId] = {
       env,
-      states: [initialState]
-    }
+      states: [initialState],
+    };
 
     return contractId;
   };
@@ -93,27 +93,26 @@ export default class ContractsTestingEnv {
 
     const prevActiveTx = currentEnv.swGlobal._activeTx;
 
-    currentEnv.swGlobal._activeTx = ContractsTestingEnv.mockActiveTx(block || {height: 1000, timestamp: 5555});
-    currentEnv.swGlobal.contracts.viewContractState = jest.fn().mockImplementation(async (viewStateContractId, viewStateInput) => {
+    currentEnv.swGlobal._activeTx = ContractsTestingEnv.mockActiveTx(block || { height: 1000, timestamp: 5555 });
 
+    currentEnv.swGlobal.contracts.viewContractState = async (viewStateContractId, viewStateInput) => {
       const targetContractEnv = this.contracts[viewStateContractId].env;
       const computedState = JSON.parse(JSON.stringify(this.currentState(viewStateContractId)));
 
-      targetContractEnv.swGlobal._activeTx = currentEnv.swGlobal._activeTx
+      targetContractEnv.swGlobal._activeTx = currentEnv.swGlobal._activeTx;
 
       return await execute(targetContractEnv.handler,
         {
           input: viewStateInput,
           caller: targetContractEnv.swGlobal.transaction.owner,
         }, computedState);
-    });
-
+    };
 
     const res: ContractInteractionResult = await execute(
       this.contracts[contractId].env.handler,
       {
         input,
-        caller
+        caller,
       },
       currentState);
 
@@ -166,15 +165,15 @@ export default class ContractsTestingEnv {
     return {
       id: `TX-ID-${mockBlock.height}`,
       owner: {
-        address: "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111",
+        address: 'bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_111111',
       },
-      recipient: "tx.recipient",
+      recipient: 'tx.recipient',
       tags: [],
       fee: {
-        winston: "444",
+        winston: '444',
       },
       quantity: {
-        winston: "333",
+        winston: '333',
       },
       block: {
         height: mockBlock.height,

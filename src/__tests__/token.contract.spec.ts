@@ -334,14 +334,6 @@ describe("Token Contract", () => {
           }
         });
 
-      const providersState = testEnv.readState(providersContract.txId);
-      testEnv.pushState(providersContract.txId, {
-        ...providersState,
-        availableTokens: {
-          [provider]: 350
-        }
-      });
-
       // when
       await testEnv.interact<TokenInput>(
         provider,
@@ -362,26 +354,26 @@ describe("Token Contract", () => {
           data: {
             contractName: "providers-registry",
             targetId: provider,
-            qty: -200
+            qty: -170
           }
         });
 
       expect(interaction.state.contractDeposits).toEqual({
         "providers-registry": {
           "deposit": 700,
-          "withdraw": 320,
+          "withdraw": 290,
           "wallets": {
             "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBY": {
               "deposit": 700,
-              "withdraw": 320,
+              "withdraw": 290,
               "log": [{"from": "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBY", "qty": 700, "timestamp": 5555}]
             }
           }
         }
       });
 
-      // 1000(initial) - 700(deposit) + 120 (withdraw 1) + 200 (withdraw 2)
-      expect(interaction.state.balances[provider]).toEqual(620);
+      // 1000 (initial) - 700(deposit on contract) + 120 (withdraw 1) + 170 (withdraw 2)
+      expect(interaction.state.balances[provider]).toEqual(590);
 
     });
 
@@ -399,14 +391,6 @@ describe("Token Contract", () => {
           }
         });
 
-      const providersState = testEnv.readState(providersContract.txId);
-      testEnv.pushState(providersContract.txId, {
-        ...providersState,
-        availableTokens: {
-          [provider]: 100
-        }
-      });
-
       // when
       const interaction = await testEnv.interact<TokenInput>(
         provider,
@@ -416,26 +400,26 @@ describe("Token Contract", () => {
           data: {
             contractName: "providers-registry",
             targetId: provider,
-            qty: -148
+            qty: -355
           }
         });
 
       expect(interaction.state.contractDeposits).toEqual({
         "providers-registry": {
           "deposit": 700,
-          "withdraw": 100,
+          "withdraw": 350,
           "wallets": {
             "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBY": {
               "deposit": 700,
-              "withdraw": 100,
+              "withdraw": 350,
               "log": [{"from": "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBY", "qty": 700, "timestamp": 5555}]
             }
           }
         }
       });
 
-      // 1000(initial) - 700(deposit) + 100 ("effective" withdraw)
-      expect(interaction.state.balances[provider]).toEqual(400);
+      // 1000 (initial) - 700(deposit on contract) + 350 ("effective" withdraw)
+      expect(interaction.state.balances[provider]).toEqual(650);
 
     });
 
@@ -453,14 +437,6 @@ describe("Token Contract", () => {
           }
         });
 
-      const providersState = testEnv.readState(providersContract.txId);
-      testEnv.pushState(providersContract.txId, {
-        ...providersState,
-        availableTokens: {
-          [provider]: 200
-        }
-      });
-
       // when
       await testEnv.interact<TokenInput>(
         provider,
@@ -470,11 +446,12 @@ describe("Token Contract", () => {
           data: {
             contractName: "providers-registry",
             targetId: provider,
-            qty: -150
+            qty: -200
           }
         });
 
-
+      // now we have 500 staked tokens, only half of them available for withdrawn (with current implementation)
+      // and 200 already withdrawn - so only 50 more be now withdrawn
       const interaction = await testEnv.interact<TokenInput>(
         provider,
         tokenContract.txId,
@@ -483,29 +460,27 @@ describe("Token Contract", () => {
           data: {
             contractName: "providers-registry",
             targetId: provider,
-            // note: this should be lowered to 50 (so "total" withdraw at this point should be 200, not 150 + 199),
-            // even though "available tokens" is set to 200 - as we've already withdrawn 150 in the previous interaction.
-            qty: -199
+            // note: this should be lowered to 50 (so "total" withdraw at this point should be 250, not 400),
+            qty: -200
           }
         });
 
       expect(interaction.state.contractDeposits).toEqual({
         "providers-registry": {
           "deposit": 700,
-          "withdraw": 200,
+          "withdraw": 250,
           "wallets": {
             "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBY": {
               "deposit": 700,
-              "withdraw": 200,
+              "withdraw": 250,
               "log": [{"from": "bYz5YKzHH97983nS8UWtqjrlhBHekyy-kvHt_eBxBBY", "qty": 700, "timestamp": 5555}]
             }
           }
         }
       });
 
-      // 1000(initial) - 700(deposit) + 200 ("effective" withdraw)
-      expect(interaction.state.balances[provider]).toEqual(500);
-
+      // 1000(initial) - 700(deposit) + 250 ("effective" withdraw)
+      expect(interaction.state.balances[provider]).toEqual(550);
     });
 
   });

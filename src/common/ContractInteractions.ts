@@ -1,5 +1,6 @@
 import { TokenState } from '../token/types';
-import { isTokenLockingContract, TokenLockingContract } from './common-types';
+import { Deposit, isTokenLockingContract, TokenLockingContract } from './common-types';
+import { InteractionResult } from 'smartweave/lib/v2';
 
 declare const SmartWeave;
 declare const ContractError;
@@ -33,6 +34,25 @@ export class ContractInteractions {
     return calleeState.availableTokens[caller];
   }
 
+  static async availableTokensViewState(contract: string, caller: string, contractDeposit: Deposit): Promise<number> {
+    const contractTxId = await ContractInteractions.getContractTxId(contract);
+    const interactionResult: InteractionResult<any, {availableTokens: number}> = await SmartWeave.contracts.viewContractState(
+      contractTxId,
+      {
+        function: 'availableTokens',
+        data: {
+          providerId: caller,
+          deposit: contractDeposit
+        },
+      });
+
+    if (interactionResult.type !== "ok") {
+      throw new ContractError(`No available tokens data in ${contract} for ${caller}.`);
+    }
+
+    return interactionResult.result.availableTokens;
+  }
+
   static async getContractTxId(contract: string): Promise<string> {
     const contractsRegistry = await SmartWeave.contracts.viewContractState(
       registryTxId, {
@@ -50,4 +70,3 @@ export class ContractInteractions {
   }
 
 }
-

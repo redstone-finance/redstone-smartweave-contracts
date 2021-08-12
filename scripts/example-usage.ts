@@ -10,9 +10,19 @@ import ContractInteractionsLoader from 'smartweave/lib/v2/core/impl/ContractInte
 import LexicographicalInteractionsSorter from 'smartweave/lib/v2/core/impl/LexicographicalInteractionsSorter';
 import MemCache from 'smartweave/lib/v2/cache/impl/MemCache';
 import CacheableExecutorFactory from 'smartweave/lib/v2/plugins/CacheableExecutorFactory';
+import { interactRead } from 'smartweave';
+import CacheableContractInteractionsLoader from 'smartweave/lib/v2/plugins/CacheableContractInteractionsLoader';
 
 
 async function readContractState() {
+
+  const cachedArweave = Arweave.init({
+    host: 'dh48zl0solow5.cloudfront.net',// Hostname or IP address for a Arweave host
+    port: 443,          // Port
+    protocol: 'https',  // Network protocol http or https
+    timeout: 20000,     // Network request timeouts in milliseconds
+    logging: false,     // Enable network request logging
+  });
 
   const arweave = Arweave.init({
     host: 'arweave.net',// Hostname or IP address for a Arweave host
@@ -31,28 +41,45 @@ async function readContractState() {
   const cacheableExecutorFactory = new CacheableExecutorFactory<any, any>(arweave, new HandlerExecutorFactory(arweave), new MemCache());
 
   const debuggableExecutorFactory = new DebuggableExecutorFactory(cacheableExecutorFactory, {
-    'OrO8n453N6bx921wtsEs-0OCImBLCItNU5oSbFKlFuU': changedSrc
+    'OrO8n453N6bx921wtsEs-0OCImBLCItNU5oSbFKlFuU': changedSrc,
   });
 
+  const interactionsLoader = new ContractInteractionsLoader(cachedArweave);
+
   const swcClient = new HandlerBasedSwcClient<any>(
-    arweave,
+    cachedArweave,
     new MemBlockHeightSwCache<EvalStateResult<ProvidersRegistryState>>(),
-    new ContractDefinitionLoader<ProvidersRegistryState>(arweave, new MemCache()),
-    new ContractInteractionsLoader(arweave),
-    new LexicographicalInteractionsSorter(arweave),
-    debuggableExecutorFactory);
+    new ContractDefinitionLoader<ProvidersRegistryState>(cachedArweave, new MemCache()),
+    new CacheableContractInteractionsLoader(interactionsLoader, new MemBlockHeightSwCache()),
+    new LexicographicalInteractionsSorter(cachedArweave),
+    cacheableExecutorFactory);
 
   console.log('swcClient created');
 
+
+  console.time('ViewState');
   const result = await swcClient.viewState(
     'OrO8n453N6bx921wtsEs-0OCImBLCItNU5oSbFKlFuU', {
       function: 'providerData',
       data: {
         providerId: '33F0QHcb22W7LwWR1iRC8Az1ntZG09XQ03YWuw2ABqA',
+        eagerManifestLoad: true,
       },
     }, jwk);
+  console.timeEnd('ViewState');
 
-  console.log(result);
+
+  /*console.time('interactRead')
+  const result2 = await interactRead(
+    arweave, jwk, 'OrO8n453N6bx921wtsEs-0OCImBLCItNU5oSbFKlFuU',
+    {
+      function: 'providerData',
+      data: {
+        providerId: '33F0QHcb22W7LwWR1iRC8Az1ntZG09XQ03YWuw2ABqA',
+        eagerManifestLoad: true
+      },
+    });
+  console.timeEnd('interactRead');*/
 
 
   function readJSON(path) {

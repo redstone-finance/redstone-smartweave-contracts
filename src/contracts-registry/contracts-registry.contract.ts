@@ -49,7 +49,6 @@ export function handle(state: ContractsRegistryState, action: ContractsRegistryA
 
     case "contractsCurrentTxId": {
       const currentTxIdData = input.data as ContractsRegistryCurrentTxIdData;
-      //console.log(`contractsCurrentTxId`, JSON.stringify(state.versions));
 
       if (state.versions === undefined) {
         throw new ContractError("No version registered yet.");
