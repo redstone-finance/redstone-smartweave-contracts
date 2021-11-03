@@ -60,7 +60,6 @@ const redStoneRapidProvider = {
   },
   "jwkAddress": "Yba8IVc_01bFxutKNJAZ7CmTD5AVi2GcWXf1NajPAsc",
   "jwkFile": "./.secrets/redstone-rapid-jwk.json"
-
 };
 
 const redStoneTestProvider = {
@@ -80,14 +79,32 @@ const redStoneTestProvider = {
   },
   "jwkAddress": "33F0QHcb22W7LwWR1iRC8Az1ntZG09XQ03YWuw2ABqA",
   "jwkFile": "./.secrets/arweave-keyfile-33F0QHcb22W7LwWR1iRC8Az1ntZG09XQ03YWuw2ABqA.json"
+};
 
+const redstoneAvalancheProvider = {
+  "provider": {
+    "adminsPool": [
+      "I-5rWUehEv-MjdK9gFw09RxfSLQX9DIHxG614Wf8qo0",
+      "zYqPZuALSPa_f5Agvf8g2JHv94cqMn9aBtnH7GFHbuA",
+      "Yba8IVc_01bFxutKNJAZ7CmTD5AVi2GcWXf1NajPAsc",
+    ],
+    "profile": {
+      "name": "RedStone Avalanche",
+      "description": "Most popular tokens from the Avalanche ecosystem",
+      "url": "https://redstone.finance/",
+      "imgUrl": "https://redstone.finance/assets/img/redstone-logo-full.svg"
+    }
+  },
+  "jwkAddress": "f1Ipos2fVPbxPVO65GBygkMyW0tkAhp2hdprRPPBBN8",
+  "jwkFile": "./.secrets/redstone-avalanche-jwk.json"
 };
 
 const providerToConfig = {
   "redstone": redStoneMainProvider,
   "redstone-stocks": redStoneStocksProvider,
   "redstone-rapid": redStoneRapidProvider,
-  "redstone-test": redStoneTestProvider
+  "redstone-avalanche": redstoneAvalancheProvider,
+  "redstone-test": redStoneTestProvider,
 };
 
 module.exports = {

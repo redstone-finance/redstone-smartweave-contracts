@@ -78,7 +78,7 @@ module.exports = {
     const statusAfterMine = await arweave.transactions.getStatus(transactionId);
 
     if (statusAfterMine.confirmed === null) {
-      console.log(`Transaction ${transactionId} not yet confirmed. Waiting another 30 seconds before next check.`);
+      console.log(`Transaction ${transactionId} not yet confirmed. Waiting another 30 seconds before next check.`, statusAfterMine);
       setTimeout(() => {
         module.exports.waitForConfirmation(transactionId, arweave);
       }, 30000);
