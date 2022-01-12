@@ -6,7 +6,7 @@
 
 Example:
 ```bash
-node src/tools/providers-registry.api.js addManifest "../redstone-node/manifests/all-supported-tokens.json" "Added pangolin source with Avax tokens" 0 false
+node src/tools/providers-registry.api.js addManifest "../redstone-node/manifests/main.json" "Added pangolin source with Avax tokens" 0 false
 ```
 
 ## Register a new provider
