@@ -6,7 +6,7 @@ export class Validators {
     return value === undefined || value.length === 0;
   }
 
-  static isTypeOf(value: any, expectedType: "string" | "number" | "object"): boolean {
+  static isTypeOf(value: any, expectedType: "string" | "number" | "object" | "function"): boolean {
     return typeof value === expectedType;
   }
 

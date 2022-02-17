@@ -1,4 +1,4 @@
-import {TokenLockingContract} from "../common/common-types";
+import { Deposit, TokenLockingContract } from '../common/common-types';
 
 export interface ProvidersRegistryState extends TokenLockingContract
 {
@@ -25,9 +25,7 @@ export interface ProvidersRegistryState extends TokenLockingContract
   /**
    * map from a wallet address of a provider to its data.
    */
-  providers: {
-    [providerAddress: string]: ProviderData;
-  }
+  providers: Providers;
 }
 
 export interface ProviderData {
@@ -69,6 +67,8 @@ export interface ProviderProfile {
 
 export type ManifestStatus = "historical" | "active" | "locked";
 
+export type Providers = { [providerAddress: string]: ProviderData };
+
 export interface ManifestData {
   uploadBlockHeight?: number;
   changeMessage: string;
@@ -100,11 +100,17 @@ export interface ProvidersRegistryInput {
     | AddContractAdmins
     | SwitchTraceData
     | GetProviderManifest
-    | UpdateAvailableTokensData;
+    | UpdateAvailableTokensData
+    | AvailableTokensData;
 }
 
 export interface UpdateAvailableTokensData {
   providerId: string;
+}
+
+export interface AvailableTokensData {
+  providerId: string;
+  deposit: Deposit;
 }
 
 export interface RegisterProviderData {
@@ -160,9 +166,10 @@ export interface ProvidersRegistryResult {
   };
   provider?: ProviderData;
   manifest?: ManifestData;
+  availableTokens?: number;
 }
 
-export const getFunctions = ["activeManifest", "providerData", "providersData"] as const;
+export const getFunctions = ["activeManifest", "providerData", "providersData", "availableTokens"] as const;
 export type ProvidersRegistryGetFunction = typeof getFunctions[number];
 
 export const adminSetFunctions = ["switchTrace", "addContractAdmins", "switchReadonly"] as const;

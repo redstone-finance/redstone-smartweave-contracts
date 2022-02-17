@@ -130,13 +130,7 @@ export async function handle(state: TokenState, action: TokenAction): Promise<Co
       const contractDeposits = state.contractDeposits[contractName];
       const walletDeposit = contractDeposits.wallets[caller];
 
-      // note: this operation requires the state of the contract "contractName" to be updated manually
-      // (ie. requires calling "interactWrite" on this contract and wait for the new transaction to be mined)
-      // prior to calling "withdraw" method, otherwise we might not get most accurate/recent info about
-      // currently available tokens (eg. if it is a time-base token locking mechanism like vesting).
-      // Alternatively "interactRead" could be called here, if it will be made available from SWC code
-      // (see: https://github.com/ArweaveTeam/SmartWeave/issues/78 for details).
-      const availableTokens = await ContractInteractions.availableTokens(contractName, caller);
+      const availableTokens = await ContractInteractions.availableTokensViewState(contractName, caller, walletDeposit);
       const totalWithdraw = walletDeposit.withdraw;
       const availableForWithdrawQty = availableTokens - totalWithdraw;
 
