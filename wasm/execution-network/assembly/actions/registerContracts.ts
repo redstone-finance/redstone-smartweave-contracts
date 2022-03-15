@@ -6,7 +6,7 @@ export function registerContracts(state: StateSchema, action: ActionSchema): Con
   const contractsToRegister = action.registerContracts!!;
 
   if (!state.networks.has(contractsToRegister.networkId)) {
-    throw ContractError("NNF", "Network not found");
+    throw new Error("[CE:NNF] Network not found");
   }
 
   const network = state.networks.get(contractsToRegister.networkId);
@@ -22,7 +22,7 @@ export function registerContracts(state: StateSchema, action: ActionSchema): Con
     for (let j = 0; j < network.contracts.length; j++) {
       const registeredContract = network.contracts[j];
       if (registeredContract.arweaveTxId == contract) {
-        throw ContractError("CAR", "Contracts already registered");
+        throw new ContractError("[CE:CAR] Contracts already registered");
       }
     }
   }

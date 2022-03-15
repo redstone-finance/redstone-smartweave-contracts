@@ -9,11 +9,11 @@ export function evolve(state: StateSchema, action: ActionSchema): ContractResult
   const sender = Transaction.owner();
 
   if (sender != contractOwner) {
-    throw ContractError("EPE", "Evolve permissions error - only contract owner can evolve");
+    throw new Error("[CE:EPE] Evolve permissions error - only contract owner can evolve");
   }
 
   if (!state.canEvolve) {
-    throw ContractError("ECE", "Evolve not allowed");
+    throw new Error("[CE:ECE] Evolve not allowed");
   }
 
   // TODO: validate evolve txid format

@@ -20,6 +20,8 @@ import {acceptedContracts} from "./actions/acceptedContracts";
 import {balance} from "./actions/balance";
 import {transfer} from "./actions/transfer";
 import {evolve} from "./actions/evolve";
+import {connectNode} from "./actions/connectNode";
+import {disconnectNode} from "./actions/disconnectNode";
 
 export type ContractResultSchema = HandlerResultSchema<StateSchema, ResultSchema>;
 
@@ -28,6 +30,8 @@ functions.set("addNetwork", addNetwork); // network operator
 functions.set("removeNetwork", removeNetwork); // network operator
 functions.set("registerContracts", registerContracts); // contract developer
 functions.set("acceptedContracts", acceptedContracts); // network nodes
+functions.set("connectNode", connectNode);
+functions.set("disconnectNode", disconnectNode);
 functions.set("balance", balance);
 functions.set("transfer", transfer);
 functions.set("evolve", evolve); // contract owner 

@@ -1,7 +1,10 @@
 export type ContractFn<S, A, R> = (state: S, action: A) => HandlerResultSchema<S, R>;
 
-export function ContractError(type: string, message: string): Error {
-  return new Error(`[CE:${type}]: ${message}`);
+export class ContractError extends Error {
+  constructor(message: string) {
+    super(`[CE] ${message}`);
+    this.name = "ContactError";
+  }
 }
 
 @serializable

@@ -6,11 +6,11 @@ export function balance(state: StateSchema, action: ActionSchema): ContractResul
   const target = action.target!!;
 
   if (!target) {
-    throw ContractError("NOB", "Must specify target to get balance for");
+    throw new Error("[CE:NOB] Must specify target to get balance for");
   }
 
   if (!state.balances.has(target)) {
-    throw ContractError("TNE", "Cannot get balance, target does not exist");
+    throw new Error("[CE:TNE] Cannot get balance, target does not exist");
   }
 
   return {

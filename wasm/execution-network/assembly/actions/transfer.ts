@@ -10,11 +10,11 @@ export function transfer(state: StateSchema, action: ActionSchema): ContractResu
   const caller = Transaction.owner();
 
   if (qty <= 0 || caller === target) {
-    throw ContractError("ITT", "Invalid token transfer");
+    throw new ContractError("Invalid token transfer");
   }
 
   if (!state.balances.has(caller) || state.balances.get(caller) < qty) {
-    throw ContractError("NEB", `Caller balance not high enough to send ${qty} token(s)!`);
+    throw new ContractError(`Caller balance not high enough to send ${qty} token(s)!`);
   }
 
   // Lower the token balance of the caller

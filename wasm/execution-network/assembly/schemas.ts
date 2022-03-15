@@ -5,7 +5,7 @@ export class StateSchema {
   name: string
   balances: Map<string, u32>
   // a map from network operator wallet address (jwkAddress) to network data
-  networks: Map<String, Network>
+  networks: Map<string, Network>
   canEvolve: boolean
   evolve: string | null
 }
@@ -20,6 +20,7 @@ export class Network {
   stakedTokens: u64
   contracts: Contract[]
   consensusParams: ConsensusParams
+  connectedNodes: Map<string, ConnectNodeSchema>
 }
 
 export enum ContractStatus {
@@ -40,9 +41,9 @@ export class Contract {
 
 @serializable
 export class ConsensusParams {
-  quorumSize: u16
-  sampleSize: u16
-  decisionThreshold: u16
+  quorumSize: string
+  sampleSize: string
+  decisionThreshold: string
 }
 
 @serializable
@@ -54,6 +55,24 @@ export class ActionSchema {
   target: string | null
   transfer: TransferSchema | null
   evolve: string | null
+  connectNode: ConnectNodeSchema | null
+  disconnectNode: DisconnectNodeSchema | null
+}
+
+@serializable
+export class DisconnectNodeSchema {
+  id: string
+  networkId: string
+}
+
+@serializable
+export class ConnectNodeSchema {
+  nodeId: string
+  url: string
+  port: i32
+  address: string
+  owner: string
+  networkId: string
 }
 
 @serializable
