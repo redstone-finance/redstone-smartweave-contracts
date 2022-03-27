@@ -57,6 +57,12 @@ export class ActionSchema {
   evolve: string | null
   connectNode: ConnectNodeSchema | null
   disconnectNode: DisconnectNodeSchema | null
+  disconnectAllNodes: DisconnectAllNodesSchema | null
+}
+
+@serializable
+export class DisconnectAllNodesSchema {
+  networkId: string
 }
 
 @serializable

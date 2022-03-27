@@ -22,6 +22,7 @@ import {transfer} from "./actions/transfer";
 import {evolve} from "./actions/evolve";
 import {connectNode} from "./actions/connectNode";
 import {disconnectNode} from "./actions/disconnectNode";
+import {disconnectAllNodes} from "./actions/disconnectAllNodes";
 
 export type ContractResultSchema = HandlerResultSchema<StateSchema, ResultSchema>;
 
@@ -32,6 +33,7 @@ functions.set("registerContracts", registerContracts); // contract developer
 functions.set("acceptedContracts", acceptedContracts); // network nodes
 functions.set("connectNode", connectNode);
 functions.set("disconnectNode", disconnectNode);
+functions.set("disconnectAllNodes", disconnectAllNodes);
 functions.set("balance", balance);
 functions.set("transfer", transfer);
 functions.set("evolve", evolve); // contract owner 
