@@ -17,7 +17,6 @@ async function registerForNetwork(networkId, contract) {
         registerContracts: {
             networkId: networkId,
             contracts: [
-                "rpx3X2kIfWPkbf9CvNVRFJR3OuJDtjXuWaQOQAeJujU",
                 "NfOsoVlsQ4_hh_tLwvI4IkNQr0Ey5p3_uHTqKD1O3Ts",
                 "fnbd1aINsmadftOiY6YU9K5i7hz7n76afypx0Shk1uo"
             ]
@@ -34,6 +33,3 @@ async function registerForNetwork(networkId, contract) {
 }
 
 registerContract().finally();
-
-
-

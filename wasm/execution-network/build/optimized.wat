@@ -34,7 +34,7 @@
  (global $~lib/util/number/_K (mut i32) (i32.const 0))
  (global $~lib/util/number/_frc_pow (mut i64) (i64.const 0))
  (global $~lib/util/number/_exp_pow (mut i32) (i32.const 0))
- (global $~lib/rt/__rtti_base i32 (i32.const 12496))
+ (global $~lib/rt/__rtti_base i32 (i32.const 12576))
  (memory $0 1)
  (data (i32.const 1036) "<")
  (data (i32.const 1048) "\01\00\00\00(\00\00\00A\00l\00l\00o\00c\00a\00t\00i\00o\00n\00 \00t\00o\00o\00 \00l\00a\00r\00g\00e")
@@ -260,112 +260,114 @@
  (data (i32.const 9224) "\1a\00\00\00\0c\00\00\00\d0#\00\00\00\00\00\000\1d")
  (data (i32.const 9244) "<")
  (data (i32.const 9256) "\01\00\00\00(\00\00\00a\00s\00s\00e\00m\00b\00l\00y\00/\00c\00o\00n\00t\00r\00a\00c\00t\00.\00t\00s")
- (data (i32.const 9308) ",")
- (data (i32.const 9320) "\01\00\00\00\10\00\00\00f\00u\00n\00c\00t\00i\00o\00n")
- (data (i32.const 9356) "\1c")
- (data (i32.const 9368) "\01\00\00\00\0c\00\00\00t\00a\00r\00g\00e\00t")
- (data (i32.const 9388) "\1c")
- (data (i32.const 9400) "\01\00\00\00\n\00\00\00o\00w\00n\00e\00r")
- (data (i32.const 9420) "\1c")
- (data (i32.const 9432) "\01\00\00\00\0c\00\00\00t\00i\00c\00k\00e\00r")
- (data (i32.const 9452) "\1c")
- (data (i32.const 9464) "\01\00\00\00\08\00\00\00n\00a\00m\00e")
- (data (i32.const 9484) ",")
- (data (i32.const 9496) "\01\00\00\00\10\00\00\00b\00a\00l\00a\00n\00c\00e\00s")
- (data (i32.const 9532) ",")
- (data (i32.const 9544) "\01\00\00\00\10\00\00\00n\00e\00t\00w\00o\00r\00k\00s")
- (data (i32.const 9580) ",")
- (data (i32.const 9592) "\01\00\00\00\12\00\00\00c\00a\00n\00E\00v\00o\00l\00v\00e")
- (data (i32.const 9628) "\1c")
- (data (i32.const 9660) "\1c")
- (data (i32.const 9672) "\01\00\00\00\06\00\00\000\00.\000")
- (data (i32.const 9692) "\1c")
- (data (i32.const 9704) "\01\00\00\00\06\00\00\00N\00a\00N")
- (data (i32.const 9724) ",")
- (data (i32.const 9736) "\01\00\00\00\12\00\00\00-\00I\00n\00f\00i\00n\00i\00t\00y")
- (data (i32.const 9772) ",")
- (data (i32.const 9784) "\01\00\00\00\10\00\00\00I\00n\00f\00i\00n\00i\00t\00y")
- (data (i32.const 9880) "\88\02\1c\08\a0\d5\8f\fav\bf>\a2\7f\e1\ae\bav\acU0 \fb\16\8b\ea5\ce]J\89B\cf-;eU\aa\b0k\9a\dfE\1a=\03\cf\1a\e6\ca\c6\9a\c7\17\fep\abO\dc\bc\be\fc\b1w\ff\0c\d6kA\ef\91V\be<\fc\7f\90\ad\1f\d0\8d\83\9aU1(\\Q\d3\b5\c9\a6\ad\8f\acq\9d\cb\8b\ee#w\"\9c\eamSx@\91I\cc\aeW\ce\b6]y\12<\827V\fbM6\94\10\c2O\98H8o\ea\96\90\c7:\82%\cb\85t\d7\f4\97\bf\97\cd\cf\86\a0\e5\ac*\17\98\n4\ef\8e\b25*\fbg8\b2;?\c6\d2\df\d4\c8\84\ba\cd\d3\1a\'D\dd\c5\96\c9%\bb\ce\9fk\93\84\a5b}$l\ac\db\f6\da_\0dXf\ab\a3&\f1\c3\de\93\f8\e2\f3\b8\80\ff\aa\a8\ad\b5\b5\8bJ|l\05_b\87S0\c14`\ff\bc\c9U&\ba\91\8c\85N\96\bd~)p$w\f9\df\8f\b8\e5\b8\9f\bd\df\a6\94}t\88\cf_\a9\f8\cf\9b\a8\8f\93pD\b9k\15\0f\bf\f8\f0\08\8a\b611eU%\b0\cd\ac\7f{\d0\c6\e2?\99\06;+*\c4\10\\\e4\d3\92si\99$$\aa\0e\ca\00\83\f2\b5\87\fd\eb\1a\11\92d\08\e5\bc\cc\88Po\t\cc\bc\8c,e\19\e2X\17\b7\d1\00\00\00\00\00\00@\9c\00\00\00\00\10\a5\d4\e8\00\00b\ac\c5\ebx\ad\84\t\94\f8x9?\81\b3\15\07\c9{\ce\97\c0p\\\ea{\ce2~\8fh\80\e9\ab\a48\d2\d5E\"\9a\17&\'O\9f\'\fb\c4\d41\a2c\ed\a8\ad\c8\8c8e\de\b0\dbe\ab\1a\8e\08\c7\83\9a\1dqB\f9\1d]\c4X\e7\1b\a6,iM\92\ea\8dp\1ad\ee\01\daJw\ef\9a\99\a3m\a2\85k}\b4{x\t\f2w\18\ddy\a1\e4T\b4\c2\c5\9b[\92\86[\86=]\96\c8\c5S5\c8\b3\a0\97\fa\\\b4*\95\e3_\a0\99\bd\9fF\de%\8c9\db4\c2\9b\a5\\\9f\98\a3r\9a\c6\f6\ce\be\e9TS\bf\dc\b7\e2A\"\f2\17\f3\fc\88\a5x\\\d3\9b\ce \cc\dfS!{\f3Z\16\98:0\1f\97\dc\b5\a0\e2\96\b3\e3\\S\d1\d9\a8<D\a7\a4\d9|\9b\fb\10D\a4\a7LLv\bb\1a\9c@\b6\ef\8e\ab\8b,\84W\a6\10\ef\1f\d0)1\91\e9\e5\a4\10\9b\9d\0c\9c\a1\fb\9b\10\e7)\f4;b\d9 (\ac\85\cf\a7z^KD\80-\dd\ac\03@\e4!\bf\8f\ffD^/\9cg\8eA\b8\8c\9c\9d\173\d4\a9\1b\e3\b4\92\db\19\9e\d9w\df\ban\bf\96\ebk\ee\f0\9b;\02\87\af")
- (data (i32.const 10576) "<\fbW\fbr\fb\8c\fb\a7\fb\c1\fb\dc\fb\f6\fb\11\fc,\fcF\fca\fc{\fc\96\fc\b1\fc\cb\fc\e6\fc\00\fd\1b\fd5\fdP\fdk\fd\85\fd\a0\fd\ba\fd\d5\fd\ef\fd\n\fe%\fe?\feZ\fet\fe\8f\fe\a9\fe\c4\fe\df\fe\f9\fe\14\ff.\ffI\ffc\ff~\ff\99\ff\b3\ff\ce\ff\e8\ff\03\00\1e\008\00S\00m\00\88\00\a2\00\bd\00\d8\00\f2\00\0d\01\'\01B\01\\\01w\01\92\01\ac\01\c7\01\e1\01\fc\01\16\021\02L\02f\02\81\02\9b\02\b6\02\d0\02\eb\02\06\03 \03;\03U\03p\03\8b\03\a5\03\c0\03\da\03\f5\03\0f\04*\04")
- (data (i32.const 10752) "\01\00\00\00\n\00\00\00d\00\00\00\e8\03\00\00\10\'\00\00\a0\86\01\00@B\0f\00\80\96\98\00\00\e1\f5\05\00\ca\9a;")
- (data (i32.const 10796) "\1c")
- (data (i32.const 10808) "1\00\00\00\08\00\00\00\0b")
- (data (i32.const 10828) "\1c")
- (data (i32.const 10840) "\01\00\00\00\04\00\00\00\"\00:")
- (data (i32.const 10860) ",")
- (data (i32.const 10872) "\1a\00\00\00\14\00\00\000\1d\00\00\00\00\00\00`*\00\00\00\00\00\00\f0\n")
+ (data (i32.const 9308) "L")
+ (data (i32.const 9320) "\01\00\00\004\00\00\00[\00R\00E\00:\00W\00T\00F\00]\00 \00U\00n\00k\00n\00o\00w\00n\00 \00f\00u\00n\00c\00t\00i\00o\00n\00 ")
+ (data (i32.const 9388) ",")
+ (data (i32.const 9400) "\01\00\00\00\10\00\00\00f\00u\00n\00c\00t\00i\00o\00n")
+ (data (i32.const 9436) "\1c")
+ (data (i32.const 9448) "\01\00\00\00\0c\00\00\00t\00a\00r\00g\00e\00t")
+ (data (i32.const 9468) "\1c")
+ (data (i32.const 9480) "\01\00\00\00\n\00\00\00o\00w\00n\00e\00r")
+ (data (i32.const 9500) "\1c")
+ (data (i32.const 9512) "\01\00\00\00\0c\00\00\00t\00i\00c\00k\00e\00r")
+ (data (i32.const 9532) "\1c")
+ (data (i32.const 9544) "\01\00\00\00\08\00\00\00n\00a\00m\00e")
+ (data (i32.const 9564) ",")
+ (data (i32.const 9576) "\01\00\00\00\10\00\00\00b\00a\00l\00a\00n\00c\00e\00s")
+ (data (i32.const 9612) ",")
+ (data (i32.const 9624) "\01\00\00\00\10\00\00\00n\00e\00t\00w\00o\00r\00k\00s")
+ (data (i32.const 9660) ",")
+ (data (i32.const 9672) "\01\00\00\00\12\00\00\00c\00a\00n\00E\00v\00o\00l\00v\00e")
+ (data (i32.const 9708) "\1c")
+ (data (i32.const 9740) "\1c")
+ (data (i32.const 9752) "\01\00\00\00\06\00\00\000\00.\000")
+ (data (i32.const 9772) "\1c")
+ (data (i32.const 9784) "\01\00\00\00\06\00\00\00N\00a\00N")
+ (data (i32.const 9804) ",")
+ (data (i32.const 9816) "\01\00\00\00\12\00\00\00-\00I\00n\00f\00i\00n\00i\00t\00y")
+ (data (i32.const 9852) ",")
+ (data (i32.const 9864) "\01\00\00\00\10\00\00\00I\00n\00f\00i\00n\00i\00t\00y")
+ (data (i32.const 9960) "\88\02\1c\08\a0\d5\8f\fav\bf>\a2\7f\e1\ae\bav\acU0 \fb\16\8b\ea5\ce]J\89B\cf-;eU\aa\b0k\9a\dfE\1a=\03\cf\1a\e6\ca\c6\9a\c7\17\fep\abO\dc\bc\be\fc\b1w\ff\0c\d6kA\ef\91V\be<\fc\7f\90\ad\1f\d0\8d\83\9aU1(\\Q\d3\b5\c9\a6\ad\8f\acq\9d\cb\8b\ee#w\"\9c\eamSx@\91I\cc\aeW\ce\b6]y\12<\827V\fbM6\94\10\c2O\98H8o\ea\96\90\c7:\82%\cb\85t\d7\f4\97\bf\97\cd\cf\86\a0\e5\ac*\17\98\n4\ef\8e\b25*\fbg8\b2;?\c6\d2\df\d4\c8\84\ba\cd\d3\1a\'D\dd\c5\96\c9%\bb\ce\9fk\93\84\a5b}$l\ac\db\f6\da_\0dXf\ab\a3&\f1\c3\de\93\f8\e2\f3\b8\80\ff\aa\a8\ad\b5\b5\8bJ|l\05_b\87S0\c14`\ff\bc\c9U&\ba\91\8c\85N\96\bd~)p$w\f9\df\8f\b8\e5\b8\9f\bd\df\a6\94}t\88\cf_\a9\f8\cf\9b\a8\8f\93pD\b9k\15\0f\bf\f8\f0\08\8a\b611eU%\b0\cd\ac\7f{\d0\c6\e2?\99\06;+*\c4\10\\\e4\d3\92si\99$$\aa\0e\ca\00\83\f2\b5\87\fd\eb\1a\11\92d\08\e5\bc\cc\88Po\t\cc\bc\8c,e\19\e2X\17\b7\d1\00\00\00\00\00\00@\9c\00\00\00\00\10\a5\d4\e8\00\00b\ac\c5\ebx\ad\84\t\94\f8x9?\81\b3\15\07\c9{\ce\97\c0p\\\ea{\ce2~\8fh\80\e9\ab\a48\d2\d5E\"\9a\17&\'O\9f\'\fb\c4\d41\a2c\ed\a8\ad\c8\8c8e\de\b0\dbe\ab\1a\8e\08\c7\83\9a\1dqB\f9\1d]\c4X\e7\1b\a6,iM\92\ea\8dp\1ad\ee\01\daJw\ef\9a\99\a3m\a2\85k}\b4{x\t\f2w\18\ddy\a1\e4T\b4\c2\c5\9b[\92\86[\86=]\96\c8\c5S5\c8\b3\a0\97\fa\\\b4*\95\e3_\a0\99\bd\9fF\de%\8c9\db4\c2\9b\a5\\\9f\98\a3r\9a\c6\f6\ce\be\e9TS\bf\dc\b7\e2A\"\f2\17\f3\fc\88\a5x\\\d3\9b\ce \cc\dfS!{\f3Z\16\98:0\1f\97\dc\b5\a0\e2\96\b3\e3\\S\d1\d9\a8<D\a7\a4\d9|\9b\fb\10D\a4\a7LLv\bb\1a\9c@\b6\ef\8e\ab\8b,\84W\a6\10\ef\1f\d0)1\91\e9\e5\a4\10\9b\9d\0c\9c\a1\fb\9b\10\e7)\f4;b\d9 (\ac\85\cf\a7z^KD\80-\dd\ac\03@\e4!\bf\8f\ffD^/\9cg\8eA\b8\8c\9c\9d\173\d4\a9\1b\e3\b4\92\db\19\9e\d9w\df\ban\bf\96\ebk\ee\f0\9b;\02\87\af")
+ (data (i32.const 10656) "<\fbW\fbr\fb\8c\fb\a7\fb\c1\fb\dc\fb\f6\fb\11\fc,\fcF\fca\fc{\fc\96\fc\b1\fc\cb\fc\e6\fc\00\fd\1b\fd5\fdP\fdk\fd\85\fd\a0\fd\ba\fd\d5\fd\ef\fd\n\fe%\fe?\feZ\fet\fe\8f\fe\a9\fe\c4\fe\df\fe\f9\fe\14\ff.\ffI\ffc\ff~\ff\99\ff\b3\ff\ce\ff\e8\ff\03\00\1e\008\00S\00m\00\88\00\a2\00\bd\00\d8\00\f2\00\0d\01\'\01B\01\\\01w\01\92\01\ac\01\c7\01\e1\01\fc\01\16\021\02L\02f\02\81\02\9b\02\b6\02\d0\02\eb\02\06\03 \03;\03U\03p\03\8b\03\a5\03\c0\03\da\03\f5\03\0f\04*\04")
+ (data (i32.const 10832) "\01\00\00\00\n\00\00\00d\00\00\00\e8\03\00\00\10\'\00\00\a0\86\01\00@B\0f\00\80\96\98\00\00\e1\f5\05\00\ca\9a;")
+ (data (i32.const 10876) "\1c")
+ (data (i32.const 10888) "1\00\00\00\08\00\00\00\0b")
  (data (i32.const 10908) "\1c")
- (data (i32.const 10920) "\1a\00\00\00\0c\00\00\00\00\1c\00\00\00\00\00\00\c0\1c")
- (data (i32.const 10940) "L")
- (data (i32.const 10952) "\01\00\00\008\00\00\00E\00x\00p\00e\00c\00t\00e\00d\00 \00J\00S\00O\00N\00.\00O\00b\00j\00 \00b\00u\00t\00 \00f\00o\00u\00n\00d\00 ")
- (data (i32.const 11020) "\\")
- (data (i32.const 11032) "\01\00\00\00H\00\00\00~\00l\00i\00b\00/\00@\00s\00e\00r\00i\00a\00l\00-\00a\00s\00/\00j\00s\00o\00n\00/\00d\00e\00s\00e\00r\00i\00a\00l\00i\00z\00e\00r\00.\00t\00s")
- (data (i32.const 11116) "L")
- (data (i32.const 11128) "\01\00\00\008\00\00\00E\00x\00p\00e\00c\00t\00e\00d\00 \00J\00S\00O\00N\00.\00S\00t\00r\00 \00b\00u\00t\00 \00f\00o\00u\00n\00d\00 ")
- (data (i32.const 11196) "\1c")
- (data (i32.const 11208) "\01\00\00\00\04\00\00\00i\00d")
- (data (i32.const 11228) "\1c")
- (data (i32.const 11240) "\01\00\00\00\08\00\00\00d\00e\00s\00c")
- (data (i32.const 11260) "\1c")
- (data (i32.const 11272) "\01\00\00\00\06\00\00\00u\00r\00l")
- (data (i32.const 11292) ",")
- (data (i32.const 11304) "\01\00\00\00\18\00\00\00s\00t\00a\00k\00e\00d\00T\00o\00k\00e\00n\00s")
- (data (i32.const 11340) ",")
- (data (i32.const 11352) "\01\00\00\00\12\00\00\00c\00o\00n\00t\00r\00a\00c\00t\00s")
- (data (i32.const 11388) "<")
- (data (i32.const 11400) "\01\00\00\00\1e\00\00\00c\00o\00n\00s\00e\00n\00s\00u\00s\00P\00a\00r\00a\00m\00s")
- (data (i32.const 11452) ",")
- (data (i32.const 11464) "\01\00\00\00\1c\00\00\00c\00o\00n\00n\00e\00c\00t\00e\00d\00N\00o\00d\00e\00s")
- (data (i32.const 11500) "\1c")
- (data (i32.const 11512) "\1a\00\00\00\0c\00\00\000\1d\00\00\00\00\00\000\1d")
- (data (i32.const 11532) "\1c")
- (data (i32.const 11544) "\1a\00\00\00\0c\00\00\000\1d\00\00\00\00\00\000\1d")
- (data (i32.const 11564) "L")
- (data (i32.const 11576) "\01\00\00\00:\00\00\00E\00x\00p\00e\00c\00t\00e\00d\00 \00J\00S\00O\00N\00.\00B\00o\00o\00l\00 \00b\00u\00t\00 \00f\00o\00u\00n\00d\00 ")
- (data (i32.const 11644) ",")
- (data (i32.const 11656) "\01\00\00\00\12\00\00\00n\00e\00t\00w\00o\00r\00k\00I\00d")
- (data (i32.const 11692) "\1c")
- (data (i32.const 11704) "\01\00\00\00\06\00\00\00q\00t\00y")
- (data (i32.const 11724) "\1c")
- (data (i32.const 11736) "\01\00\00\00\0c\00\00\00n\00o\00d\00e\00I\00d")
- (data (i32.const 11756) "\1c")
- (data (i32.const 11768) "\01\00\00\00\08\00\00\00p\00o\00r\00t")
- (data (i32.const 11788) ",")
- (data (i32.const 11800) "\01\00\00\00\0e\00\00\00a\00d\00d\00r\00e\00s\00s")
- (data (i32.const 11836) ",")
- (data (i32.const 11848) "\01\00\00\00\14\00\00\00q\00u\00o\00r\00u\00m\00S\00i\00z\00e")
- (data (i32.const 11884) ",")
- (data (i32.const 11896) "\01\00\00\00\14\00\00\00s\00a\00m\00p\00l\00e\00S\00i\00z\00e")
- (data (i32.const 11932) "<")
- (data (i32.const 11944) "\01\00\00\00\"\00\00\00d\00e\00c\00i\00s\00i\00o\00n\00T\00h\00r\00e\00s\00h\00o\00l\00d")
- (data (i32.const 11996) "\\")
- (data (i32.const 12008) "\01\00\00\00@\00\00\00E\00x\00p\00e\00c\00t\00e\00d\00 \00J\00S\00O\00N\00.\00I\00n\00t\00e\00g\00e\00r\00 \00b\00u\00t\00 \00f\00o\00u\00n\00d\00 ")
- (data (i32.const 12092) ",")
- (data (i32.const 12104) "\01\00\00\00\16\00\00\00a\00r\00w\00e\00a\00v\00e\00T\00x\00I\00d")
- (data (i32.const 12140) "\1c")
- (data (i32.const 12152) "\01\00\00\00\0c\00\00\00s\00t\00a\00t\00u\00s")
- (data (i32.const 12172) "<")
- (data (i32.const 12184) "\01\00\00\00\1e\00\00\00v\00a\00l\00i\00d\00a\00t\00e\00d\00H\00e\00i\00g\00h\00t")
- (data (i32.const 12236) ",")
- (data (i32.const 12248) "\01\00\00\00\1a\00\00\00v\00a\00l\00i\00d\00a\00t\00e\00d\00H\00a\00s\00h")
- (data (i32.const 12284) ",")
- (data (i32.const 12296) "\01\00\00\00\18\00\00\00t\00o\00t\00a\00l\00G\00a\00s\00U\00s\00e\00d")
- (data (i32.const 12332) ",")
- (data (i32.const 12344) "\01\00\00\00\18\00\00\00r\00e\00g\00i\00s\00t\00e\00r\00e\00d\00B\00y")
- (data (i32.const 12380) "L")
- (data (i32.const 12392) "\01\00\00\008\00\00\00E\00x\00p\00e\00c\00t\00e\00d\00 \00J\00S\00O\00N\00.\00A\00r\00r\00 \00b\00u\00t\00 \00f\00o\00u\00n\00d\00 ")
- (data (i32.const 12460) "\1c")
- (data (i32.const 12472) "\1a\00\00\00\0c\00\00\000\1d\00\00\00\00\00\000\1d")
- (data (i32.const 12496) "2\00\00\00 \00\00\00\00\00\00\00 ")
- (data (i32.const 12532) "\10\01\82")
- (data (i32.const 12556) "\02A")
- (data (i32.const 12580) "\10A\82\00\00\00\00\00\10A\82")
- (data (i32.const 12620) "\02A")
- (data (i32.const 12676) "\10A\82\00\00\00\00\00\02\t")
- (data (i32.const 12708) "\04A\00\00\00\00\00\00 \00\00\00\00\00\00\00 \00\00\00\1b\00\00\00A\00\00\00\02\00\00\00\00\00\00\00\1f\00\00\00 \00\00\00\00\00\00\00\02A")
- (data (i32.const 12784) "\1b\00\00\00\10A\82")
- (data (i32.const 12800) "\1b\00\00\00\00\00\00\00\1b\00\00\00 \00\00\00\1b\00\00\00 \00\00\00)\00\00\00 \00\00\00\1b\00\00\00 \00\00\00\1b\00\00\00\00\00\00\00,")
- (data (i32.const 12864) ".\00\00\00 \00\00\00\00\00\00\00 \00\00\00\00\00\00\00 \00\00\00/")
+ (data (i32.const 10920) "\01\00\00\00\04\00\00\00\"\00:")
+ (data (i32.const 10940) ",")
+ (data (i32.const 10952) "\1a\00\00\00\14\00\00\000\1d\00\00\00\00\00\00\b0*\00\00\00\00\00\00\f0\n")
+ (data (i32.const 10988) "\1c")
+ (data (i32.const 11000) "\1a\00\00\00\0c\00\00\00\00\1c\00\00\00\00\00\00\c0\1c")
+ (data (i32.const 11020) "L")
+ (data (i32.const 11032) "\01\00\00\008\00\00\00E\00x\00p\00e\00c\00t\00e\00d\00 \00J\00S\00O\00N\00.\00O\00b\00j\00 \00b\00u\00t\00 \00f\00o\00u\00n\00d\00 ")
+ (data (i32.const 11100) "\\")
+ (data (i32.const 11112) "\01\00\00\00H\00\00\00~\00l\00i\00b\00/\00@\00s\00e\00r\00i\00a\00l\00-\00a\00s\00/\00j\00s\00o\00n\00/\00d\00e\00s\00e\00r\00i\00a\00l\00i\00z\00e\00r\00.\00t\00s")
+ (data (i32.const 11196) "L")
+ (data (i32.const 11208) "\01\00\00\008\00\00\00E\00x\00p\00e\00c\00t\00e\00d\00 \00J\00S\00O\00N\00.\00S\00t\00r\00 \00b\00u\00t\00 \00f\00o\00u\00n\00d\00 ")
+ (data (i32.const 11276) "\1c")
+ (data (i32.const 11288) "\01\00\00\00\04\00\00\00i\00d")
+ (data (i32.const 11308) "\1c")
+ (data (i32.const 11320) "\01\00\00\00\08\00\00\00d\00e\00s\00c")
+ (data (i32.const 11340) "\1c")
+ (data (i32.const 11352) "\01\00\00\00\06\00\00\00u\00r\00l")
+ (data (i32.const 11372) ",")
+ (data (i32.const 11384) "\01\00\00\00\18\00\00\00s\00t\00a\00k\00e\00d\00T\00o\00k\00e\00n\00s")
+ (data (i32.const 11420) ",")
+ (data (i32.const 11432) "\01\00\00\00\12\00\00\00c\00o\00n\00t\00r\00a\00c\00t\00s")
+ (data (i32.const 11468) "<")
+ (data (i32.const 11480) "\01\00\00\00\1e\00\00\00c\00o\00n\00s\00e\00n\00s\00u\00s\00P\00a\00r\00a\00m\00s")
+ (data (i32.const 11532) ",")
+ (data (i32.const 11544) "\01\00\00\00\1c\00\00\00c\00o\00n\00n\00e\00c\00t\00e\00d\00N\00o\00d\00e\00s")
+ (data (i32.const 11580) "\1c")
+ (data (i32.const 11592) "\1a\00\00\00\0c\00\00\000\1d\00\00\00\00\00\000\1d")
+ (data (i32.const 11612) "\1c")
+ (data (i32.const 11624) "\1a\00\00\00\0c\00\00\000\1d\00\00\00\00\00\000\1d")
+ (data (i32.const 11644) "L")
+ (data (i32.const 11656) "\01\00\00\00:\00\00\00E\00x\00p\00e\00c\00t\00e\00d\00 \00J\00S\00O\00N\00.\00B\00o\00o\00l\00 \00b\00u\00t\00 \00f\00o\00u\00n\00d\00 ")
+ (data (i32.const 11724) ",")
+ (data (i32.const 11736) "\01\00\00\00\12\00\00\00n\00e\00t\00w\00o\00r\00k\00I\00d")
+ (data (i32.const 11772) "\1c")
+ (data (i32.const 11784) "\01\00\00\00\06\00\00\00q\00t\00y")
+ (data (i32.const 11804) "\1c")
+ (data (i32.const 11816) "\01\00\00\00\0c\00\00\00n\00o\00d\00e\00I\00d")
+ (data (i32.const 11836) "\1c")
+ (data (i32.const 11848) "\01\00\00\00\08\00\00\00p\00o\00r\00t")
+ (data (i32.const 11868) ",")
+ (data (i32.const 11880) "\01\00\00\00\0e\00\00\00a\00d\00d\00r\00e\00s\00s")
+ (data (i32.const 11916) ",")
+ (data (i32.const 11928) "\01\00\00\00\14\00\00\00q\00u\00o\00r\00u\00m\00S\00i\00z\00e")
+ (data (i32.const 11964) ",")
+ (data (i32.const 11976) "\01\00\00\00\14\00\00\00s\00a\00m\00p\00l\00e\00S\00i\00z\00e")
+ (data (i32.const 12012) "<")
+ (data (i32.const 12024) "\01\00\00\00\"\00\00\00d\00e\00c\00i\00s\00i\00o\00n\00T\00h\00r\00e\00s\00h\00o\00l\00d")
+ (data (i32.const 12076) "\\")
+ (data (i32.const 12088) "\01\00\00\00@\00\00\00E\00x\00p\00e\00c\00t\00e\00d\00 \00J\00S\00O\00N\00.\00I\00n\00t\00e\00g\00e\00r\00 \00b\00u\00t\00 \00f\00o\00u\00n\00d\00 ")
+ (data (i32.const 12172) ",")
+ (data (i32.const 12184) "\01\00\00\00\16\00\00\00a\00r\00w\00e\00a\00v\00e\00T\00x\00I\00d")
+ (data (i32.const 12220) "\1c")
+ (data (i32.const 12232) "\01\00\00\00\0c\00\00\00s\00t\00a\00t\00u\00s")
+ (data (i32.const 12252) "<")
+ (data (i32.const 12264) "\01\00\00\00\1e\00\00\00v\00a\00l\00i\00d\00a\00t\00e\00d\00H\00e\00i\00g\00h\00t")
+ (data (i32.const 12316) ",")
+ (data (i32.const 12328) "\01\00\00\00\1a\00\00\00v\00a\00l\00i\00d\00a\00t\00e\00d\00H\00a\00s\00h")
+ (data (i32.const 12364) ",")
+ (data (i32.const 12376) "\01\00\00\00\18\00\00\00t\00o\00t\00a\00l\00G\00a\00s\00U\00s\00e\00d")
+ (data (i32.const 12412) ",")
+ (data (i32.const 12424) "\01\00\00\00\18\00\00\00r\00e\00g\00i\00s\00t\00e\00r\00e\00d\00B\00y")
+ (data (i32.const 12460) "L")
+ (data (i32.const 12472) "\01\00\00\008\00\00\00E\00x\00p\00e\00c\00t\00e\00d\00 \00J\00S\00O\00N\00.\00A\00r\00r\00 \00b\00u\00t\00 \00f\00o\00u\00n\00d\00 ")
+ (data (i32.const 12540) "\1c")
+ (data (i32.const 12552) "\1a\00\00\00\0c\00\00\000\1d\00\00\00\00\00\000\1d")
+ (data (i32.const 12576) "2\00\00\00 \00\00\00\00\00\00\00 ")
+ (data (i32.const 12612) "\10\01\82")
+ (data (i32.const 12636) "\02A")
+ (data (i32.const 12660) "\10A\82\00\00\00\00\00\10A\82")
+ (data (i32.const 12700) "\02A")
+ (data (i32.const 12756) "\10A\82\00\00\00\00\00\02\t")
+ (data (i32.const 12788) "\04A\00\00\00\00\00\00 \00\00\00\00\00\00\00 \00\00\00\1b\00\00\00A\00\00\00\02\00\00\00\00\00\00\00\1f\00\00\00 \00\00\00\00\00\00\00\02A")
+ (data (i32.const 12864) "\1b\00\00\00\10A\82")
+ (data (i32.const 12880) "\1b\00\00\00\00\00\00\00\1b\00\00\00 \00\00\00\1b\00\00\00 \00\00\00)\00\00\00 \00\00\00\1b\00\00\00 \00\00\00\1b\00\00\00\00\00\00\00,")
+ (data (i32.const 12944) ".\00\00\00 \00\00\00\00\00\00\00 \00\00\00\00\00\00\00 \00\00\00/")
  (table $0 12 funcref)
  (elem $0 (i32.const 1) $assembly/actions/addNetwork/addNetwork $assembly/actions/removeNetwork/removeNetwork $assembly/actions/registerContracts/registerContracts $assembly/actions/acceptedContracts/acceptedContracts~anonymous|0 $assembly/actions/acceptedContracts/acceptedContracts $assembly/actions/connectNode/connectNode $assembly/actions/disconnectNode/disconnectNode $assembly/actions/balance/balance $assembly/actions/transfer/transfer $assembly/actions/evolve/evolve $~lib/assemblyscript-json/JSON/Arr#stringify~anonymous|0)
  (export "handle" (func $assembly/contract/handle))
@@ -3213,12 +3215,12 @@
   local.get $2
   call $~lib/string/String.__eq
   if (result i32)
+   i32.const 1
+  else
    local.get $1
    i32.load offset=4
    local.get $2
    call $~lib/string/String.__eq
-  else
-   i32.const 0
   end
   i32.eqz
   if
@@ -4614,7 +4616,7 @@
     i32.sub
     i32.load offset=12
     local.tee $3
-    i32.const 12496
+    i32.const 12576
     i32.load
     i32.le_u
     if
@@ -4628,7 +4630,7 @@
       local.get $3
       i32.const 3
       i32.shl
-      i32.const 12500
+      i32.const 12580
       i32.add
       i32.load offset=4
       local.tee $3
@@ -4655,7 +4657,7 @@
     i32.sub
     i32.load offset=12
     local.tee $0
-    i32.const 12496
+    i32.const 12576
     i32.load
     i32.le_u
     if
@@ -4669,7 +4671,7 @@
       local.get $0
       i32.const 3
       i32.shl
-      i32.const 12500
+      i32.const 12580
       i32.add
       i32.load offset=4
       local.tee $0
@@ -4709,7 +4711,7 @@
      i32.sub
      i32.load offset=12
      local.tee $1
-     i32.const 12496
+     i32.const 12576
      i32.load
      i32.le_u
      if
@@ -4723,7 +4725,7 @@
        local.get $1
        i32.const 3
        i32.shl
-       i32.const 12500
+       i32.const 12580
        i32.add
        i32.load offset=4
        local.tee $1
@@ -4750,7 +4752,7 @@
      i32.sub
      i32.load offset=12
      local.tee $0
-     i32.const 12496
+     i32.const 12576
      i32.load
      i32.le_u
      if
@@ -4764,7 +4766,7 @@
        local.get $0
        i32.const 3
        i32.shl
-       i32.const 12500
+       i32.const 12580
        i32.add
        i32.load offset=4
        local.tee $0
@@ -7556,18 +7558,18 @@
       local.get $2
       call $~lib/array/Array<assembly/schemas/Contract>#push
       local.get $0
-      i32.const 9408
+      i32.const 9488
       local.get $1
       local.tee $2
       i32.load
       call $~lib/@serial-as/json/serializer/ValueSerializer#encode_field<~lib/string/String>
       local.get $0
-      i32.const 9440
+      i32.const 9520
       local.get $1
       i32.load offset=4
       call $~lib/@serial-as/json/serializer/ValueSerializer#encode_field<~lib/string/String>
       local.get $0
-      i32.const 9472
+      i32.const 9552
       local.get $1
       i32.load offset=8
       call $~lib/@serial-as/json/serializer/ValueSerializer#encode_field<~lib/string/String>
@@ -7589,7 +7591,7 @@
        i32.sub
        i32.load offset=12
        local.tee $3
-       i32.const 12496
+       i32.const 12576
        i32.load
        i32.le_u
        if
@@ -7603,7 +7605,7 @@
          local.get $3
          i32.const 3
          i32.shl
-         i32.const 12500
+         i32.const 12580
          i32.add
          i32.load offset=4
          local.tee $3
@@ -7665,7 +7667,7 @@
       local.set $3
       local.get $6
       i32.load
-      i32.const 9504
+      i32.const 9584
       local.get $3
       call $~lib/map/Map<~lib/string/String,assembly/schemas/Network>#set
       local.get $2
@@ -7685,7 +7687,7 @@
        i32.sub
        i32.load offset=12
        local.tee $3
-       i32.const 12496
+       i32.const 12576
        i32.load
        i32.le_u
        if
@@ -7699,7 +7701,7 @@
          local.get $3
          i32.const 3
          i32.shl
-         i32.const 12500
+         i32.const 12580
          i32.add
          i32.load offset=4
          local.tee $3
@@ -7754,7 +7756,7 @@
            i32.sub
            i32.load offset=12
            local.tee $3
-           i32.const 12496
+           i32.const 12576
            i32.load
            i32.le_u
            if
@@ -7768,7 +7770,7 @@
              local.get $3
              i32.const 3
              i32.shl
-             i32.const 12500
+             i32.const 12580
              i32.add
              i32.load offset=4
              local.tee $3
@@ -7808,7 +7810,7 @@
       local.set $3
       local.get $5
       i32.load
-      i32.const 9552
+      i32.const 9632
       local.get $3
       call $~lib/map/Map<~lib/string/String,assembly/schemas/Network>#set
       local.get $2
@@ -7828,7 +7830,7 @@
        i32.sub
        i32.load offset=12
        local.tee $3
-       i32.const 12496
+       i32.const 12576
        i32.load
        i32.le_u
        if
@@ -7842,7 +7844,7 @@
          local.get $3
          i32.const 3
          i32.shl
-         i32.const 12500
+         i32.const 12580
          i32.add
          i32.load offset=4
          local.tee $3
@@ -7878,7 +7880,7 @@
       local.set $3
       local.get $5
       i32.load
-      i32.const 9600
+      i32.const 9680
       local.get $3
       call $~lib/map/Map<~lib/string/String,assembly/schemas/Network>#set
       local.get $2
@@ -7898,7 +7900,7 @@
        i32.sub
        i32.load offset=12
        local.tee $0
-       i32.const 12496
+       i32.const 12576
        i32.load
        i32.le_u
        if
@@ -7912,7 +7914,7 @@
          local.get $0
          i32.const 3
          i32.shl
-         i32.const 12500
+         i32.const 12580
          i32.add
          i32.load offset=4
          local.tee $0
@@ -8042,21 +8044,21 @@
      global.set $~argumentsLength
      local.get $4
      local.get $1
-     i32.const 9408
+     i32.const 9488
      call $~lib/@serial-as/core/deserializer/Deserializer<~lib/assemblyscript-json/JSON/Value>#decode_field<~lib/string/String>@varargs
      i32.store
      i32.const 1
      global.set $~argumentsLength
      local.get $4
      local.get $1
-     i32.const 9440
+     i32.const 9520
      call $~lib/@serial-as/core/deserializer/Deserializer<~lib/assemblyscript-json/JSON/Value>#decode_field<~lib/string/String>@varargs
      i32.store offset=4
      i32.const 1
      global.set $~argumentsLength
      local.get $4
      local.get $1
-     i32.const 9472
+     i32.const 9552
      call $~lib/@serial-as/core/deserializer/Deserializer<~lib/assemblyscript-json/JSON/Value>#decode_field<~lib/string/String>@varargs
      i32.store offset=8
      i32.const 1
@@ -8074,13 +8076,13 @@
        call $~lib/@serial-as/json/deserializer/ValueDeserializer#get:currentObj
        local.tee $2
        i32.load
-       i32.const 9504
-       i32.const 9504
+       i32.const 9584
+       i32.const 9584
        call $~lib/util/hash/HASH<~lib/string/String>
        call $~lib/map/Map<~lib/string/String,assembly/schemas/Network>#find
        if
         local.get $2
-        i32.const 9504
+        i32.const 9584
         call $~lib/assemblyscript-json/JSON/Obj#get
         local.tee $3
         i32.eqz
@@ -8133,14 +8135,14 @@
            local.get $5
            i32.gt_s
            if
-            i32.const 11524
+            i32.const 11604
             local.get $6
             local.get $5
             call $~lib/array/Array<~lib/string/String>#__get
             local.tee $10
             i32.store
-            i32.const 11520
-            i32.const 11516
+            i32.const 11600
+            i32.const 11596
             i32.load
             i32.const 2
             i32.shr_u
@@ -8157,7 +8159,7 @@
             i32.eqz
             if
              i32.const 1344
-             i32.const 11040
+             i32.const 11120
              i32.const 132
              i32.const 19
              call $~lib/builtins/abort
@@ -8220,13 +8222,13 @@
        call $~lib/@serial-as/json/deserializer/ValueDeserializer#get:currentObj
        local.tee $0
        i32.load
-       i32.const 9600
-       i32.const 9600
+       i32.const 9680
+       i32.const 9680
        call $~lib/util/hash/HASH<~lib/string/String>
        call $~lib/map/Map<~lib/string/String,assembly/schemas/Network>#find
        if (result i32)
         local.get $0
-        i32.const 9600
+        i32.const 9680
         call $~lib/assemblyscript-json/JSON/Obj#get
         local.tee $0
         i32.eqz
@@ -8259,7 +8261,7 @@
             i32.sub
             i32.load offset=12
             local.tee $0
-            i32.const 12496
+            i32.const 12576
             i32.load
             i32.le_u
             if
@@ -8273,7 +8275,7 @@
               local.get $0
               i32.const 3
               i32.shl
-              i32.const 12500
+              i32.const 12580
               i32.add
               i32.load offset=4
               local.tee $0
@@ -8287,7 +8289,7 @@
           end
           i32.eqz
           if
-           i32.const 11584
+           i32.const 11664
            local.get $1
            i32.load offset=4
            local.tee $0
@@ -8298,7 +8300,7 @@
            call $~lib/array/Array<~lib/string/String>#__get
            call $~lib/assemblyscript-json/JSON/Value#stringify@virtual
            call $~lib/string/String#concat
-           i32.const 11040
+           i32.const 11120
            i32.const 48
            i32.const 5
            call $~lib/builtins/abort
@@ -8318,7 +8320,7 @@
            i32.sub
            i32.load offset=12
            local.tee $0
-           i32.const 12496
+           i32.const 12576
            i32.load
            i32.le_u
            if
@@ -8332,7 +8334,7 @@
              local.get $0
              i32.const 3
              i32.shl
-             i32.const 12500
+             i32.const 12580
              i32.add
              i32.load offset=4
              local.tee $0
@@ -8344,7 +8346,7 @@
           i32.eqz
           if
            i32.const 7200
-           i32.const 11040
+           i32.const 11120
            i32.const 49
            i32.const 24
            call $~lib/builtins/abort
@@ -8388,7 +8390,7 @@
    return
   end
   i32.const 1344
-  i32.const 11040
+  i32.const 11120
   i32.const 40
   i32.const 18
   call $~lib/builtins/abort
@@ -8450,7 +8452,7 @@
           i32.sub
           i32.load offset=12
           local.tee $0
-          i32.const 12496
+          i32.const 12576
           i32.load
           i32.le_u
           if
@@ -8464,7 +8466,7 @@
             local.get $0
             i32.const 3
             i32.shl
-            i32.const 12500
+            i32.const 12580
             i32.add
             i32.load offset=4
             local.tee $0
@@ -8572,7 +8574,7 @@
           i32.sub
           i32.load offset=12
           local.tee $1
-          i32.const 12496
+          i32.const 12576
           i32.load
           i32.le_u
           if
@@ -8586,7 +8588,7 @@
             local.get $1
             i32.const 3
             i32.shl
-            i32.const 12500
+            i32.const 12580
             i32.add
             i32.load offset=4
             local.tee $1
@@ -8634,12 +8636,12 @@
               i64.load
               call $~lib/@serial-as/json/serializer/ValueSerializer#encode_field<u64>
               local.get $1
-              i32.const 9376
+              i32.const 9456
               local.get $2
               i32.load offset=8
               call $~lib/@serial-as/json/serializer/ValueSerializer#encode_field<~lib/string/String>
               local.get $1
-              i32.const 9440
+              i32.const 9520
               local.get $2
               i32.load offset=12
               call $~lib/@serial-as/json/serializer/ValueSerializer#encode_field<~lib/string/String>
@@ -8723,7 +8725,7 @@
      global.set $~argumentsLength
      local.get $4
      local.get $0
-     i32.const 9328
+     i32.const 9408
      call $~lib/@serial-as/core/deserializer/Deserializer<~lib/assemblyscript-json/JSON/Value>#decode_field<~lib/string/String>@varargs
      i32.store
      i32.const 1
@@ -8780,7 +8782,7 @@
             i32.sub
             i32.load offset=12
             local.tee $3
-            i32.const 12496
+            i32.const 12576
             i32.load
             i32.le_u
             if
@@ -8794,7 +8796,7 @@
               local.get $3
               i32.const 3
               i32.shl
-              i32.const 12500
+              i32.const 12580
               i32.add
               i32.load offset=4
               local.tee $3
@@ -8824,28 +8826,28 @@
              global.set $~argumentsLength
              local.get $2
              local.get $1
-             i32.const 11216
+             i32.const 11296
              call $~lib/@serial-as/core/deserializer/Deserializer<~lib/assemblyscript-json/JSON/Value>#decode_field<~lib/string/String>@varargs
              i32.store
              i32.const 1
              global.set $~argumentsLength
              local.get $2
              local.get $1
-             i32.const 9472
+             i32.const 9552
              call $~lib/@serial-as/core/deserializer/Deserializer<~lib/assemblyscript-json/JSON/Value>#decode_field<~lib/string/String>@varargs
              i32.store offset=4
              i32.const 1
              global.set $~argumentsLength
              local.get $2
              local.get $1
-             i32.const 11248
+             i32.const 11328
              call $~lib/@serial-as/core/deserializer/Deserializer<~lib/assemblyscript-json/JSON/Value>#decode_field<~lib/string/String>@varargs
              i32.store offset=8
              i32.const 1
              global.set $~argumentsLength
              local.get $2
              local.get $1
-             i32.const 11280
+             i32.const 11360
              call $~lib/@serial-as/core/deserializer/Deserializer<~lib/assemblyscript-json/JSON/Value>#decode_field<~lib/string/String>@varargs
              i32.store offset=12
              br $__inlined_func$~lib/@serial-as/core/deserializer/Deserializer<~lib/assemblyscript-json/JSON/Value>#decode_object<assembly/schemas/AddNetworkSchema>@virtual
@@ -8936,7 +8938,7 @@
             i32.sub
             i32.load offset=12
             local.tee $2
-            i32.const 12496
+            i32.const 12576
             i32.load
             i32.le_u
             if
@@ -8950,7 +8952,7 @@
               local.get $2
               i32.const 3
               i32.shl
-              i32.const 12500
+              i32.const 12580
               i32.add
               i32.load offset=4
               local.tee $2
@@ -8982,7 +8984,7 @@
              global.set $~argumentsLength
              local.get $2
              local.get $1
-             i32.const 11664
+             i32.const 11744
              call $~lib/@serial-as/core/deserializer/Deserializer<~lib/assemblyscript-json/JSON/Value>#decode_field<~lib/string/String>@varargs
              i32.store
              br $__inlined_func$~lib/@serial-as/core/deserializer/Deserializer<~lib/assemblyscript-json/JSON/Value>#decode_object<assembly/schemas/AcceptedContractsSchema>@virtual
@@ -9010,7 +9012,7 @@
      global.set $~argumentsLength
      local.get $4
      local.get $0
-     i32.const 9376
+     i32.const 9456
      call $~lib/@serial-as/core/deserializer/Deserializer<~lib/assemblyscript-json/JSON/Value>#decode_field<~lib/string/String|null>@varargs
      i32.store offset=16
      i32.const 1
@@ -9066,7 +9068,7 @@
             i32.sub
             i32.load offset=12
             local.tee $3
-            i32.const 12496
+            i32.const 12576
             i32.load
             i32.le_u
             if
@@ -9080,7 +9082,7 @@
               local.get $3
               i32.const 3
               i32.shl
-              i32.const 12500
+              i32.const 12580
               i32.add
               i32.load offset=4
               local.tee $3
@@ -9112,14 +9114,14 @@
              global.set $~argumentsLength
              local.get $2
              local.get $1
-             i32.const 9376
+             i32.const 9456
              call $~lib/@serial-as/core/deserializer/Deserializer<~lib/assemblyscript-json/JSON/Value>#decode_field<~lib/string/String>@varargs
              i32.store
              i32.const 1
              global.set $~argumentsLength
              local.get $2
              local.get $1
-             i32.const 11712
+             i32.const 11792
              call $~lib/@serial-as/core/deserializer/Deserializer<~lib/assemblyscript-json/JSON/Value>#decode_field<u32>@varargs
              i32.store offset=4
              br $__inlined_func$~lib/@serial-as/core/deserializer/Deserializer<~lib/assemblyscript-json/JSON/Value>#decode_object<assembly/schemas/TransferSchema>@virtual
@@ -9208,7 +9210,7 @@
             i32.sub
             i32.load offset=12
             local.tee $2
-            i32.const 12496
+            i32.const 12576
             i32.load
             i32.le_u
             if
@@ -9222,7 +9224,7 @@
               local.get $2
               i32.const 3
               i32.shl
-              i32.const 12500
+              i32.const 12580
               i32.add
               i32.load offset=4
               local.tee $2
@@ -9313,7 +9315,7 @@
             i32.sub
             i32.load offset=12
             local.tee $0
-            i32.const 12496
+            i32.const 12576
             i32.load
             i32.le_u
             if
@@ -9327,7 +9329,7 @@
               local.get $0
               i32.const 3
               i32.shl
-              i32.const 12500
+              i32.const 12580
               i32.add
               i32.load offset=4
               local.tee $0
@@ -9359,14 +9361,14 @@
              global.set $~argumentsLength
              local.get $0
              local.get $1
-             i32.const 11216
+             i32.const 11296
              call $~lib/@serial-as/core/deserializer/Deserializer<~lib/assemblyscript-json/JSON/Value>#decode_field<~lib/string/String>@varargs
              i32.store
              i32.const 1
              global.set $~argumentsLength
              local.get $0
              local.get $1
-             i32.const 11664
+             i32.const 11744
              call $~lib/@serial-as/core/deserializer/Deserializer<~lib/assemblyscript-json/JSON/Value>#decode_field<~lib/string/String>@varargs
              i32.store offset=4
              br $__inlined_func$~lib/@serial-as/core/deserializer/Deserializer<~lib/assemblyscript-json/JSON/Value>#decode_object<assembly/schemas/DisconnectNodeSchema>@virtual
@@ -9459,7 +9461,10 @@
     local.get $0
     i32.load offset=4
    else
-    i32.const 0
+    i32.const 9328
+    local.get $5
+    i32.load
+    call $~lib/string/String#concat
     i32.const 9264
     i32.const 56
     i32.const 5
@@ -9477,7 +9482,7 @@
    return
   end
   i32.const 1344
-  i32.const 11040
+  i32.const 11120
   i32.const 40
   i32.const 18
   call $~lib/builtins/abort
@@ -9543,7 +9548,7 @@
      i32.eqz
      if
       i32.const 1344
-      i32.const 11040
+      i32.const 11120
       i32.const 40
       i32.const 18
       call $~lib/builtins/abort
@@ -9627,7 +9632,7 @@
           i32.sub
           i32.load offset=12
           local.tee $4
-          i32.const 12496
+          i32.const 12576
           i32.load
           i32.le_u
           if
@@ -9641,7 +9646,7 @@
             local.get $4
             i32.const 3
             i32.shl
-            i32.const 12500
+            i32.const 12580
             i32.add
             i32.load offset=4
             local.tee $4
@@ -9671,7 +9676,7 @@
            global.set $~argumentsLength
            local.get $2
            local.get $1
-           i32.const 11664
+           i32.const 11744
            call $~lib/@serial-as/core/deserializer/Deserializer<~lib/assemblyscript-json/JSON/Value>#decode_field<~lib/string/String>@varargs
            i32.store
            i32.const 1
@@ -9688,13 +9693,13 @@
              call $~lib/@serial-as/json/deserializer/ValueDeserializer#get:currentObj
              local.tee $4
              i32.load
-             i32.const 11360
-             i32.const 11360
+             i32.const 11440
+             i32.const 11440
              call $~lib/util/hash/HASH<~lib/string/String>
              call $~lib/map/Map<~lib/string/String,assembly/schemas/Network>#find
              if
               local.get $4
-              i32.const 11360
+              i32.const 11440
               call $~lib/assemblyscript-json/JSON/Obj#get
               local.tee $3
               i32.eqz
@@ -9790,7 +9795,7 @@
    return
   end
   i32.const 1344
-  i32.const 11040
+  i32.const 11120
   i32.const 40
   i32.const 18
   call $~lib/builtins/abort
@@ -9840,7 +9845,7 @@
      i32.eqz
      if
       i32.const 1344
-      i32.const 11040
+      i32.const 11120
       i32.const 40
       i32.const 18
       call $~lib/builtins/abort
@@ -9875,7 +9880,7 @@
          i32.sub
          i32.load offset=12
          local.tee $0
-         i32.const 12496
+         i32.const 12576
          i32.load
          i32.le_u
          if
@@ -9889,7 +9894,7 @@
            local.get $0
            i32.const 3
            i32.shl
-           i32.const 12500
+           i32.const 12580
            i32.add
            i32.load offset=4
            local.tee $0
@@ -9964,7 +9969,7 @@
    i32.sub
    i32.load offset=12
    local.tee $3
-   i32.const 12496
+   i32.const 12576
    i32.load
    i32.le_u
    if
@@ -9978,7 +9983,7 @@
      local.get $3
      i32.const 3
      i32.shl
-     i32.const 12500
+     i32.const 12580
      i32.add
      i32.load offset=4
      local.tee $3
@@ -10221,7 +10226,7 @@
      local.get $8
      i32.const 1
      i32.shl
-     i32.const 9824
+     i32.const 9904
      i32.add
      local.get $6
      i32.const 65535
@@ -10252,7 +10257,7 @@
      local.get $2
      i32.const 2
      i32.shl
-     i32.const 10752
+     i32.const 10832
      i32.add
      i64.load32_u
      local.get $10
@@ -10262,7 +10267,7 @@
      local.get $4
      i32.const 1
      i32.shl
-     i32.const 9822
+     i32.const 9902
      i32.add
      local.tee $5
      i32.load16_u
@@ -10343,7 +10348,7 @@
     local.get $5
     i32.const 1
     i32.shl
-    i32.const 9824
+    i32.const 9904
     i32.add
     local.get $1
     i32.wrap_i64
@@ -10376,7 +10381,7 @@
   i32.sub
   i32.const 2
   i32.shl
-  i32.const 10752
+  i32.const 10832
   i32.add
   i64.load32_u
   local.get $9
@@ -10385,7 +10390,7 @@
   local.get $4
   i32.const 1
   i32.shl
-  i32.const 9822
+  i32.const 9902
   i32.add
   local.tee $5
   i32.load16_u
@@ -10779,7 +10784,7 @@
   f64.lt
   local.tee $2
   if (result f64)
-   i32.const 9824
+   i32.const 9904
    i32.const 45
    i32.store16
    local.get $0
@@ -10879,14 +10884,14 @@
   i32.sub
   global.set $~lib/util/number/_K
   local.get $8
-  i32.const 9880
+  i32.const 9960
   i32.add
   i64.load
   global.set $~lib/util/number/_frc_pow
   local.get $7
   i32.const 1
   i32.shl
-  i32.const 10576
+  i32.const 10656
   i32.add
   i32.load16_s
   global.set $~lib/util/number/_exp_pow
@@ -10955,7 +10960,7 @@
   local.get $2
   i32.const 1
   i32.shl
-  i32.const 9824
+  i32.const 9904
   i32.add
   local.get $9
   local.get $10
@@ -11254,13 +11259,13 @@
       call $~lib/@serial-as/json/deserializer/ValueDeserializer#get:currentObj
       local.tee $1
       i32.load
-      i32.const 9552
-      i32.const 9552
+      i32.const 9632
+      i32.const 9632
       call $~lib/util/hash/HASH<~lib/string/String>
       call $~lib/map/Map<~lib/string/String,assembly/schemas/Network>#find
       if
        local.get $1
-       i32.const 9552
+       i32.const 9632
        call $~lib/assemblyscript-json/JSON/Obj#get
        local.tee $2
        i32.eqz
@@ -11313,14 +11318,14 @@
           local.get $9
           i32.gt_s
           if
-           i32.const 11556
+           i32.const 11636
            local.get $8
            local.get $9
            call $~lib/array/Array<~lib/string/String>#__get
            local.tee $2
            i32.store
-           i32.const 11552
-           i32.const 11548
+           i32.const 11632
+           i32.const 11628
            i32.load
            i32.const 2
            i32.shr_u
@@ -11358,42 +11363,42 @@
              local.get $10
              local.get $1
              local.tee $2
-             i32.const 11216
+             i32.const 11296
              call $~lib/@serial-as/core/deserializer/Deserializer<~lib/assemblyscript-json/JSON/Value>#decode_field<~lib/string/String>@varargs
              i32.store
              i32.const 1
              global.set $~argumentsLength
              local.get $10
              local.get $2
-             i32.const 9408
+             i32.const 9488
              call $~lib/@serial-as/core/deserializer/Deserializer<~lib/assemblyscript-json/JSON/Value>#decode_field<~lib/string/String>@varargs
              i32.store offset=4
              i32.const 1
              global.set $~argumentsLength
              local.get $10
              local.get $2
-             i32.const 9472
+             i32.const 9552
              call $~lib/@serial-as/core/deserializer/Deserializer<~lib/assemblyscript-json/JSON/Value>#decode_field<~lib/string/String>@varargs
              i32.store offset=8
              i32.const 1
              global.set $~argumentsLength
              local.get $10
              local.get $2
-             i32.const 11248
+             i32.const 11328
              call $~lib/@serial-as/core/deserializer/Deserializer<~lib/assemblyscript-json/JSON/Value>#decode_field<~lib/string/String>@varargs
              i32.store offset=12
              i32.const 1
              global.set $~argumentsLength
              local.get $10
              local.get $2
-             i32.const 11280
+             i32.const 11360
              call $~lib/@serial-as/core/deserializer/Deserializer<~lib/assemblyscript-json/JSON/Value>#decode_field<~lib/string/String>@varargs
              i32.store offset=16
              i32.const 1
              global.set $~argumentsLength
              local.get $10
              local.get $2
-             i32.const 11312
+             i32.const 11392
              call $~lib/@serial-as/core/deserializer/Deserializer<~lib/assemblyscript-json/JSON/Value>#decode_field<u64>@varargs
              i64.store offset=24
              i32.const 1
@@ -11419,13 +11424,13 @@
                call $~lib/@serial-as/json/deserializer/ValueDeserializer#get:currentObj
                local.tee $12
                i32.load
-               i32.const 11408
-               i32.const 11408
+               i32.const 11488
+               i32.const 11488
                call $~lib/util/hash/HASH<~lib/string/String>
                call $~lib/map/Map<~lib/string/String,assembly/schemas/Network>#find
                if
                 local.get $12
-                i32.const 11408
+                i32.const 11488
                 call $~lib/assemblyscript-json/JSON/Obj#get
                 local.tee $4
                 i32.eqz
@@ -11450,21 +11455,21 @@
                   global.set $~argumentsLength
                   local.get $4
                   local.get $3
-                  i32.const 11856
+                  i32.const 11936
                   call $~lib/@serial-as/core/deserializer/Deserializer<~lib/assemblyscript-json/JSON/Value>#decode_field<~lib/string/String>@varargs
                   i32.store
                   i32.const 1
                   global.set $~argumentsLength
                   local.get $4
                   local.get $3
-                  i32.const 11904
+                  i32.const 11984
                   call $~lib/@serial-as/core/deserializer/Deserializer<~lib/assemblyscript-json/JSON/Value>#decode_field<~lib/string/String>@varargs
                   i32.store offset=4
                   i32.const 1
                   global.set $~argumentsLength
                   local.get $4
                   local.get $3
-                  i32.const 11952
+                  i32.const 12032
                   call $~lib/@serial-as/core/deserializer/Deserializer<~lib/assemblyscript-json/JSON/Value>#decode_field<~lib/string/String>@varargs
                   i32.store offset=8
                   br $__inlined_func$~lib/@serial-as/core/deserializer/Deserializer<~lib/assemblyscript-json/JSON/Value>#decode_object<assembly/schemas/ConsensusParams>@virtual
@@ -11502,13 +11507,13 @@
                call $~lib/@serial-as/json/deserializer/ValueDeserializer#get:currentObj
                local.tee $2
                i32.load
-               i32.const 11472
-               i32.const 11472
+               i32.const 11552
+               i32.const 11552
                call $~lib/util/hash/HASH<~lib/string/String>
                call $~lib/map/Map<~lib/string/String,assembly/schemas/Network>#find
                if
                 local.get $2
-                i32.const 11472
+                i32.const 11552
                 call $~lib/assemblyscript-json/JSON/Obj#get
                 local.tee $2
                 i32.eqz
@@ -11539,14 +11544,14 @@
                    local.get $10
                    i32.gt_s
                    if
-                    i32.const 12484
+                    i32.const 12564
                     local.get $2
                     local.get $10
                     call $~lib/array/Array<~lib/string/String>#__get
                     local.tee $13
                     i32.store
-                    i32.const 12480
-                    i32.const 12476
+                    i32.const 12560
+                    i32.const 12556
                     i32.load
                     i32.const 2
                     i32.shr_u
@@ -11633,14 +11638,14 @@
     return
    end
    i32.const 1344
-   i32.const 11040
+   i32.const 11120
    i32.const 40
    i32.const 18
    call $~lib/builtins/abort
    unreachable
   end
   i32.const 1344
-  i32.const 11040
+  i32.const 11120
   i32.const 132
   i32.const 19
   call $~lib/builtins/abort
@@ -11664,7 +11669,7 @@
     i32.sub
     i32.load offset=12
     local.tee $1
-    i32.const 12496
+    i32.const 12576
     i32.load
     i32.le_u
     if
@@ -11678,7 +11683,7 @@
       local.get $1
       i32.const 3
       i32.shl
-      i32.const 12500
+      i32.const 12580
       i32.add
       i32.load offset=4
       local.tee $1
@@ -11692,7 +11697,7 @@
   end
   i32.eqz
   if
-   i32.const 10960
+   i32.const 11040
    local.get $0
    i32.load offset=4
    local.tee $0
@@ -11703,7 +11708,7 @@
    call $~lib/array/Array<~lib/string/String>#__get
    call $~lib/assemblyscript-json/JSON/Value#stringify@virtual
    call $~lib/string/String#concat
-   i32.const 11040
+   i32.const 11120
    i32.const 27
    i32.const 5
    call $~lib/builtins/abort
@@ -11723,7 +11728,7 @@
    i32.sub
    i32.load offset=12
    local.tee $0
-   i32.const 12496
+   i32.const 12576
    i32.load
    i32.le_u
    if
@@ -11737,7 +11742,7 @@
      local.get $0
      i32.const 3
      i32.shl
-     i32.const 12500
+     i32.const 12580
      i32.add
      i32.load offset=4
      local.tee $0
@@ -11749,7 +11754,7 @@
   i32.eqz
   if
    i32.const 7200
-   i32.const 11040
+   i32.const 11120
    i32.const 28
    i32.const 23
    call $~lib/builtins/abort
@@ -11800,7 +11805,7 @@
       i32.sub
       i32.load offset=12
       local.tee $1
-      i32.const 12496
+      i32.const 12576
       i32.load
       i32.le_u
       if
@@ -11814,7 +11819,7 @@
         local.get $1
         i32.const 3
         i32.shl
-        i32.const 12500
+        i32.const 12580
         i32.add
         i32.load offset=4
         local.tee $1
@@ -11828,7 +11833,7 @@
     end
     i32.eqz
     if
-     i32.const 11136
+     i32.const 11216
      local.get $0
      i32.load offset=4
      local.tee $0
@@ -11839,7 +11844,7 @@
      call $~lib/array/Array<~lib/string/String>#__get
      call $~lib/assemblyscript-json/JSON/Value#stringify@virtual
      call $~lib/string/String#concat
-     i32.const 11040
+     i32.const 11120
      i32.const 54
      i32.const 5
      call $~lib/builtins/abort
@@ -11859,7 +11864,7 @@
      i32.sub
      i32.load offset=12
      local.tee $0
-     i32.const 12496
+     i32.const 12576
      i32.load
      i32.le_u
      if
@@ -11873,7 +11878,7 @@
        local.get $0
        i32.const 3
        i32.shl
-       i32.const 12500
+       i32.const 12580
        i32.add
        i32.load offset=4
        local.tee $0
@@ -11885,7 +11890,7 @@
     i32.eqz
     if
      i32.const 7200
-     i32.const 11040
+     i32.const 11120
      i32.const 55
      i32.const 23
      call $~lib/builtins/abort
@@ -11917,7 +11922,7 @@
    i32.sub
    i32.load offset=12
    local.tee $3
-   i32.const 12496
+   i32.const 12576
    i32.load
    i32.le_u
    if
@@ -11931,7 +11936,7 @@
      local.get $3
      i32.const 3
      i32.shl
-     i32.const 12500
+     i32.const 12580
      i32.add
      i32.load offset=4
      local.tee $3
@@ -12005,33 +12010,33 @@
       local.get $2
       call $~lib/array/Array<assembly/schemas/Contract>#push
       local.get $0
-      i32.const 11216
+      i32.const 11296
       local.get $1
       local.tee $2
       i32.load
       call $~lib/@serial-as/json/serializer/ValueSerializer#encode_field<~lib/string/String>
       local.get $0
-      i32.const 9408
+      i32.const 9488
       local.get $1
       i32.load offset=4
       call $~lib/@serial-as/json/serializer/ValueSerializer#encode_field<~lib/string/String>
       local.get $0
-      i32.const 9472
+      i32.const 9552
       local.get $1
       i32.load offset=8
       call $~lib/@serial-as/json/serializer/ValueSerializer#encode_field<~lib/string/String>
       local.get $0
-      i32.const 11248
+      i32.const 11328
       local.get $1
       i32.load offset=12
       call $~lib/@serial-as/json/serializer/ValueSerializer#encode_field<~lib/string/String>
       local.get $0
-      i32.const 11280
+      i32.const 11360
       local.get $1
       i32.load offset=16
       call $~lib/@serial-as/json/serializer/ValueSerializer#encode_field<~lib/string/String>
       local.get $0
-      i32.const 11312
+      i32.const 11392
       local.get $1
       i64.load offset=24
       call $~lib/@serial-as/json/serializer/ValueSerializer#encode_field<u64>
@@ -12054,7 +12059,7 @@
        i32.sub
        i32.load offset=12
        local.tee $3
-       i32.const 12496
+       i32.const 12576
        i32.load
        i32.le_u
        if
@@ -12068,7 +12073,7 @@
          local.get $3
          i32.const 3
          i32.shl
-         i32.const 12500
+         i32.const 12580
          i32.add
          i32.load offset=4
          local.tee $3
@@ -12118,32 +12123,32 @@
             local.get $9
             call $~lib/array/Array<assembly/schemas/Contract>#push
             local.get $3
-            i32.const 12112
+            i32.const 12192
             local.get $8
             i32.load
             call $~lib/@serial-as/json/serializer/ValueSerializer#encode_field<~lib/string/String>
             local.get $3
-            i32.const 12160
+            i32.const 12240
             local.get $8
             i32.load offset=4
             call $~lib/@serial-as/json/serializer/ValueSerializer#encode_field<i32>
             local.get $3
-            i32.const 12192
+            i32.const 12272
             local.get $8
             i32.load offset=8
             call $~lib/@serial-as/json/serializer/ValueSerializer#encode_field<u32>
             local.get $3
-            i32.const 12256
+            i32.const 12336
             local.get $8
             i32.load offset=12
             call $~lib/@serial-as/json/serializer/ValueSerializer#encode_field<~lib/string/String>
             local.get $3
-            i32.const 12304
+            i32.const 12384
             local.get $8
             i64.load offset=16
             call $~lib/@serial-as/json/serializer/ValueSerializer#encode_field<u64>
             local.get $3
-            i32.const 12352
+            i32.const 12432
             local.get $8
             i32.load offset=24
             call $~lib/@serial-as/json/serializer/ValueSerializer#encode_field<~lib/string/String>
@@ -12180,7 +12185,7 @@
       local.set $3
       local.get $6
       i32.load
-      i32.const 11360
+      i32.const 11440
       local.get $3
       call $~lib/map/Map<~lib/string/String,assembly/schemas/Network>#set
       local.get $2
@@ -12200,7 +12205,7 @@
        i32.sub
        i32.load offset=12
        local.tee $3
-       i32.const 12496
+       i32.const 12576
        i32.load
        i32.le_u
        if
@@ -12214,7 +12219,7 @@
          local.get $3
          i32.const 3
          i32.shl
-         i32.const 12500
+         i32.const 12580
          i32.add
          i32.load offset=4
          local.tee $3
@@ -12240,17 +12245,17 @@
         local.get $3
         call $~lib/array/Array<assembly/schemas/Contract>#push
         local.get $1
-        i32.const 11856
+        i32.const 11936
         local.get $4
         i32.load
         call $~lib/@serial-as/json/serializer/ValueSerializer#encode_field<~lib/string/String>
         local.get $1
-        i32.const 11904
+        i32.const 11984
         local.get $4
         i32.load offset=4
         call $~lib/@serial-as/json/serializer/ValueSerializer#encode_field<~lib/string/String>
         local.get $1
-        i32.const 11952
+        i32.const 12032
         local.get $4
         i32.load offset=8
         call $~lib/@serial-as/json/serializer/ValueSerializer#encode_field<~lib/string/String>
@@ -12264,7 +12269,7 @@
       local.set $1
       local.get $5
       i32.load
-      i32.const 11408
+      i32.const 11488
       local.get $1
       call $~lib/map/Map<~lib/string/String,assembly/schemas/Network>#set
       local.get $2
@@ -12285,7 +12290,7 @@
        i32.sub
        i32.load offset=12
        local.tee $0
-       i32.const 12496
+       i32.const 12576
        i32.load
        i32.le_u
        if
@@ -12299,7 +12304,7 @@
          local.get $0
          i32.const 3
          i32.shl
-         i32.const 12500
+         i32.const 12580
          i32.add
          i32.load offset=4
          local.tee $0
@@ -12357,7 +12362,7 @@
            i32.sub
            i32.load offset=12
            local.tee $3
-           i32.const 12496
+           i32.const 12576
            i32.load
            i32.le_u
            if
@@ -12371,7 +12376,7 @@
              local.get $3
              i32.const 3
              i32.shl
-             i32.const 12500
+             i32.const 12580
              i32.add
              i32.load offset=4
              local.tee $3
@@ -12397,32 +12402,32 @@
             local.get $3
             call $~lib/array/Array<assembly/schemas/Contract>#push
             local.get $0
-            i32.const 11744
+            i32.const 11824
             local.get $8
             i32.load
             call $~lib/@serial-as/json/serializer/ValueSerializer#encode_field<~lib/string/String>
             local.get $0
-            i32.const 11280
+            i32.const 11360
             local.get $8
             i32.load offset=4
             call $~lib/@serial-as/json/serializer/ValueSerializer#encode_field<~lib/string/String>
             local.get $0
-            i32.const 11776
+            i32.const 11856
             local.get $8
             i32.load offset=8
             call $~lib/@serial-as/json/serializer/ValueSerializer#encode_field<i32>
             local.get $0
-            i32.const 11808
+            i32.const 11888
             local.get $8
             i32.load offset=12
             call $~lib/@serial-as/json/serializer/ValueSerializer#encode_field<~lib/string/String>
             local.get $0
-            i32.const 9408
+            i32.const 9488
             local.get $8
             i32.load offset=16
             call $~lib/@serial-as/json/serializer/ValueSerializer#encode_field<~lib/string/String>
             local.get $0
-            i32.const 11664
+            i32.const 11744
             local.get $8
             i32.load offset=20
             call $~lib/@serial-as/json/serializer/ValueSerializer#encode_field<~lib/string/String>
@@ -12456,7 +12461,7 @@
       local.set $0
       local.get $5
       i32.load
-      i32.const 11472
+      i32.const 11552
       local.get $0
       call $~lib/map/Map<~lib/string/String,assembly/schemas/Network>#set
       br $__inlined_func$~lib/@serial-as/core/serializer/Serializer<~lib/assemblyscript-json/JSON/Value>#encode_object<assembly/schemas/Network>@virtual
@@ -12491,42 +12496,42 @@
     global.set $~argumentsLength
     local.get $1
     local.get $0
-    i32.const 11744
+    i32.const 11824
     call $~lib/@serial-as/core/deserializer/Deserializer<~lib/assemblyscript-json/JSON/Value>#decode_field<~lib/string/String>@varargs
     i32.store
     i32.const 1
     global.set $~argumentsLength
     local.get $1
     local.get $0
-    i32.const 11280
+    i32.const 11360
     call $~lib/@serial-as/core/deserializer/Deserializer<~lib/assemblyscript-json/JSON/Value>#decode_field<~lib/string/String>@varargs
     i32.store offset=4
     i32.const 1
     global.set $~argumentsLength
     local.get $1
     local.get $0
-    i32.const 11776
+    i32.const 11856
     call $~lib/@serial-as/core/deserializer/Deserializer<~lib/assemblyscript-json/JSON/Value>#decode_field<u32>@varargs
     i32.store offset=8
     i32.const 1
     global.set $~argumentsLength
     local.get $1
     local.get $0
-    i32.const 11808
+    i32.const 11888
     call $~lib/@serial-as/core/deserializer/Deserializer<~lib/assemblyscript-json/JSON/Value>#decode_field<~lib/string/String>@varargs
     i32.store offset=12
     i32.const 1
     global.set $~argumentsLength
     local.get $1
     local.get $0
-    i32.const 9408
+    i32.const 9488
     call $~lib/@serial-as/core/deserializer/Deserializer<~lib/assemblyscript-json/JSON/Value>#decode_field<~lib/string/String>@varargs
     i32.store offset=16
     i32.const 1
     global.set $~argumentsLength
     local.get $1
     local.get $0
-    i32.const 11664
+    i32.const 11744
     call $~lib/@serial-as/core/deserializer/Deserializer<~lib/assemblyscript-json/JSON/Value>#decode_field<~lib/string/String>@varargs
     i32.store offset=20
     br $__inlined_func$~lib/@serial-as/core/deserializer/Deserializer<~lib/assemblyscript-json/JSON/Value>#decode_object<assembly/schemas/ConnectNodeSchema>@virtual
@@ -12554,7 +12559,7 @@
    i32.sub
    i32.load offset=12
    local.tee $3
-   i32.const 12496
+   i32.const 12576
    i32.load
    i32.le_u
    if
@@ -12568,7 +12573,7 @@
      local.get $3
      i32.const 3
      i32.shl
-     i32.const 12500
+     i32.const 12580
      i32.add
      i32.load offset=4
      local.tee $3
@@ -12782,7 +12787,7 @@
      i32.eqz
      if
       i32.const 1344
-      i32.const 11040
+      i32.const 11120
       i32.const 40
       i32.const 18
       call $~lib/builtins/abort
@@ -12845,7 +12850,7 @@
      i32.eqz
      if
       i32.const 1344
-      i32.const 11040
+      i32.const 11120
       i32.const 40
       i32.const 18
       call $~lib/builtins/abort
@@ -13168,19 +13173,19 @@
     call $~lib/@serial-as/json/deserializer/ValueDeserializer#get:currentObj
     local.tee $1
     i32.load
-    i32.const 11360
-    i32.const 11360
+    i32.const 11440
+    i32.const 11440
     call $~lib/util/hash/HASH<~lib/string/String>
     call $~lib/map/Map<~lib/string/String,assembly/schemas/Network>#find
     if
      local.get $1
-     i32.const 11360
+     i32.const 11440
      call $~lib/assemblyscript-json/JSON/Obj#get
      local.tee $1
      i32.eqz
      if
       i32.const 1344
-      i32.const 11040
+      i32.const 11120
       i32.const 40
       i32.const 18
       call $~lib/builtins/abort
@@ -13289,42 +13294,42 @@
            global.set $~argumentsLength
            local.get $4
            local.get $1
-           i32.const 12112
+           i32.const 12192
            call $~lib/@serial-as/core/deserializer/Deserializer<~lib/assemblyscript-json/JSON/Value>#decode_field<~lib/string/String>@varargs
            i32.store
            i32.const 1
            global.set $~argumentsLength
            local.get $4
            local.get $1
-           i32.const 12160
+           i32.const 12240
            call $~lib/@serial-as/core/deserializer/Deserializer<~lib/assemblyscript-json/JSON/Value>#decode_field<u32>@varargs
            i32.store offset=4
            i32.const 1
            global.set $~argumentsLength
            local.get $4
            local.get $1
-           i32.const 12192
+           i32.const 12272
            call $~lib/@serial-as/core/deserializer/Deserializer<~lib/assemblyscript-json/JSON/Value>#decode_field<u32>@varargs
            i32.store offset=8
            i32.const 1
            global.set $~argumentsLength
            local.get $4
            local.get $1
-           i32.const 12256
+           i32.const 12336
            call $~lib/@serial-as/core/deserializer/Deserializer<~lib/assemblyscript-json/JSON/Value>#decode_field<~lib/string/String>@varargs
            i32.store offset=12
            i32.const 1
            global.set $~argumentsLength
            local.get $4
            local.get $1
-           i32.const 12304
+           i32.const 12384
            call $~lib/@serial-as/core/deserializer/Deserializer<~lib/assemblyscript-json/JSON/Value>#decode_field<u64>@varargs
            i64.store offset=16
            i32.const 1
            global.set $~argumentsLength
            local.get $4
            local.get $1
-           i32.const 12352
+           i32.const 12432
            call $~lib/@serial-as/core/deserializer/Deserializer<~lib/assemblyscript-json/JSON/Value>#decode_field<~lib/string/String>@varargs
            i32.store offset=24
            br $__inlined_func$~lib/@serial-as/core/deserializer/Deserializer<~lib/assemblyscript-json/JSON/Value>#decode_object<assembly/schemas/Contract>@virtual
@@ -13379,7 +13384,7 @@
    i32.sub
    i32.load offset=12
    local.tee $3
-   i32.const 12496
+   i32.const 12576
    i32.load
    i32.le_u
    if
@@ -13393,7 +13398,7 @@
      local.get $3
      i32.const 3
      i32.shl
-     i32.const 12500
+     i32.const 12580
      i32.add
      i32.load offset=4
      local.tee $3
@@ -13459,7 +13464,7 @@
     i32.sub
     i32.load offset=12
     local.tee $1
-    i32.const 12496
+    i32.const 12576
     i32.load
     i32.le_u
     if
@@ -13473,7 +13478,7 @@
       local.get $1
       i32.const 3
       i32.shl
-      i32.const 12500
+      i32.const 12580
       i32.add
       i32.load offset=4
       local.tee $1
@@ -13487,7 +13492,7 @@
   end
   i32.eqz
   if
-   i32.const 12400
+   i32.const 12480
    local.get $0
    i32.load offset=4
    local.tee $0
@@ -13498,7 +13503,7 @@
    call $~lib/array/Array<~lib/string/String>#__get
    call $~lib/assemblyscript-json/JSON/Value#stringify@virtual
    call $~lib/string/String#concat
-   i32.const 11040
+   i32.const 11120
    i32.const 32
    i32.const 5
    call $~lib/builtins/abort
@@ -13518,7 +13523,7 @@
    i32.sub
    i32.load offset=12
    local.tee $0
-   i32.const 12496
+   i32.const 12576
    i32.load
    i32.le_u
    if
@@ -13532,7 +13537,7 @@
      local.get $0
      i32.const 3
      i32.shl
-     i32.const 12500
+     i32.const 12580
      i32.add
      i32.load offset=4
      local.tee $0
@@ -13544,7 +13549,7 @@
   i32.eqz
   if
    i32.const 7200
-   i32.const 11040
+   i32.const 11120
    i32.const 33
    i32.const 23
    call $~lib/builtins/abort
@@ -13578,7 +13583,7 @@
          end
          i32.const 0
          i32.const 23
-         i32.const 9648
+         i32.const 9728
          call $~lib/rt/__newArray
          local.set $3
          loop $for-loop|0
@@ -13683,7 +13688,7 @@
         local.get $0
         f64.load
         local.set $5
-        i32.const 9680
+        i32.const 9760
         local.set $0
         block $__inlined_func$~lib/util/number/dtoa
          local.get $5
@@ -13696,14 +13701,14 @@
          f64.const 0
          f64.ne
          if
-          i32.const 9712
+          i32.const 9792
           local.set $0
           local.get $5
           local.get $5
           f64.ne
           br_if $__inlined_func$~lib/util/number/dtoa
-          i32.const 9744
-          i32.const 9792
+          i32.const 9824
+          i32.const 9872
           local.get $5
           f64.const 0
           f64.lt
@@ -13719,7 +13724,7 @@
          i32.const 1
          call $~lib/rt/stub/__new
          local.tee $0
-         i32.const 9824
+         i32.const 9904
          local.get $2
          call $~lib/memory/memory.copy
         end
@@ -13892,7 +13897,7 @@
     i32.const 8368
     local.get $0
     i32.load
-    i32.const 10816
+    i32.const 10896
     call $~lib/array/Array<assembly/schemas/Contract>#map<~lib/string/String>
     local.tee $0
     i32.load offset=4
@@ -13928,16 +13933,16 @@
      call $~lib/map/Map<~lib/string/String,assembly/schemas/Network>#get
      call $~lib/assemblyscript-json/JSON/Value#stringify@virtual
      local.set $2
-     i32.const 10884
+     i32.const 10964
      local.get $7
      i32.store
-     i32.const 10892
+     i32.const 10972
      local.get $2
      i32.store
      local.get $6
      local.get $3
-     i32.const 10880
-     i32.const 10876
+     i32.const 10960
+     i32.const 10956
      i32.load
      i32.const 2
      i32.shr_u
@@ -13951,7 +13956,7 @@
      br $for-loop|05
     end
    end
-   i32.const 10932
+   i32.const 11012
    local.get $6
    i32.load offset=4
    local.get $6
@@ -13959,8 +13964,8 @@
    i32.const 7392
    call $~lib/util/string/joinStringArray
    i32.store
-   i32.const 10928
-   i32.const 10924
+   i32.const 11008
+   i32.const 11004
    i32.load
    i32.const 2
    i32.shr_u
@@ -13996,7 +14001,7 @@
      i32.sub
      i32.load offset=12
      local.tee $0
-     i32.const 12496
+     i32.const 12576
      i32.load
      i32.le_u
      if
@@ -14010,7 +14015,7 @@
        local.get $0
        i32.const 3
        i32.shl
-       i32.const 12500
+       i32.const 12580
        i32.add
        i32.load offset=4
        local.tee $0
@@ -14024,7 +14029,7 @@
    end
    i32.eqz
    if
-    i32.const 12016
+    i32.const 12096
     local.get $1
     i32.load offset=4
     local.tee $0
@@ -14035,7 +14040,7 @@
     call $~lib/array/Array<~lib/string/String>#__get
     call $~lib/assemblyscript-json/JSON/Value#stringify@virtual
     call $~lib/string/String#concat
-    i32.const 11040
+    i32.const 11120
     i32.const 157
     i32.const 5
     call $~lib/builtins/abort
@@ -14055,7 +14060,7 @@
     i32.sub
     i32.load offset=12
     local.tee $0
-    i32.const 12496
+    i32.const 12576
     i32.load
     i32.le_u
     if
@@ -14069,7 +14074,7 @@
       local.get $0
       i32.const 3
       i32.shl
-      i32.const 12500
+      i32.const 12580
       i32.add
       i32.load offset=4
       local.tee $0
@@ -14081,7 +14086,7 @@
    i32.eqz
    if
     i32.const 7200
-    i32.const 11040
+    i32.const 11120
     i32.const 158
     i32.const 30
     call $~lib/builtins/abort
@@ -14097,7 +14102,7 @@
  (func $~start
   (local $0 i32)
   (local $1 i32)
-  i32.const 12908
+  i32.const 12988
   global.set $~lib/rt/stub/offset
   i32.const 24
   i32.const 22

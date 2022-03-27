@@ -52,6 +52,6 @@ function handle(state: StateSchema, action: ActionSchema): ResultSchema | null {
     }
     return handlerResult.result;
   } else {
-    throw ContractError("WTF", `Unknown function ${action.function}`);
+    throw new Error(`[RE:WTF] Unknown function ${action.function}`);
   }
 }

@@ -17,7 +17,7 @@ export function disconnectNode(state: StateSchema, action: ActionSchema): Contra
   const node = network.connectedNodes.get(disconnectNode.id);
 
   // note: only node owner or network owner are allowed to disconnect the node from network.
-  if (node.owner != caller || network.owner != caller) {
+  if (node.owner != caller && network.owner != caller) {
     throw new ContractError("[CE:NAD] Transaction caller not allowed to disconnect node");
   }
   network.connectedNodes.delete(disconnectNode.id);

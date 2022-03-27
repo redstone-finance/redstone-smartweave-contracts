@@ -22,7 +22,7 @@ export function registerContracts(state: StateSchema, action: ActionSchema): Con
     for (let j = 0; j < network.contracts.length; j++) {
       const registeredContract = network.contracts[j];
       if (registeredContract.arweaveTxId == contract) {
-        throw new ContractError("[CE:CAR] Contracts already registered");
+        throw new Error("[CE:CAR] Contracts already registered");
       }
     }
   }

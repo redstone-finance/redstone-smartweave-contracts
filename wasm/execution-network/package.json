@@ -19,13 +19,11 @@
   },
   "devDependencies": {
     "@assemblyscript/loader": "^0.19.23",
-    "arlocal": "1.1.26",
+    "arlocal": "1.1.30",
     "arweave": "^1.10.23",
     "assemblyscript": "^0.19.23",
     "asyncify-wasm": "^1.2.1",
-    "redstone-smartweave": "0.4.44",
-    "visitor-as": "^0.8.0",
-    "wasm-json-toolkit": "^0.2.6",
-    "wasm-metering": "^0.2.1"
+    "redstone-smartweave": "0.4.53",
+    "visitor-as": "^0.8.0"
   }
 }

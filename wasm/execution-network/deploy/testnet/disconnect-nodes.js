@@ -12,7 +12,7 @@ async function connectNodes() {
     const contract = await connectContract(arweave, wallet);
 
     await disconnectNode(contract, {
-        id: "localnode_1",
+        id: "MacBook-Air-Piotr.local_5777_hV8F2CfILQqeEH67AFVQnnU3tYTrXv72aJa3KYJ1nws",
         networkId: "ppe_localhost"
     });
 
