@@ -4,7 +4,7 @@ import {ContractResultSchema} from "../contract";
 import {ContractError} from "../imports";
 
 export function transfer(state: StateSchema, action: ActionSchema): ContractResultSchema {
-  const transferData = action.transfer!!;
+  const transferData = action.transfer;
   const target = transferData.target;
   const qty = transferData.qty;
   const caller = Transaction.owner();

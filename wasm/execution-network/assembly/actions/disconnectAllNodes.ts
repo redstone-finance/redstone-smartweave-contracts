@@ -4,7 +4,7 @@ import {ContractError, Transaction, console} from "../imports";
 
 export function disconnectAllNodes(state: StateSchema, action: ActionSchema): ContractResultSchema {
   const caller = Transaction.owner();
-  const disconnectNode = action.disconnectAllNodes!!;
+  const disconnectNode = action.disconnectAllNodes;
 
   if (!state.networks.has(disconnectNode.networkId)) {
     throw new Error("[CE:NNF] Network not found");

@@ -2,23 +2,25 @@ const {connectArweave} = require("./connect-arweave");
 const {connectContract} = require("./connect-contract");
 const {loadWallet} = require("./load-wallet");
 
-async function addNetworks() {
-    const arweave = connectArweave();
-    const wallet = await loadWallet(arweave);
-    const contract = await connectContract(arweave, wallet);
+const testnet = false;
 
-    await addNetwork(contract, {
+async function addNetworks() {
+    const arweave = connectArweave(testnet);
+    const wallet = await loadWallet(arweave, testnet);
+    const contract = await connectContract(arweave, wallet, testnet);
+
+    /*await addNetwork(contract, {
         id: "ppe_localhost",
         name: "Localhost Flat PSTs network",
         desc: "Network that handles basic PSTs - without reads to other contracts",
         url: "http://localhost:5666"
-    });
+    });*/
 
     await addNetwork(contract,
         {
-            id: "redstone_testnet_1",
-            name: "Flat PSTs network",
-            desc: "Network that handles basic PSTs - without reads to other contracts",
+            id: "ppe_testnet_1",
+            name: "ppe's testnet",
+            desc: "Some random contracts...",
             url: "https://redstone.finance"
         });
 
@@ -33,7 +35,11 @@ async function addNetwork(contract, addNetwork) {
     const result = await contract.dryWrite(input);
 
     if (result.type == 'ok') {
-        await contract.writeInteraction(input);
+        if (testnet) {
+            await contract.writeInteraction(input);
+        } else {
+            await contract.bundleInteraction(input);
+        }
     } else {
         console.error(result);
     }

@@ -5,22 +5,28 @@ const {LoggerFactory} = require("redstone-smartweave");
 
 LoggerFactory.INST.logLevel('debug', 'WASM:AS')
 
+const testnet = false;
+
 async function disconnectAllNodes() {
-    const arweave = connectArweave();
-    const wallet = await loadWallet(arweave);
-    const contract = await connectContract(arweave, wallet);
+    const arweave = connectArweave(testnet);
+    const wallet = await loadWallet(arweave, testnet);
+    const contract = await connectContract(arweave, wallet, testnet);
 
     const input = {
         function: 'disconnectAllNodes',
         disconnectAllNodes: {
-            networkId: "ppe_localhost"
+            networkId: "redstone_testnet_1"
         }
     };
 
     const result = await contract.dryWrite(input);
 
     if (result.type == 'ok') {
-        await contract.writeInteraction(input);
+        if (testnet) {
+            await contract.writeInteraction(input);
+        } else {
+            await contract.bundleInteraction(input);
+        }
     } else {
         console.error(result);
     }

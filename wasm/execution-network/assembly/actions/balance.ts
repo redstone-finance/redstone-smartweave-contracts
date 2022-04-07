@@ -1,9 +1,8 @@
 import {ActionSchema, StateSchema} from "../schemas";
 import {ContractResultSchema} from "../contract";
-import {ContractError} from "../imports";
 
 export function balance(state: StateSchema, action: ActionSchema): ContractResultSchema {
-  const target = action.target!!;
+  const target = action.target;
 
   if (!target) {
     throw new Error("[CE:NOB] Must specify target to get balance for");

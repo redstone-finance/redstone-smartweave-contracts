@@ -5,10 +5,12 @@ const {connectArweave} = require("./connect-arweave");
 const {loadWallet, walletAddress} = require("./load-wallet");
 const {mineBlock} = require("../utils");
 
+const testnet = false;
+
 async function deploy() {
-    const arweave = connectArweave();
+    const arweave = connectArweave(testnet);
     const smartweave = SmartWeaveNodeFactory.memCached(arweave);
-    const wallet = await loadWallet(arweave);
+    const wallet = await loadWallet(arweave, testnet);
     const walletAddr = await walletAddress(arweave, wallet);
 
     const contractSrc = fs.readFileSync(path.join(__dirname, '../../build/optimized.wasm'))
@@ -30,20 +32,28 @@ async function deploy() {
         src: contractSrc
     },
         path.join(__dirname, '../../assembly'));
-    fs.writeFileSync(path.join(__dirname, 'contract-tx-id.txt'), contractTxId);
 
-    await mineBlock(arweave);
+    if (testnet) {
+        fs.writeFileSync(path.join(__dirname, 'contract-tx-id.txt'), contractTxId);
+    } else {
+        fs.writeFileSync(path.join(__dirname, 'contract-tx-id-prod.txt'), contractTxId)
+    }
 
-    const contract = smartweave
-        .contract(contractTxId)
-        .setEvaluationOptions({
-            gasLimit: 14000000
-        })
-        .connect(wallet);
+    if (testnet) {
+        await mineBlock(arweave);
+        const contract = smartweave
+            .contract(contractTxId)
+            .setEvaluationOptions({
+                gasLimit: 14000000
+            })
+            .connect(wallet);
 
-    const {state, validity} = await contract.readState();
+        const {state, validity} = await contract.readState();
 
-    console.log("Init state:", state);
+        console.log("Init state:", state);
+    }
+
+
     console.log("Contract tx id", contractTxId);
 }
 

@@ -4,7 +4,7 @@ import {ContractResultSchema} from "../contract";
 import {ContractError} from "../imports";
 
 export function addNetwork(state: StateSchema, action: ActionSchema): ContractResultSchema {
-  const addNetworkData = action.addNetwork!!;
+  const addNetworkData = action.addNetwork;
   const networkOwner = Transaction.owner();
 
   if (addNetworkData.id == null || addNetworkData.id.length == 0) {

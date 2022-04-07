@@ -16,13 +16,14 @@ import {ActionSchema, ResultSchema, StateSchema} from "./schemas";
 import {addNetwork} from "./actions/addNetwork";
 import {removeNetwork} from "./actions/removeNetwork";
 import {registerContracts} from "./actions/registerContracts";
-import {acceptedContracts} from "./actions/acceptedContracts";
 import {balance} from "./actions/balance";
 import {transfer} from "./actions/transfer";
 import {evolve} from "./actions/evolve";
 import {connectNode} from "./actions/connectNode";
 import {disconnectNode} from "./actions/disconnectNode";
 import {disconnectAllNodes} from "./actions/disconnectAllNodes";
+import {modifyConsensus} from "./actions/modifyConsensus";
+import {acceptedContracts} from "./actions/acceptedContracts";
 
 export type ContractResultSchema = HandlerResultSchema<StateSchema, ResultSchema>;
 
@@ -37,6 +38,7 @@ functions.set("disconnectAllNodes", disconnectAllNodes);
 functions.set("balance", balance);
 functions.set("transfer", transfer);
 functions.set("evolve", evolve); // contract owner 
+functions.set("modifyConsensus", modifyConsensus); // contract owner
 /*functions.set("acceptContracts", acceptContracts); // network operator
 functions.set("rejectContracts", rejectContracts); // network operator*/
 
@@ -50,7 +52,7 @@ function handle(state: StateSchema, action: ActionSchema): ResultSchema | null {
   if (functions.has(fn)) {
     const handlerResult = functions.get(fn)(state, action);
     if (handlerResult.state != null) {
-      contractState = handlerResult.state!!;
+      contractState = handlerResult.state as StateSchema;
     }
     return handlerResult.result;
   } else {

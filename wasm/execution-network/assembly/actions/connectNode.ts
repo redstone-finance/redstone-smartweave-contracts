@@ -3,7 +3,7 @@ import {ContractResultSchema} from "../contract";
 import {console} from "../imports";
 
 export function connectNode(state: StateSchema, action: ActionSchema): ContractResultSchema {
-  const connectNode = action.connectNode!!;
+  const connectNode = action.connectNode;
 
   console.log(`Connecting node ${connectNode.nodeId}`);
 

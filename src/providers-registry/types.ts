@@ -25,10 +25,13 @@ export interface ProvidersRegistryState extends TokenLockingContract
   /**
    * map from a wallet address of a provider to its data.
    */
-  providers: {
-    [providerAddress: string]: ProviderData;
+  balances: {
+    [id: string]: {[address: string]: number};
   }
 }
+
+export type address =
+  {[address: string]: number}
 
 export interface ProviderData {
   /**

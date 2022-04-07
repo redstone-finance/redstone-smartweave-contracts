@@ -3,7 +3,7 @@ import {ContractResultSchema} from "../contract";
 import {ContractError, Transaction} from "../imports";
 
 export function registerContracts(state: StateSchema, action: ActionSchema): ContractResultSchema {
-  const contractsToRegister = action.registerContracts!!;
+  const contractsToRegister = action.registerContracts;
 
   if (!state.networks.has(contractsToRegister.networkId)) {
     throw new Error("[CE:NNF] Network not found");

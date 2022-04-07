@@ -4,7 +4,7 @@ import {ContractResultSchema} from "../contract";
 import {Contract, ContractError} from "../imports";
 
 export function evolve(state: StateSchema, action: ActionSchema): ContractResultSchema {
-  const evolve = action.evolve!!;
+  const evolve = action.evolve;
   const contractOwner = Contract.owner();
   const sender = Transaction.owner();
 

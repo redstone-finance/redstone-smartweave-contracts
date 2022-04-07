@@ -49,15 +49,22 @@ export class ConsensusParams {
 @serializable
 export class ActionSchema {
   function: string
-  addNetwork: AddNetworkSchema | null
-  registerContracts: RegisterContractsSchema | null
-  acceptedContracts: AcceptedContractsSchema | null
-  target: string | null
-  transfer: TransferSchema | null
-  evolve: string | null
-  connectNode: ConnectNodeSchema | null
-  disconnectNode: DisconnectNodeSchema | null
-  disconnectAllNodes: DisconnectAllNodesSchema | null
+  addNetwork: AddNetworkSchema 
+  registerContracts: RegisterContractsSchema 
+  acceptedContracts: AcceptedContractsSchema 
+  target: string 
+  transfer: TransferSchema 
+  evolve: string 
+  connectNode: ConnectNodeSchema 
+  disconnectNode: DisconnectNodeSchema 
+  disconnectAllNodes: DisconnectAllNodesSchema 
+  modifyConsensus: ModifyConsensusSchema 
+}
+
+@serializable
+export class ModifyConsensusSchema {
+  networkId: string
+  params: ConsensusParams
 }
 
 @serializable

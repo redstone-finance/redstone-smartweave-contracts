@@ -3,10 +3,10 @@ import {ContractResultSchema} from "../contract";
 import {ContractError} from "../imports";
 
 export function acceptedContracts(state: StateSchema, action: ActionSchema): ContractResultSchema {
-  const networkId = action.acceptedContracts!!.networkId;
+  const networkId = action.acceptedContracts.networkId;
 
   if (!state.networks.has(networkId)) {
-    throw ContractError("NNF", "Network not found");
+    throw new Error("[CE:NNF] Network not found");
   }
 
   // TODO: return only contracts accepted by network owner
