@@ -10,8 +10,8 @@ async function registerContract() {
     const contract = await connectContract(arweave, wallet, testnet);
 
     //await registerForNetwork('redstone_testnet_1', contract);
-    await registerForNetwork('ppe_testnet_1', contract);
-    await registerForNetwork('kuba_testnet_1', contract);
+    await registerForNetwork('redstone_network', contract);
+    //await registerForNetwork('kuba_testnet_1', contract);
     //await registerForNetwork('ppe_localhost', contract);
 }
 
@@ -24,15 +24,12 @@ async function registerForNetwork(networkId, contract) {
             "X0Bd7SZY2ezke7RXuTzUm3oV90x53FPwKJZMUgsihx0"
         ]
         : [
-            "OrO8n453N6bx921wtsEs-0OCImBLCItNU5oSbFKlFuU", //redstone
+            "OrO8n453N6bx921wtsEs-0OCImBLCItNU5oSbFKlFuU", //redstone oracle
+            "pvudp_Wp8NMDJR6KUsQbzJJ27oLO4fAKXsnVQn86JbU", // fake news
+            "KT45jaf8n9UwgkEareWxPgLJk4oMWpI5NODgYVIF1fY", //warp9
             "-8A6RexFkpfWwuyVO98wzSFZh0d6VJuI-buTJvlwOJQ", //ardrive
             "usjm4PCxUd5mtaon7zc97-dt-3qf67yPyqgzLnLqk5A", //verto
             "mzvUgNc8YFk0w5K5H7c8pyT-FC5Y_ba0r7_8766Kx74", //commxyz
-            "f6lW-sKxsc340p8eBBL2i_fnmSI_fRSFmkqvzqyUsRs", //arverify
-            "KT45jaf8n9UwgkEareWxPgLJk4oMWpI5NODgYVIF1fY", //warp9
-            "ewepANKEVffP0cm_XKjwTYhSBqaiQrJbVrCcBiWqw-s", //arwiki
-            "6eTVr8IKPNYbMHVcpHFXr-XNaL5hT6zRJXimcP-owmo", //openbits
-
         ]
 
 

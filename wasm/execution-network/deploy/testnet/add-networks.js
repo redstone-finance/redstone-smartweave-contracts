@@ -18,9 +18,9 @@ async function addNetworks() {
 
     await addNetwork(contract,
         {
-            id: "ppe_testnet_1",
-            name: "ppe's testnet",
-            desc: "Some random contracts...",
+            id: "redstone_network",
+            name: "RedStone Contracts",
+            desc: "Redstone Contracts + some random PSTs",
             url: "https://redstone.finance"
         });
 

@@ -26,12 +26,14 @@ async function deploy() {
         }
     }
 
+    const useBundler = !testnet;
+
     const contractTxId = await smartweave.createContract.deploy({
         wallet,
         initState: JSON.stringify(initialState),
-        src: contractSrc
-    },
-        path.join(__dirname, '../../assembly'));
+        src: contractSrc,
+        wasmSrcCodeDir: path.join(__dirname, '../../assembly')
+    }, useBundler);
 
     if (testnet) {
         fs.writeFileSync(path.join(__dirname, 'contract-tx-id.txt'), contractTxId);

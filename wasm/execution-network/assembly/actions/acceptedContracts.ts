@@ -1,6 +1,5 @@
 import {ActionSchema, StateSchema} from "../schemas";
 import {ContractResultSchema} from "../contract";
-import {ContractError} from "../imports";
 
 export function acceptedContracts(state: StateSchema, action: ActionSchema): ContractResultSchema {
   const networkId = action.acceptedContracts.networkId;

@@ -23,7 +23,7 @@
     "arweave": "^1.10.23",
     "assemblyscript": "^0.19.23",
     "asyncify-wasm": "^1.2.1",
-    "redstone-smartweave": "0.4.53",
+    "redstone-smartweave": "0.4.71",
     "visitor-as": "^0.8.0"
   }
 }
