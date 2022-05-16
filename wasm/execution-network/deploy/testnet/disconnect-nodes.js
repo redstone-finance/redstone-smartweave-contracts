@@ -5,26 +5,31 @@ const {LoggerFactory} = require("redstone-smartweave");
 
 LoggerFactory.INST.logLevel('debug', 'WASM:AS')
 
+const testnet = false;
+
 async function disconnectNodes() {
-    const arweave = connectArweave();
-    const wallet = await loadWallet(arweave);
+    const arweave = connectArweave(testnet);
+    const wallet = await loadWallet(arweave, testnet);
     const walletAddr = await walletAddress(arweave, wallet);
-    const contract = await connectContract(arweave, wallet);
+    const contract = await connectContract(arweave, wallet, testnet);
 
     await disconnectNode(contract, {
-        id: "MacBook-Air-Piotr.local_5777_hV8F2CfILQqeEH67AFVQnnU3tYTrXv72aJa3KYJ1nws",
-        networkId: "ppe_localhost"
+        id: "3fea32083819_8080_JQwYpXCFr_iwgLngZdIe7pm-Q8pxNU24Tb2DK00-2P8",
+        networkId: "redstone_network"
     });
-
-    /*await disconnectNode(contract, {
-        id: "localnode_2",
-        networkId: "ppe_localhost"
+/*    await disconnectNode(contract, {
+        id: "b8de826e0d62_8080_JQwYpXCFr_iwgLngZdIe7pm-Q8pxNU24Tb2DK00-2P8",
+        networkId: "redstone_network"
     });
-
     await disconnectNode(contract, {
-        id: "localnode_3",
-        networkId: "ppe_localhost"
+        id: "d6b5c28e0703_8080_JQwYpXCFr_iwgLngZdIe7pm-Q8pxNU24Tb2DK00-2P8",
+        networkId: "redstone_network"
+    });
+    await disconnectNode(contract, {
+        id: "e2032798323e_8080_JQwYpXCFr_iwgLngZdIe7pm-Q8pxNU24Tb2DK00-2P8",
+        networkId: "redstone_network"
     });*/
+
 }
 
 async function disconnectNode(contract, disconnectNode) {
@@ -36,7 +41,11 @@ async function disconnectNode(contract, disconnectNode) {
     const result = await contract.dryWrite(input);
 
     if (result.type == 'ok') {
-        await contract.writeInteraction(input);
+        if (testnet) {
+            await contract.writeInteraction(input);
+        } else {
+            await contract.bundleInteraction(input);
+        }
     } else {
         console.error(result);
     }

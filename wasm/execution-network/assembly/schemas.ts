@@ -51,7 +51,8 @@ export class ActionSchema {
   function: string
   addNetwork: AddNetworkSchema 
   registerContracts: RegisterContractsSchema 
-  acceptedContracts: AcceptedContractsSchema 
+  unregisterContracts: UnregisterContractsSchema
+  acceptedContracts: AcceptedContractsSchema
   target: string 
   transfer: TransferSchema 
   evolve: string 
@@ -109,6 +110,12 @@ export class AcceptedContractsSchema {
 
 @serializable
 export class RegisterContractsSchema {
+  networkId: string
+  contracts: string[]
+}
+
+@serializable
+export class UnregisterContractsSchema {
   networkId: string
   contracts: string[]
 }
