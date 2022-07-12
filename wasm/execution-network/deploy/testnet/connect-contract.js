@@ -4,17 +4,17 @@ const {contractTxIdProd} = require("./contract-tx-id-prod");
 
 
 module.exports.connectContract = async function (arweave, wallet, testnet) {
-    const contractId = testnet ? contractTxId : contractTxIdProd;
+  const contractId = testnet ? contractTxId : contractTxIdProd;
 
-    if (testnet) {
-        return SmartWeaveNodeFactory.memCached(arweave)
-            .contract(contractId)
-            .connect(wallet);
-    } else {
-        return SmartWeaveNodeFactory.memCachedBased(arweave)
-            .useRedStoneGateway()
-            .build()
-            .contract(contractId)
-            .connect(wallet);
-    }
+  if (testnet) {
+    return SmartWeaveNodeFactory.memCachedBased(arweave)
+      .useArweaveGateway()
+      .build()
+      .contract(contractId)
+      .connect(wallet);
+  } else {
+    return SmartWeaveNodeFactory.memCached(arweave)
+      .contract(contractId)
+      .connect(wallet);
+  }
 }

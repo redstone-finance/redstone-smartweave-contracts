@@ -4,7 +4,7 @@ const {loadWallet, walletAddress} = require("./load-wallet");
 
 const testnet = false;
 
-async function registerContract() {
+async function unregisterContract() {
     const arweave = connectArweave(testnet);
     const wallet = await loadWallet(arweave, testnet);
     const contract = await connectContract(arweave, wallet, testnet);
@@ -21,17 +21,7 @@ async function unregisterFromNetwork(networkId, contract) {
             "X0Bd7SZY2ezke7RXuTzUm3oV90x53FPwKJZMUgsihx0"
         ]
         : [
-            /*"OrO8n453N6bx921wtsEs-0OCImBLCItNU5oSbFKlFuU", //redstone oracle
-            "pvudp_Wp8NMDJR6KUsQbzJJ27oLO4fAKXsnVQn86JbU", // fake news
-            "KT45jaf8n9UwgkEareWxPgLJk4oMWpI5NODgYVIF1fY", //warp9
-            "-8A6RexFkpfWwuyVO98wzSFZh0d6VJuI-buTJvlwOJQ", //ardrive*/
-            "usjm4PCxUd5mtaon7zc97-dt-3qf67yPyqgzLnLqk5A", //verto
-            "mzvUgNc8YFk0w5K5H7c8pyT-FC5Y_ba0r7_8766Kx74", //commxyz
-            "qg5BIOUraunoi6XJzbCC-TgIAypcXyXlVprgg0zRRDE", // new redstone oracle contract
-           /* "KT45jaf8n9UwgkEareWxPgLJk4oMWpI5NODgYVIF1fY", // warp token
-            "-ZyLeMEKzAfuseW-5CxZixpMdOiMBF7oZtg2sA_g5FI", // disputes
-            "XIutiOKujGI21_ywULlBeyy-L9d8goHxt0ZyUayGaDg", //pianity nft
-            "5Yt1IujBmOm1LSux9KDUTjCE7rJqepzP7gZKf_DyzWI" // warp page pst*/
+            "DJWTeeWivJnGzaXMtk3UliIW1aKruy_f0wxtNi-znV4"
         ]
 
 
@@ -56,4 +46,4 @@ async function unregisterFromNetwork(networkId, contract) {
     }
 }
 
-registerContract().finally();
+unregisterContract().finally();

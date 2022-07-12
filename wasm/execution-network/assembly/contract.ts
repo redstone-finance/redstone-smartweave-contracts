@@ -25,6 +25,7 @@ import {disconnectAllNodes} from "./actions/disconnectAllNodes";
 import {acceptedContracts} from "./actions/acceptedContracts";
 import {modifyConsensus} from "./actions/modifyConsensus";
 import {unregisterContracts} from "./actions/unregisterContracts";
+import {registerContractGroups} from "./actions/registerContractGroups";
 
 export type ContractResultSchema = HandlerResultSchema<StateSchema, ResultSchema>;
 
@@ -32,6 +33,7 @@ const functions: Map<string, ContractFn<StateSchema, ActionSchema, ResultSchema>
 functions.set("addNetwork", addNetwork); // network operator
 functions.set("removeNetwork", removeNetwork); // network operator
 functions.set("registerContracts", registerContracts); // contract developer
+functions.set("registerContractGroups", registerContractGroups); // contract developer
 functions.set("unregisterContracts", unregisterContracts); // contract developer
 functions.set("acceptedContracts", acceptedContracts); // network nodes
 functions.set("connectNode", connectNode);

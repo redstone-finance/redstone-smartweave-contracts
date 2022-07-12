@@ -27,6 +27,7 @@ export function addNetwork(state: StateSchema, action: ActionSchema): ContractRe
   state.networks.set(addNetworkData.id, {
     id: addNetworkData.id,
     contracts: [],
+    contractGroups: [],
     desc: addNetworkData.desc,
     owner: networkOwner,
     name: addNetworkData.name,

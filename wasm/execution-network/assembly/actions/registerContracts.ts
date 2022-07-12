@@ -1,6 +1,6 @@
 import {ActionSchema, ContractStatus, StateSchema} from "../schemas";
 import {ContractResultSchema} from "../contract";
-import {ContractError, Transaction} from "../imports";
+import {Transaction} from "../imports";
 
 export function registerContracts(state: StateSchema, action: ActionSchema): ContractResultSchema {
   const contractsToRegister = action.registerContracts;
@@ -22,7 +22,7 @@ export function registerContracts(state: StateSchema, action: ActionSchema): Con
     for (let j = 0; j < network.contracts.length; j++) {
       const registeredContract = network.contracts[j];
       if (registeredContract.arweaveTxId == contract) {
-        throw new Error("[CE:CAR] Contracts already registered");
+        throw new Error(`[CE:CAR] Contract ${contract} already registered`);
       }
     }
   }

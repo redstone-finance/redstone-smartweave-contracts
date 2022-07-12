@@ -19,6 +19,7 @@ export class Network {
   url: string
   stakedTokens: u64
   contracts: Contract[]
+  contractGroups: string[]
   consensusParams: ConsensusParams
   connectedNodes: Map<string, ConnectNodeSchema>
 }
@@ -51,6 +52,7 @@ export class ActionSchema {
   function: string
   addNetwork: AddNetworkSchema 
   registerContracts: RegisterContractsSchema 
+  registerContractsGroup: RegisterContractsGroupSchema
   unregisterContracts: UnregisterContractsSchema
   acceptedContracts: AcceptedContractsSchema
   target: string 
@@ -112,6 +114,12 @@ export class AcceptedContractsSchema {
 export class RegisterContractsSchema {
   networkId: string
   contracts: string[]
+}
+
+@serializable
+export class RegisterContractsGroupSchema {
+  networkId: string
+  groups: string[]
 }
 
 @serializable
