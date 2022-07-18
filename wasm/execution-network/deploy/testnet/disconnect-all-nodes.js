@@ -15,7 +15,7 @@ async function disconnectAllNodes() {
     const input = {
         function: 'disconnectAllNodes',
         disconnectAllNodes: {
-            networkId: "redstone_network"
+            networkId: "bundlr_network_testnet"
         }
     };
 
