@@ -1,49 +1,103 @@
 {
   "owner": "I-5rWUehEv-MjdK9gFw09RxfSLQX9DIHxG614Wf8qo0",
-  "ticker": "THE_BUNDLR_TESTNET_DEN",
-  "name": "DEN Token Mk. 5 - Bundlr",
+  "ticker": "THE_PSTS_DEN",
+  "name": "DEN Token Mk. 5 - PSTs",
   "balances": {
     "I-5rWUehEv-MjdK9gFw09RxfSLQX9DIHxG614Wf8qo0": 10000000
   },
   "networks": {
-    "bundlr_network_testnet": {
-      "id": "bundlr_network_testnet",
+    "all_pst": {
+      "id": "all_pst",
       "owner": "I-5rWUehEv-MjdK9gFw09RxfSLQX9DIHxG614Wf8qo0",
-      "name": "Bundlr Testnet contracts",
-      "desc": "I understand your frustration",
-      "url": "https://bundlr.network/",
+      "name": "PSTs",
+      "desc": "PST contracts",
+      "url": "https://warp.cc/",
       "stakedTokens": "0",
-      "contracts": [
-        {
-          "arweaveTxId": "R7wHkzV2bRktpSnOfBj9I7GHn5JaeO6XrQKDFlcu2XA",
-          "status": 0,
-          "validatedHeight": 0,
-          "validatedHash": "",
-          "totalGasUsed": "0",
-          "registeredBy": "I-5rWUehEv-MjdK9gFw09RxfSLQX9DIHxG614Wf8qo0"
-        },
-        {
-          "arweaveTxId": "WXh8Ui34yJCYKO0gUDegoPBUd_Lcm3fi8sCaGCUke3w",
-          "status": 0,
-          "validatedHeight": 0,
-          "validatedHash": "",
-          "totalGasUsed": "0",
-          "registeredBy": "I-5rWUehEv-MjdK9gFw09RxfSLQX9DIHxG614Wf8qo0"
-        },
-        {
-          "arweaveTxId": "RkinCLBlY4L5GZFv8gCFcrygTyd5Xm91CzKlR6qxhKA",
-          "status": 0,
-          "validatedHeight": 0,
-          "validatedHash": "",
-          "totalGasUsed": "0",
-          "registeredBy": "I-5rWUehEv-MjdK9gFw09RxfSLQX9DIHxG614Wf8qo0"
-        }
-      ],
-      "contractGroups": [],
+      "contractGroups": ["all_pst"],
       "consensusParams": {
         "quorumSize": "0.6",
         "sampleSize": "1",
-        "decisionThreshold": "1"
+        "decisionThreshold": "0"
+      },
+      "connectedNodes": {
+      }
+    },
+    "all_pst_local": {
+      "id": "all_pst_local",
+      "owner": "I-5rWUehEv-MjdK9gFw09RxfSLQX9DIHxG614Wf8qo0",
+      "name": "PSTs",
+      "desc": "PST contracts",
+      "url": "https://warp.cc/",
+      "stakedTokens": "0",
+      "contractGroups": ["all_pst"],
+      "consensusParams": {
+        "quorumSize": "0.6",
+        "sampleSize": "1",
+        "decisionThreshold": "0"
+      },
+      "connectedNodes": {
+      }
+    },
+    "atomic_nfts": {
+      "id": "atomic_nfts",
+      "owner": "I-5rWUehEv-MjdK9gFw09RxfSLQX9DIHxG614Wf8qo0",
+      "name": "Atomic NFTs",
+      "desc": "KOII Atomic NFTs contracts",
+      "url": "https://warp.cc/",
+      "stakedTokens": "0",
+      "contractGroups": ["r_ibeOTHJW8McJvivPJjHxjMwkYfAKRjs-LjAeaBcLc"],
+      "consensusParams": {
+        "quorumSize": "0.6",
+        "sampleSize": "1",
+        "decisionThreshold": "0"
+      },
+      "connectedNodes": {
+      }
+    },
+    "atomic_nfts_local": {
+      "id": "atomic_nfts_local",
+      "owner": "I-5rWUehEv-MjdK9gFw09RxfSLQX9DIHxG614Wf8qo0",
+      "name": "Atomic NFTs",
+      "desc": "KOII Atomic NFTs contracts",
+      "url": "https://warp.cc/",
+      "stakedTokens": "0",
+      "contractGroups": ["r_ibeOTHJW8McJvivPJjHxjMwkYfAKRjs-LjAeaBcLc"],
+      "consensusParams": {
+        "quorumSize": "0.6",
+        "sampleSize": "1",
+        "decisionThreshold": "0"
+      },
+      "connectedNodes": {
+      }
+    },
+    "hoh": {
+      "id": "hoh",
+      "owner": "I-5rWUehEv-MjdK9gFw09RxfSLQX9DIHxG614Wf8qo0",
+      "name": "HoH contracts",
+      "desc": "Heroes of History Bundlr contracts",
+      "url": "https://warp.cc/",
+      "stakedTokens": "0",
+      "contractGroups": ["Qa7IR-xvPkBtcYUBZXd8z-Tu611VeJH33uEA5XiFUNA"],
+      "consensusParams": {
+        "quorumSize": "0.6",
+        "sampleSize": "1",
+        "decisionThreshold": "0"
+      },
+      "connectedNodes": {
+      }
+    },
+    "hoh_local": {
+      "id": "hoh_local",
+      "owner": "I-5rWUehEv-MjdK9gFw09RxfSLQX9DIHxG614Wf8qo0",
+      "name": "HoH contracts",
+      "desc": "Heroes of History Bundlr contracts",
+      "url": "https://warp.cc/",
+      "stakedTokens": "0",
+      "contractGroups": ["Qa7IR-xvPkBtcYUBZXd8z-Tu611VeJH33uEA5XiFUNA"],
+      "consensusParams": {
+        "quorumSize": "0.6",
+        "sampleSize": "1",
+        "decisionThreshold": "0"
       },
       "connectedNodes": {
       }

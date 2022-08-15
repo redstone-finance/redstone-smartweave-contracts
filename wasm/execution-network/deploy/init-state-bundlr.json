@@ -1,0 +1,54 @@
+{
+  "owner": "I-5rWUehEv-MjdK9gFw09RxfSLQX9DIHxG614Wf8qo0",
+  "ticker": "THE_BUNDLR_TESTNET_DEN",
+  "name": "DEN Token Mk. 5 - Bundlr",
+  "balances": {
+    "I-5rWUehEv-MjdK9gFw09RxfSLQX9DIHxG614Wf8qo0": 10000000
+  },
+  "networks": {
+    "bundlr_network_testnet": {
+      "id": "bundlr_network_testnet",
+      "owner": "I-5rWUehEv-MjdK9gFw09RxfSLQX9DIHxG614Wf8qo0",
+      "name": "Bundlr Testnet contracts",
+      "desc": "I understand your frustration",
+      "url": "https://bundlr.network/",
+      "stakedTokens": "0",
+      "contracts": [
+        {
+          "arweaveTxId": "R7wHkzV2bRktpSnOfBj9I7GHn5JaeO6XrQKDFlcu2XA",
+          "status": 0,
+          "validatedHeight": 0,
+          "validatedHash": "",
+          "totalGasUsed": "0",
+          "registeredBy": "I-5rWUehEv-MjdK9gFw09RxfSLQX9DIHxG614Wf8qo0"
+        },
+        {
+          "arweaveTxId": "WXh8Ui34yJCYKO0gUDegoPBUd_Lcm3fi8sCaGCUke3w",
+          "status": 0,
+          "validatedHeight": 0,
+          "validatedHash": "",
+          "totalGasUsed": "0",
+          "registeredBy": "I-5rWUehEv-MjdK9gFw09RxfSLQX9DIHxG614Wf8qo0"
+        },
+        {
+          "arweaveTxId": "RkinCLBlY4L5GZFv8gCFcrygTyd5Xm91CzKlR6qxhKA",
+          "status": 0,
+          "validatedHeight": 0,
+          "validatedHash": "",
+          "totalGasUsed": "0",
+          "registeredBy": "I-5rWUehEv-MjdK9gFw09RxfSLQX9DIHxG614Wf8qo0"
+        }
+      ],
+      "contractGroups": [],
+      "consensusParams": {
+        "quorumSize": "0.6",
+        "sampleSize": "1",
+        "decisionThreshold": "1"
+      },
+      "connectedNodes": {
+      }
+    }
+  },
+  "canEvolve": true,
+  "evolve": null
+}

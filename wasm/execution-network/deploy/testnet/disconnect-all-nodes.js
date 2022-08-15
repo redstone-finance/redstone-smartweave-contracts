@@ -15,7 +15,7 @@ async function disconnectAllNodes() {
     const input = {
         function: 'disconnectAllNodes',
         disconnectAllNodes: {
-            networkId: "bundlr_network_testnet"
+            networkId: "all_pst"
         }
     };
 

@@ -15,11 +15,11 @@ async function modifyConsensus() {
     const input = {
         function: 'modifyConsensus',
         modifyConsensus: {
-            networkId: "redstone_network",
+            networkId: "all_pst",
             params: {
                 quorumSize: "0.6",
-                sampleSize: "2",
-                decisionThreshold: "1",
+                sampleSize: "1",
+                decisionThreshold: "0",
             }
         }
     };
